@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://wsdl.cybozu.co.jp/admin/2008" xmlns:typens="http://wsdl.cybozu.co.jp/admin/2008/types" xmlns:base_services="http://wsdl.cybozu.co.jp/base/2008" xmlns="http://schemas.xmlsoap.org/wsdl/" name="CybozuAdminServices" targetNamespace="http://wsdl.cybozu.co.jp/admin/2008" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import namespace="http://wsdl.cybozu.co.jp/base/2008" location="base.wsdl" />
+  <wsdl:types>
+    <xsd:schema xmlns:admin="http://schemas.cybozu.co.jp/admin/2008" xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns:base_types="http://wsdl.cybozu.co.jp/base/2008/types" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://wsdl.cybozu.co.jp/admin/2008/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+      <xsd:import schemaLocation="admin.xsd" namespace="http://schemas.cybozu.co.jp/admin/2008" />
+      <xsd:import namespace="http://wsdl.cybozu.co.jp/base/2008/types" />
+      <xsd:complexType name="AdminCountUsersRequestType" />
+      <xsd:complexType name="AdminCountUsersResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="number_users" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetUserIdsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="offset" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="limit" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetUserIdsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="number_users" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="userId" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetUserDetailByIdsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="userId" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetUserDetailByIdsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="number_users" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="userDetail" type="admin:UserDetail" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminCountOrgsRequestType" />
+      <xsd:complexType name="AdminCountOrgsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="number_orgs" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetOrgIdsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="offset" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="limit" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetOrgIdsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="number_orgs" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="orgId" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetOrgDetailByIdsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="orgId" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetOrgDetailByIdsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="number_orgs" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="orgDetail" type="admin:OrgDetail" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminCountChildOrgsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="parent_orgId" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminCountChildOrgsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="parent_orgId" type="xsd:integer" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="number_child_orgs" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetChildOrgsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="parent_orgId" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="offset" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="limit" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetChildOrgsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="parent_orgId" type="xsd:integer" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="number_child_orgs" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="orgId" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminCountUsersInOrgRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="orgId" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminCountUsersInOrgResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="orgId" type="xsd:integer" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="number_users" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetUserIdsInOrgRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="orgId" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="offset" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="limit" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetUserIdsInOrgResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="orgId" type="xsd:integer" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="number_users" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="userId" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminCountNoGroupUsersRequestType" />
+      <xsd:complexType name="AdminCountNoGroupUsersResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="number_users" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetNoGroupUserIdsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="offset" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="limit" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetNoGroupUserIdsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="number_users" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="userId" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminCountOrgsOfUserRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="userId" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminCountOrgsOfUserResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="userId" type="xsd:integer" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="number_orgs" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetOrgIdsOfUserRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="userId" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetOrgIdsOfUserResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="userId" type="xsd:integer" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="number_orgs" type="xsd:integer" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="orgId" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetParentOrgIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="child_orgId" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetParentOrgIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="child_orgId" type="xsd:integer" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="parent_orgId" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetUserIdByLoginNameRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="login_name" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetUserIdByLoginNameResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="login_name" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="userId" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetOrgIdByOrgCodeRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="org_code" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AdminGetOrgIdByOrgCodeResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="org_code" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="orgId" type="xsd:integer" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="AdminCountUsersRequest">
+    <wsdl:part name="parameters" type="typens:AdminCountUsersRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminCountUsersResponse">
+    <wsdl:part name="returns" type="typens:AdminCountUsersResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetUserIdsRequest">
+    <wsdl:part name="parameters" type="typens:AdminGetUserIdsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetUserIdsResponse">
+    <wsdl:part name="returns" type="typens:AdminGetUserIdsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetUserDetailByIdsRequest">
+    <wsdl:part name="parameters" type="typens:AdminGetUserDetailByIdsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetUserDetailByIdsResponse">
+    <wsdl:part name="returns" type="typens:AdminGetUserDetailByIdsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AdminCountOrgsRequest">
+    <wsdl:part name="parameters" type="typens:AdminCountOrgsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminCountOrgsResponse">
+    <wsdl:part name="returns" type="typens:AdminCountOrgsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetOrgIdsRequest">
+    <wsdl:part name="parameters" type="typens:AdminGetOrgIdsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetOrgIdsResponse">
+    <wsdl:part name="returns" type="typens:AdminGetOrgIdsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetOrgDetailByIdsRequest">
+    <wsdl:part name="parameters" type="typens:AdminGetOrgDetailByIdsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetOrgDetailByIdsResponse">
+    <wsdl:part name="returns" type="typens:AdminGetOrgDetailByIdsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AdminCountChildOrgsRequest">
+    <wsdl:part name="parameters" type="typens:AdminCountChildOrgsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminCountChildOrgsResponse">
+    <wsdl:part name="returns" type="typens:AdminCountChildOrgsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetChildOrgsRequest">
+    <wsdl:part name="parameters" type="typens:AdminGetChildOrgsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetChildOrgsResponse">
+    <wsdl:part name="returns" type="typens:AdminGetChildOrgsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AdminCountUsersInOrgRequest">
+    <wsdl:part name="parameters" type="typens:AdminCountUsersInOrgRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminCountUsersInOrgResponse">
+    <wsdl:part name="returns" type="typens:AdminCountUsersInOrgResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetUserIdsInOrgRequest">
+    <wsdl:part name="parameters" type="typens:AdminGetUserIdsInOrgRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetUserIdsInOrgResponse">
+    <wsdl:part name="returns" type="typens:AdminGetUserIdsInOrgResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AdminCountNoGroupUsersRequest">
+    <wsdl:part name="parameters" type="typens:AdminCountNoGroupUsersRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminCountNoGroupUsersResponse">
+    <wsdl:part name="returns" type="typens:AdminCountNoGroupUsersResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetNoGroupUserIdsRequest">
+    <wsdl:part name="parameters" type="typens:AdminGetNoGroupUserIdsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetNoGroupUserIdsResponse">
+    <wsdl:part name="returns" type="typens:AdminGetNoGroupUserIdsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AdminCountOrgsOfUserRequest">
+    <wsdl:part name="parameters" type="typens:AdminCountOrgsOfUserRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminCountOrgsOfUserResponse">
+    <wsdl:part name="returns" type="typens:AdminCountOrgsOfUserResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetOrgIdsOfUserRequest">
+    <wsdl:part name="parameters" type="typens:AdminGetOrgIdsOfUserRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetOrgIdsOfUserResponse">
+    <wsdl:part name="returns" type="typens:AdminGetOrgIdsOfUserResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetParentOrgIdRequest">
+    <wsdl:part name="parameters" type="typens:AdminGetParentOrgIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetParentOrgIdResponse">
+    <wsdl:part name="returns" type="typens:AdminGetParentOrgIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetUserIdByLoginNameRequest">
+    <wsdl:part name="parameters" type="typens:AdminGetUserIdByLoginNameRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetUserIdByLoginNameResponse">
+    <wsdl:part name="returns" type="typens:AdminGetUserIdByLoginNameResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetOrgIdByOrgCodeRequest">
+    <wsdl:part name="parameters" type="typens:AdminGetOrgIdByOrgCodeRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AdminGetOrgIdByOrgCodeResponse">
+    <wsdl:part name="returns" type="typens:AdminGetOrgIdByOrgCodeResponseType" />
+  </wsdl:message>
+  <wsdl:portType name="AdminPort">
+    <wsdl:operation name="AdminCountUsers">
+      <documentation>
+        This API returns the number of users in a Garoon system.
+      </documentation>
+      <wsdl:input message="tns:AdminCountUsersRequest" />
+      <wsdl:output message="tns:AdminCountUsersResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetUserIds">
+      <documentation>
+        This API returns the list of userIds in a Garoon system. 
+        The starting position of userIds and the limit number of userIds can be set 
+        via parameters "offset" and "limit". If no parameters is set, all userIds 
+        will be returned.
+      </documentation>
+      <wsdl:input message="tns:AdminGetUserIdsRequest" />
+      <wsdl:output message="tns:AdminGetUserIdsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetUserDetailByIds">
+      <documentation>
+        This function returns the details of an user specified by his/her userId.
+      </documentation>
+      <wsdl:input message="tns:AdminGetUserDetailByIdsRequest" />
+      <wsdl:output message="tns:AdminGetUserDetailByIdsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminCountOrgs">
+      <documentation>
+        This function returns the number of organizations in a Garoon system.
+      </documentation>
+      <wsdl:input message="tns:AdminCountOrgsRequest" />
+      <wsdl:output message="tns:AdminCountOrgsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetOrgIds">
+      <documentation>
+        This function returns a list of organization ID in a Garoon system.
+        By setting "offset" and "limit", one can retrieve a part from the list.
+      </documentation>
+      <wsdl:input message="tns:AdminGetOrgIdsRequest" />
+      <wsdl:output message="tns:AdminGetOrgIdsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetOrgDetailByIds">
+      <documentation>
+        This function returns the details of an organization specified by its orgId.
+      </documentation>
+      <wsdl:input message="tns:AdminGetOrgDetailByIdsRequest" />
+      <wsdl:output message="tns:AdminGetOrgDetailByIdsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminCountChildOrgs">
+      <documentation>
+        This function returns the number of child organizations below an organization.
+      </documentation>
+      <wsdl:input message="tns:AdminCountChildOrgsRequest" />
+      <wsdl:output message="tns:AdminCountChildOrgsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetChildOrgs">
+      <documentation>
+        This function returns a list of child organizations below an organization.
+        By setting "offset" and "limit", one can retrieve a part from the list.
+      </documentation>
+      <wsdl:input message="tns:AdminGetChildOrgsRequest" />
+      <wsdl:output message="tns:AdminGetChildOrgsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminCountUsersInOrg">
+      <documentation>
+        This function returns the number of users inside an organization.
+        Since the root org in Garoon does not have users, using root org 
+        in parameter will raise a value error of -1 in the response XML.
+      </documentation>
+      <wsdl:input message="tns:AdminCountUsersInOrgRequest" />
+      <wsdl:output message="tns:AdminCountUsersInOrgResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetUserIdsInOrg">
+      <documentation>
+        This function returns a list of users inside an organization.
+        By setting "offset" and "limit", one can retrieve a part from the list.
+        Since root org in Garoon does not have users, using root org 
+        in parameter will raise a value error of -1 in the response XML.
+      </documentation>
+      <wsdl:input message="tns:AdminGetUserIdsInOrgRequest" />
+      <wsdl:output message="tns:AdminGetUserIdsInOrgResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminCountNoGroupUsers">
+      <documentation>
+        This function returns the number of users inside an organization.
+        Since the root org in Garoon does not have users, using root org 
+        in parameter will raise a value error of -1 in the response XML.
+      </documentation>
+      <wsdl:input message="tns:AdminCountNoGroupUsersRequest" />
+      <wsdl:output message="tns:AdminCountNoGroupUsersResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetNoGroupUserIds">
+      <documentation>
+        This function returns a list of users inside an organization.
+        By setting "offset" and "limit", one can retrieve a part from the list.
+        Since root org in Garoon does not have users, using root org 
+        in parameter will raise a value error of -1 in the response XML.
+      </documentation>
+      <wsdl:input message="tns:AdminGetNoGroupUserIdsRequest" />
+      <wsdl:output message="tns:AdminGetNoGroupUserIdsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminCountOrgsOfUser">
+      <documentation>
+        This function returns the number of organizations that a user belongs to.
+        If that userId does not exist, it returns an userId=-1 in the response XML.
+      </documentation>
+      <wsdl:input message="tns:AdminCountOrgsOfUserRequest" />
+      <wsdl:output message="tns:AdminCountOrgsOfUserResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetOrgIdsOfUser">
+      <documentation>
+        This function returns a list of of organizations that a user belongs to.
+        By setting "offset" and "limit", one can retrieve a part from the list.
+      </documentation>
+      <wsdl:input message="tns:AdminGetOrgIdsOfUserRequest" />
+      <wsdl:output message="tns:AdminGetOrgIdsOfUserResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetParentOrgId">
+      <documentation>
+        This function returns the parent organization of a organization.
+        It returns an orgId=0 if the parent is the root org in Garoon.
+        It returns a minus orgId if the current org does not exist.
+        In other cases, it returns a valid orgId.
+      </documentation>
+      <wsdl:input message="tns:AdminGetParentOrgIdRequest" />
+      <wsdl:output message="tns:AdminGetParentOrgIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetUserIdByLoginName">
+      <documentation>
+      This API function returns a user's positive userId by his/her login name.
+      If that login name does not exist, it returns a negative userId, that means an error.
+      </documentation>
+      <wsdl:input message="tns:AdminGetUserIdByLoginNameRequest" />
+      <wsdl:output message="tns:AdminGetUserIdByLoginNameResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetOrgIdByOrgCode">
+      <documentation>
+        Return the orgId of an organization by its org_code.
+        If that organization does not exist, it returns a minus orgId -1.
+      </documentation>
+      <wsdl:input message="tns:AdminGetOrgIdByOrgCodeRequest" />
+      <wsdl:output message="tns:AdminGetOrgIdByOrgCodeResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AdminBinding" type="tns:AdminPort">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="AdminCountUsers">
+      <soap12:operation soapAction="AdminCountUsers" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetUserIds">
+      <soap12:operation soapAction="AdminGetUserIds" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetUserDetailByIds">
+      <soap12:operation soapAction="AdminGetUserDetailByIds" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AdminCountOrgs">
+      <soap12:operation soapAction="AdminCountOrgs" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetOrgIds">
+      <soap12:operation soapAction="AdminGetOrgIds" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetOrgDetailByIds">
+      <soap12:operation soapAction="AdminGetOrgDetailByIds" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AdminCountChildOrgs">
+      <soap12:operation soapAction="AdminCountChildOrgs" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetChildOrgs">
+      <soap12:operation soapAction="AdminGetChildOrgs" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AdminCountUsersInOrg">
+      <soap12:operation soapAction="AdminCountUsersInOrg" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetUserIdsInOrg">
+      <soap12:operation soapAction="AdminGetUserIdsInOrg" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AdminCountNoGroupUsers">
+      <soap12:operation soapAction="AdminCountNoGroupUsers" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetNoGroupUserIds">
+      <soap12:operation soapAction="AdminGetNoGroupUserIds" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AdminCountOrgsOfUser">
+      <soap12:operation soapAction="AdminCountOrgsOfUser" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetOrgIdsOfUser">
+      <soap12:operation soapAction="AdminGetOrgIdsOfUser" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetParentOrgId">
+      <soap12:operation soapAction="AdminGetParentOrgId" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetUserIdByLoginName">
+      <soap12:operation soapAction="AdminGetUserIdByLoginName" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AdminGetOrgIdByOrgCode">
+      <soap12:operation soapAction="AdminGetOrgIdByOrgCode" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/admin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>

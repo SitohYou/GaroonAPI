@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://wsdl.cybozu.co.jp/util_api/2008" xmlns:typens="http://wsdl.cybozu.co.jp/util_api/2008/types" xmlns:base_services="http://wsdl.cybozu.co.jp/base/2008" xmlns="http://schemas.xmlsoap.org/wsdl/" name="CybozuUtilServices" targetNamespace="http://wsdl.cybozu.co.jp/util_api/2008" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import namespace="http://wsdl.cybozu.co.jp/base/2008" location="base.wsdl" />
+  <wsdl:types>
+    <xsd:schema xmlns:util_api="http://schemas.cybozu.co.jp/util_api/2008" xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns:base_types="http://wsdl.cybozu.co.jp/base/2008/types" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://wsdl.cybozu.co.jp/util_api/2008/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+      <xsd:import schemaLocation="util_api.xsd" namespace="http://schemas.cybozu.co.jp/util_api/2008" />
+      <xsd:import namespace="http://wsdl.cybozu.co.jp/base/2008/types" />
+      <xsd:complexType name="UtilLoginRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="login_name" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="password" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="UtilLoginResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="login_name" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="status" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="cookie" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="UtilLogoutRequestType" />
+      <xsd:complexType name="UtilLogoutResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="login_name" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="status" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="UtilGetRequestTokenRequestType" />
+      <xsd:complexType name="UtilGetRequestTokenResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="request_token" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="UtilGetLoginUserIdRequestType" />
+      <xsd:complexType name="UtilGetLoginUserIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="user_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="UtilLoginRequest">
+    <wsdl:part name="parameters" type="typens:UtilLoginRequestType" />
+  </wsdl:message>
+  <wsdl:message name="UtilLoginResponse">
+    <wsdl:part name="returns" type="typens:UtilLoginResponseType" />
+  </wsdl:message>
+  <wsdl:message name="UtilLogoutRequest">
+    <wsdl:part name="parameters" type="typens:UtilLogoutRequestType" />
+  </wsdl:message>
+  <wsdl:message name="UtilLogoutResponse">
+    <wsdl:part name="returns" type="typens:UtilLogoutResponseType" />
+  </wsdl:message>
+  <wsdl:message name="UtilGetRequestTokenRequest">
+    <wsdl:part name="parameters" type="typens:UtilGetRequestTokenRequestType" />
+  </wsdl:message>
+  <wsdl:message name="UtilGetRequestTokenResponse">
+    <wsdl:part name="returns" type="typens:UtilGetRequestTokenResponseType" />
+  </wsdl:message>
+  <wsdl:message name="UtilGetLoginUserIdRequest">
+    <wsdl:part name="parameters" type="typens:UtilGetLoginUserIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="UtilGetLoginUserIdResponse">
+    <wsdl:part name="returns" type="typens:UtilGetLoginUserIdResponseType" />
+  </wsdl:message>
+  <wsdl:portType name="UtilPort">
+    <wsdl:operation name="UtilLogin">
+      <documentation>
+        This API logins a user into Garoon using his userId and password.
+        If success, it returns a session cookie in the response header.
+        Further actions can use this cookie for authentication.
+      </documentation>
+      <wsdl:input message="tns:UtilLoginRequest" />
+      <wsdl:output message="tns:UtilLoginResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="UtilLogout">
+      <documentation>
+        This API deletes user information in a session and logouts users from Garoon.
+      </documentation>
+      <wsdl:input message="tns:UtilLogoutRequest" />
+      <wsdl:output message="tns:UtilLogoutResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="UtilGetRequestToken">
+      <documentation>
+        This API gets request token in a session for CSRF.
+      </documentation>
+      <wsdl:input message="tns:UtilGetRequestTokenRequest" />
+      <wsdl:output message="tns:UtilGetRequestTokenResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="UtilGetLoginUserId">
+      <documentation>
+        This API gets user id of login user.
+      </documentation>
+      <wsdl:input message="tns:UtilGetLoginUserIdRequest" />
+      <wsdl:output message="tns:UtilGetLoginUserIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="UtilBinding" type="tns:UtilPort">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="UtilLogin">
+      <soap12:operation soapAction="UtilLogin" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/util_api/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/util_api/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/util_api/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="UtilLogout">
+      <soap12:operation soapAction="UtilLogout" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/util_api/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/util_api/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/util_api/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="UtilGetRequestToken">
+      <soap12:operation soapAction="UtilGetRequestToken" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/util_api/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/util_api/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/util_api/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="UtilGetLoginUserId">
+      <soap12:operation soapAction="UtilGetLoginUserId" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/util_api/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/util_api/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/util_api/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>

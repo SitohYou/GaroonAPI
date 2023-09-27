@@ -1,0 +1,11 @@
+C:\Users\y_saito\source\repos\GaroonAPI\GaroonAPI\bin\Debug\GaroonAPI.exe.config
+C:\Users\y_saito\source\repos\GaroonAPI\GaroonAPI\bin\Debug\GaroonAPI.exe
+C:\Users\y_saito\source\repos\GaroonAPI\GaroonAPI\bin\Debug\GaroonAPI.pdb
+C:\Users\y_saito\source\repos\GaroonAPI\GaroonAPI\obj\Debug\GaroonAPI.csproj.AssemblyReference.cache
+C:\Users\y_saito\source\repos\GaroonAPI\GaroonAPI\obj\Debug\GaroonAPI.csproj.SuggestedBindingRedirects.cache
+C:\Users\y_saito\source\repos\GaroonAPI\GaroonAPI\obj\Debug\GaroonAPI.Form1.resources
+C:\Users\y_saito\source\repos\GaroonAPI\GaroonAPI\obj\Debug\GaroonAPI.Properties.Resources.resources
+C:\Users\y_saito\source\repos\GaroonAPI\GaroonAPI\obj\Debug\GaroonAPI.csproj.GenerateResource.cache
+C:\Users\y_saito\source\repos\GaroonAPI\GaroonAPI\obj\Debug\GaroonAPI.csproj.CoreCompileInputs.cache
+C:\Users\y_saito\source\repos\GaroonAPI\GaroonAPI\obj\Debug\GaroonAPI.exe
+C:\Users\y_saito\source\repos\GaroonAPI\GaroonAPI\obj\Debug\GaroonAPI.pdb

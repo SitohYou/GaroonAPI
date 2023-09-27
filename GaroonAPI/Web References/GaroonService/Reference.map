@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DiscoveryClientResultsFile xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Results>
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/bulletin.wsdl" filename="CybozuBulletinServices.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/workflow.wsdl" filename="CybozuWorkflowServices.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/schedule.wsdl" filename="CybozuScheduleServices.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/util_api.wsdl" filename="CybozuUtilServices.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/notification.xsd" filename="notification.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/address.xsd" filename="address.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/workflow.xsd" filename="workflow.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/base.wsdl" filename="CybozuBaseServices.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/admin.xsd" filename="admin.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/message.wsdl" filename="CybozuMessageServices.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/cabinet.wsdl" filename="CybozuCabinetServices.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/admin.wsdl" filename="CybozuAdminServices.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/mail.wsdl" filename="CybozuMailServices.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://bemac.cybozu.com/g/index.csp?WSDL" filename="GaroonServices.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/address.wsdl" filename="CybozuAddressServices.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/star.xsd" filename="star.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/util_api.xsd" filename="util_api.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/schedule.xsd" filename="schedule.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/notification.wsdl" filename="CybozuNotificationServices.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/base.xsd" filename="base.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/cabinet.xsd" filename="cabinet.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/bulletin.xsd" filename="bulletin.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/mail.xsd" filename="mail.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/report.wsdl" filename="CybozuReportServices.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/star.wsdl" filename="CybozuStarServices.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/message.xsd" filename="message.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="https://static.cybozu.com/g/F23.8_3169796/api/2008/report.xsd" filename="report.xsd" />
+  </Results>
+</DiscoveryClientResultsFile>

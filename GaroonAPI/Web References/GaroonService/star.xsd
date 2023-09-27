@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns="http://schemas.cybozu.co.jp/star/2008" elementFormDefault="qualified" targetNamespace="http://schemas.cybozu.co.jp/star/2008" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+  <xsd:simpleType name="ModuleIdType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="grn.schedule" />
+      <xsd:enumeration value="grn.mail" />
+      <xsd:enumeration value="grn.message" />
+      <xsd:enumeration value="grn.cabinet" />
+      <xsd:enumeration value="grn.report" />
+      <xsd:enumeration value="grn.bulletin" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="BulletinType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="normal" />
+      <xsd:enumeration value="draft" />
+      <xsd:enumeration value="wait" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="StarDataType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        The notification.
+
+        module_id : Module name (ex. 'grn.message', 'grn.schedule', ...).
+        item      : Application data reference (Xpath 2.0).
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" processContents="lax" />
+    </xsd:sequence>
+    <xsd:attribute name="id" type="base:IDType" use="required" />
+    <xsd:attribute name="module_id" type="ModuleIdType" use="required" />
+    <xsd:attribute name="item" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="subject" type="xsd:string" use="required" />
+    <xsd:attribute name="version" type="base:VersionType" use="required" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+</xsd:schema>

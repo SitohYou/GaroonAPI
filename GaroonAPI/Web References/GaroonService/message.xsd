@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns="http://schemas.cybozu.co.jp/message/2008" elementFormDefault="qualified" targetNamespace="http://schemas.cybozu.co.jp/message/2008" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+  <xsd:element name="message">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="1" ref="threads" />
+        <xsd:element minOccurs="0" maxOccurs="1" ref="folders" />
+        <xsd:element minOccurs="0" maxOccurs="1" ref="follows" />
+        <xsd:element minOccurs="0" maxOccurs="1" ref="files" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="threads">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="thread" type="ThreadType" />
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:key name="thread_key">
+      <xsd:selector xpath="thread" />
+      <xsd:field xpath="@id" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:complexType name="ThreadType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="addressee">
+        <xsd:complexType>
+          <xsd:attribute name="user_id" type="base:IDType" use="optional" />
+          <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+          <xsd:attribute name="deleted" type="xsd:boolean" use="required" />
+          <xsd:attribute name="confirmed" type="xsd:boolean" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="1" maxOccurs="1" ref="content" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="follow">
+        <xsd:complexType>
+          <xsd:attribute name="id" type="base:IDType" use="required" />
+          <xsd:attribute name="number" type="base:NonBlankStringType" use="required" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="1" maxOccurs="unbounded" name="folder">
+        <xsd:complexType>
+          <xsd:attribute name="id" type="base:IDType" use="required" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="creator" type="base:ChangeLogType" />
+      <xsd:element name="modifier" type="base:ChangeLogType" />
+    </xsd:sequence>
+    <xsd:attribute name="id" type="base:IDType" use="required" />
+    <xsd:attribute name="version" type="base:VersionType" use="required" />
+    <xsd:attribute name="subject" type="xsd:string" use="required" />
+    <xsd:attribute name="confirm" type="xsd:boolean" use="required" />
+    <xsd:attribute name="snapshot" type="xsd:dateTime" use="optional" />
+    <xsd:attribute name="is_draft" type="xsd:boolean" use="optional" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:element name="content">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="file">
+          <xsd:complexType>
+            <xsd:attribute name="id" type="base:IDType" use="required" />
+            <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+            <xsd:attribute name="size" type="xsd:unsignedLong" use="optional" />
+            <xsd:attribute name="mime_type" type="xsd:string" use="optional" />
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="body" type="xsd:string" use="required" />
+      <xsd:attribute name="html_body" type="xsd:string" use="optional" />
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="folders">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="folder_for_user">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="folder" type="FolderType" />
+            </xsd:sequence>
+            <xsd:attribute name="user_id" type="base:NonBlankStringType" use="required" />
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:key name="folder_key">
+      <xsd:selector xpath="folder" />
+      <xsd:field xpath="@id" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:complexType name="FolderType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="folder">
+        <xsd:complexType>
+          <xsd:attribute name="id" type="base:IDType" use="required" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="thread">
+        <xsd:complexType>
+          <xsd:attribute name="id" type="base:IDType" use="required" />
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="base:IDType" use="required" />
+    <xsd:attribute name="version" type="base:VersionType" use="required" />
+    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="description" type="xsd:string" use="optional" />
+    <xsd:attribute name="order" type="xsd:unsignedLong" use="optional" />
+    <xsd:attribute name="parent_folder_id" type="base:IDType" use="optional" />
+  </xsd:complexType>
+  <xsd:element name="follows">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="follow" type="FollowType" />
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:key name="follow_key">
+      <xsd:selector xpath="follow" />
+      <xsd:field xpath="@id" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:complexType name="FollowType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="file">
+        <xsd:complexType>
+          <xsd:attribute name="id" type="base:IDType" use="required" />
+          <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+          <xsd:attribute name="size" type="xsd:unsignedLong" use="optional" />
+          <xsd:attribute name="mime_type" type="xsd:string" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="creator" type="base:ChangeLogType" />
+    </xsd:sequence>
+    <xsd:attribute name="id" type="base:IDType" use="required" />
+    <xsd:attribute name="number" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="text" type="xsd:string" use="required" />
+    <xsd:attribute name="html_text" type="xsd:string" use="optional" />
+  </xsd:complexType>
+  <xsd:element name="files">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" ref="file" />
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:key name="file_key">
+      <xsd:selector xpath="file" />
+      <xsd:field xpath="@id" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:element name="file">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        ``max_version'' value is the generation to keep file data in a system.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="1" maxOccurs="1" name="title" type="xsd:string" />
+        <xsd:element minOccurs="0" maxOccurs="1" name="description" type="xsd:string" />
+        <xsd:element minOccurs="1" maxOccurs="unbounded" name="log">
+          <xsd:complexType>
+            <xsd:attribute name="revision" type="xsd:unsignedInt" use="required" />
+            <xsd:attribute name="version" type="xsd:unsignedInt" use="required" />
+            <xsd:attribute name="operation" type="FileOperationType" use="required" />
+            <xsd:attribute name="updater_id" type="base:NonBlankStringType" use="required" />
+            <xsd:attribute name="update_date" type="xsd:dateTime" use="required" />
+            <xsd:attribute name="updater_name" type="xsd:string" use="required" />
+            <xsd:attribute name="description" type="xsd:string" />
+            <xsd:attribute name="restore_version" type="xsd:unsignedInt" />
+            <xsd:anyAttribute processContents="lax" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element minOccurs="1" maxOccurs="unbounded" name="body" type="base:FileType" />
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="skip" />
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:string" use="required" />
+      <xsd:attribute name="creator_id" type="base:NonBlankStringType" use="required" />
+      <xsd:attribute name="create_date" type="xsd:string" use="required" />
+      <xsd:attribute name="creator_name" type="xsd:string" use="required" />
+      <xsd:attribute name="max_version" type="xsd:unsignedInt" />
+      <xsd:attribute name="lock_owner_id" type="base:NonBlankStringType" />
+      <xsd:attribute name="lock_timeout" type="xsd:duration" />
+      <xsd:anyAttribute processContents="lax" />
+    </xsd:complexType>
+    <xsd:key name="log_revision_key">
+      <xsd:selector xpath="log" />
+      <xsd:field xpath="@revision" />
+    </xsd:key>
+    <xsd:key name="body_version_key">
+      <xsd:selector xpath="body" />
+      <xsd:field xpath="@version" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:simpleType name="FileOperationType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="create" />
+      <xsd:enumeration value="update" />
+      <xsd:enumeration value="rollback" />
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

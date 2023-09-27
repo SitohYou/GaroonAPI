@@ -1,0 +1,1169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://wsdl.cybozu.co.jp/mail/2008" xmlns:typens="http://wsdl.cybozu.co.jp/mail/2008/types" xmlns:base_services="http://wsdl.cybozu.co.jp/base/2008" xmlns="http://schemas.xmlsoap.org/wsdl/" name="CybozuMailServices" targetNamespace="http://wsdl.cybozu.co.jp/mail/2008" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import namespace="http://wsdl.cybozu.co.jp/base/2008" location="base.wsdl" />
+  <wsdl:types>
+    <xsd:schema xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns:mail="http://schemas.cybozu.co.jp/mail/2008" xmlns:base_types="http://wsdl.cybozu.co.jp/base/2008/types" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://wsdl.cybozu.co.jp/mail/2008/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+      <xsd:import schemaLocation="mail.xsd" namespace="http://schemas.cybozu.co.jp/mail/2008" />
+      <xsd:import namespace="http://wsdl.cybozu.co.jp/base/2008/types" />
+      <xsd:complexType name="MailGetAccountVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="account_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailGetAccountVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="account_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailGetAccountsByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="account_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailGetAccountsByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="account" type="mail:AccountType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailGetMailVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="mail_item" type="base_types:ItemVersionType" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="folder_id" type="base:IDType" />
+        </xsd:sequence>
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="MailGetMailVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="mail_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailGetMailsByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="mail_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailGetMailsByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="mail" type="mail:MailType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailSendMailType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="mail" type="mail:MailType" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="file">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="1" maxOccurs="1" name="content" type="xsd:base64Binary" />
+              </xsd:sequence>
+              <xsd:attribute name="id" type="base:IDType" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="remove_file_id" type="base:IDType" />
+        </xsd:sequence>
+        <xsd:attribute name="account_id" type="base:IDType" use="required" />
+        <xsd:attribute name="to_string" type="base:NonBlankStringType" use="optional" />
+        <xsd:attribute name="cc_string" type="base:NonBlankStringType" use="optional" />
+        <xsd:attribute name="bcc_string" type="base:NonBlankStringType" use="optional" />
+        <xsd:attribute name="draft_id" type="base:IDType" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="MailSendMailsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="send_mail" type="typens:MailSendMailType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailSendMailsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="mail" type="mail:MailType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailReplyMailsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="reply_mail" type="typens:MailSendMailType" />
+        </xsd:sequence>
+        <xsd:attribute name="reply_all" type="xsd:boolean" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="MailReplyMailsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="mail" type="mail:MailType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailForwardMailType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="typens:MailSendMailType">
+            <xsd:attribute name="mail_id" type="base:IDType" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MailForwardMailsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="forward_mail" type="typens:MailForwardMailType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailForwardMailsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="mail" type="mail:MailType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="MailDraftOperationType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="send" />
+          <xsd:enumeration value="reply" />
+          <xsd:enumeration value="reply_all" />
+          <xsd:enumeration value="forward" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="MailDraftMailType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="typens:MailSendMailType">
+            <xsd:attribute name="operation" type="typens:MailDraftOperationType" use="optional" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MailSaveDraftMailsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="save_mail" type="typens:MailDraftMailType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailSaveDraftMailsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="mail" type="mail:MailType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailRemoveMailsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="mail_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailSearchMailsRequestType">
+        <xsd:attribute name="text" type="xsd:string" use="required" />
+        <xsd:attribute name="start" type="xsd:dateTime" use="optional" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+        <xsd:attribute name="search_all_accounts" type="xsd:boolean" use="required" />
+        <xsd:attribute name="account_id" type="base:IDType" use="optional" />
+        <xsd:attribute name="folder_id" type="base:IDType" use="optional" />
+        <xsd:attribute name="search_sub_folders" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="title_search" type="xsd:boolean" use="required" />
+        <xsd:attribute name="body_search" type="xsd:boolean" use="required" />
+        <xsd:attribute name="from_search" type="xsd:boolean" use="required" />
+        <xsd:attribute name="to_search" type="xsd:boolean" use="required" />
+        <xsd:attribute name="cc_search" type="xsd:boolean" use="required" />
+        <xsd:attribute name="bcc_search" type="xsd:boolean" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="MailSearchMailsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="mail" type="mail:MailType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="MailDispositionNotificationType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="open" />
+          <xsd:enumeration value="ignore" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="MailOpenDispositionNotificationOperationType">
+        <xsd:attribute name="account_id" type="base:IDType" use="required" />
+        <xsd:attribute name="mail_id" type="base:IDType" use="required" />
+        <xsd:attribute name="type" type="typens:MailDispositionNotificationType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="MailOpenDispositionNotificationsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="operation" type="typens:MailOpenDispositionNotificationOperationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailOpenDispositionNotificationsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="mail" type="mail:MailType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailModifyFolderOperationType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="folder" type="mail:FolderType" />
+        </xsd:sequence>
+        <xsd:attribute name="account_id" type="base:IDType" use="required" />
+        <xsd:attribute name="parent_folder_id" type="base:IDType" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="MailAddFoldersRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="add_folder" type="typens:MailModifyFolderOperationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailAddFoldersResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="folder" type="mail:FolderType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailModifyFoldersRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="modify_folder" type="typens:MailModifyFolderOperationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailModifyFoldersResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="folder" type="mail:FolderType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailRemoveFoldersRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="folder_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailMoveMailsOperationType">
+        <xsd:attribute name="folder_id" type="base:IDType" />
+        <xsd:attribute name="mail_id" type="base:IDType" />
+      </xsd:complexType>
+      <xsd:complexType name="MailMoveMailsToOtherFolderRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="operation" type="typens:MailMoveMailsOperationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailMoveMailsToOtherFolderResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="mail" type="mail:MailType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailSignatureType">
+        <xsd:attribute name="account_id" type="base:IDType" use="required" />
+        <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+        <xsd:attribute name="content" type="xsd:string" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="MailGetSignaturesRequestType">
+        <xsd:attribute name="account_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="MailGetSignaturesResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="signature" type="typens:MailSignatureType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailGetFiltersRequestType">
+        <xsd:attribute name="account_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="MailGetFiltersResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="filter" type="mail:FilterType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailPersonalProfileType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="from_name">
+            <xsd:complexType>
+              <xsd:attribute name="account_id" type="base:IDType" use="required" />
+              <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="show_preview" type="xsd:boolean" use="required" />
+        <xsd:attribute name="send_charset" type="xsd:string" use="required" />
+        <xsd:attribute name="use_trash" type="xsd:boolean" use="required" />
+        <xsd:attribute name="send_vcard" type="xsd:boolean" use="optional" />
+        <xsd:attribute default="false" name="wrap" type="xsd:boolean" use="optional" />
+        <xsd:attribute default="70" name="linewidth" type="xsd:positiveInteger" use="optional" />
+        <xsd:attribute name="use_message_disposition_notification" type="xsd:boolean" use="required" />
+        <xsd:attribute name="use_status" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="use_history" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="reply_message_disposition_notification" use="required">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="None" />
+              <xsd:enumeration value="ShowConfirmMessage" />
+              <xsd:enumeration value="ReplyAlways" />
+              <xsd:enumeration value="ReplyIncludingToOrCC" />
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:complexType>
+      <xsd:complexType name="MailSizeLimitsType">
+        <xsd:attribute name="total_kb" type="xsd:positiveInteger" use="optional" />
+        <xsd:attribute name="receive_kb" type="xsd:positiveInteger" use="optional" />
+        <xsd:attribute name="send_kb" type="xsd:positiveInteger" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="UserAuthoritiesType">
+        <xsd:attribute name="allow_account_all_permission" type="xsd:boolean" use="required" />
+        <xsd:attribute name="allow_account_modification" type="xsd:boolean" use="required" />
+        <xsd:attribute name="allow_store_on_server" type="xsd:boolean" use="required" />
+        <xsd:attribute name="allow_new_mail_check" type="xsd:boolean" use="required" />
+        <xsd:attribute name="allow_collective_reception" type="xsd:boolean" use="required" />
+        <xsd:attribute name="allow_send_markup_body" type="xsd:boolean" use="required" />
+        <xsd:attribute name="allow_display_markup_image" type="xsd:boolean" use="required" />
+        <xsd:attribute name="allow_message_disposition_notification" type="xsd:boolean" use="required" />
+        <xsd:attribute name="allow_status" type="xsd:boolean" use="required" />
+        <xsd:attribute name="allow_history" type="xsd:boolean" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="MailSystemProfileType">
+        <xsd:sequence>
+          <xsd:element name="auto_receive">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="0" maxOccurs="unbounded" name="receive_time" type="xsd:time" />
+              </xsd:sequence>
+              <xsd:attribute name="interval" type="xsd:duration" use="optional" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="1" maxOccurs="1" name="limit" type="typens:MailSizeLimitsType" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="authority" type="typens:UserAuthoritiesType" />
+        </xsd:sequence>
+        <xsd:attribute name="disable_client" type="xsd:boolean" use="required" />
+        <xsd:attribute name="check_new_mail_at_login" type="xsd:boolean" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="MailGetProfilesRequestType">
+        <xsd:attribute name="include_system_profile" type="xsd:boolean" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="MailGetProfilesResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="personal_profile" type="typens:MailPersonalProfileType" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="system_profile" type="typens:MailSystemProfileType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailSetProfilesRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="personal_profile" type="typens:MailPersonalProfileType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailSetProfilesResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="personal_profile" type="typens:MailPersonalProfileType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailSourceDownloadRequestType">
+        <xsd:attribute name="mail_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="MailSourceDownloadResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="source" type="base_types:FileBodyType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailFileDownloadRequestType">
+        <xsd:attribute name="mail_id" type="base:IDType" use="required" />
+        <xsd:attribute name="file_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="MailFileDownloadResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="file" type="base_types:FileBodyType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailUserAccountType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="account_info" type="mail:Account_Info" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="mail_setting" type="mail:MailSetting" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailCreateUserAccountRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="mail_user_accounts" type="typens:MailUserAccountType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailCreateUserAccountResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="user_accounts" type="typens:MailUserAccountType" />
+        </xsd:sequence>
+        <xsd:attribute name="acc_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="MailEditUserAccountRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="edit_user_accounts" type="typens:MailUserAccountType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailEditUserAccountResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="edit_user_accounts" type="typens:MailUserAccountType" />
+        </xsd:sequence>
+        <xsd:attribute name="acc_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="MailDeleteUserAccountRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="delete_user_accounts" type="mail:DeleteUserAccount" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="NewArrivingEmailType">
+        <xsd:attribute name="id" type="base:IDType" use="required" />
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+        <xsd:attribute name="email" type="xsd:string" use="required" />
+        <xsd:attribute name="new_mails" type="xsd:integer" use="optional" />
+        <xsd:attribute name="disabled" type="xsd:string" use="optional" />
+        <xsd:attribute name="deleted" type="xsd:string" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="MailGetNewArrivingEmailRequestType" />
+      <xsd:complexType name="MailGetNewArrivingEmailResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="account" type="typens:NewArrivingEmailType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailAddMailServersRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="server" type="mail:MailServerInfoType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailAddMailServersResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="server" type="mail:MailServerInfoType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailModifyMailServersRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="server" type="mail:MailServerInfoType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailModifyMailServersResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="server" type="mail:MailServerInfoType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MailRemoveMailServersRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="server_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="MailGetAccountVersionsRequest">
+    <wsdl:part name="parameters" type="typens:MailGetAccountVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailGetAccountVersionsResponse">
+    <wsdl:part name="returns" type="typens:MailGetAccountVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailGetAccountsByIdRequest">
+    <wsdl:part name="parameters" type="typens:MailGetAccountsByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailGetAccountsByIdResponse">
+    <wsdl:part name="returns" type="typens:MailGetAccountsByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailGetMailVersionsRequest">
+    <wsdl:part name="parameters" type="typens:MailGetMailVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailGetMailVersionsResponse">
+    <wsdl:part name="returns" type="typens:MailGetMailVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailGetMailsByIdRequest">
+    <wsdl:part name="parameters" type="typens:MailGetMailsByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailGetMailsByIdResponse">
+    <wsdl:part name="returns" type="typens:MailGetMailsByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailSendMailsRequest">
+    <wsdl:part name="parameters" type="typens:MailSendMailsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailSendMailsResponse">
+    <wsdl:part name="returns" type="typens:MailSendMailsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailReplyMailsRequest">
+    <wsdl:part name="parameters" type="typens:MailReplyMailsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailReplyMailsResponse">
+    <wsdl:part name="returns" type="typens:MailReplyMailsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailForwardMailsRequest">
+    <wsdl:part name="parameters" type="typens:MailForwardMailsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailForwardMailsResponse">
+    <wsdl:part name="returns" type="typens:MailForwardMailsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailSaveDraftMailsRequest">
+    <wsdl:part name="parameters" type="typens:MailSaveDraftMailsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailSaveDraftMailsResponse">
+    <wsdl:part name="returns" type="typens:MailSaveDraftMailsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailRemoveMailsRequest">
+    <wsdl:part name="parameters" type="typens:MailRemoveMailsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailSearchMailsRequest">
+    <wsdl:part name="parameters" type="typens:MailSearchMailsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailSearchMailsResponse">
+    <wsdl:part name="returns" type="typens:MailSearchMailsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailOpenDispositionNotificationsRequest">
+    <wsdl:part name="parameters" type="typens:MailOpenDispositionNotificationsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailOpenDispositionNotificationsResponse">
+    <wsdl:part name="returns" type="typens:MailOpenDispositionNotificationsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailAddFoldersRequest">
+    <wsdl:part name="parameters" type="typens:MailAddFoldersRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailAddFoldersResponse">
+    <wsdl:part name="returns" type="typens:MailAddFoldersResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailModifyFoldersRequest">
+    <wsdl:part name="parameters" type="typens:MailModifyFoldersRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailModifyFoldersResponse">
+    <wsdl:part name="returns" type="typens:MailModifyFoldersResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailRemoveFoldersRequest">
+    <wsdl:part name="parameters" type="typens:MailRemoveFoldersRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailMoveMailsToOtherFolderRequest">
+    <wsdl:part name="parameters" type="typens:MailMoveMailsToOtherFolderRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailMoveMailsToOtherFolderResponse">
+    <wsdl:part name="returns" type="typens:MailMoveMailsToOtherFolderResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailGetSignaturesRequest">
+    <wsdl:part name="parameters" type="typens:MailGetSignaturesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailGetSignaturesResponse">
+    <wsdl:part name="returns" type="typens:MailGetSignaturesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailGetFiltersRequest">
+    <wsdl:part name="parameters" type="typens:MailGetFiltersRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailGetFiltersResponse">
+    <wsdl:part name="returns" type="typens:MailGetFiltersResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailGetProfilesRequest">
+    <wsdl:part name="parameters" type="typens:MailGetProfilesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailGetProfilesResponse">
+    <wsdl:part name="returns" type="typens:MailGetProfilesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailSetProfilesRequest">
+    <wsdl:part name="parameters" type="typens:MailSetProfilesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailSetProfilesResponse">
+    <wsdl:part name="returns" type="typens:MailSetProfilesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailSourceDownloadRequest">
+    <wsdl:part name="parameters" type="typens:MailSourceDownloadRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailSourceDownloadResponse">
+    <wsdl:part name="returns" type="typens:MailSourceDownloadResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailFileDownloadRequest">
+    <wsdl:part name="parameters" type="typens:MailFileDownloadRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailFileDownloadResponse">
+    <wsdl:part name="returns" type="typens:MailFileDownloadResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailCreateUserAccountRequest">
+    <wsdl:part name="parameters" type="typens:MailCreateUserAccountRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailCreateUserAccountResponse">
+    <wsdl:part name="returns" type="typens:MailCreateUserAccountResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailEditUserAccountRequest">
+    <wsdl:part name="parameters" type="typens:MailEditUserAccountRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailEditUserAccountResponse">
+    <wsdl:part name="returns" type="typens:MailEditUserAccountResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailDeleteUserAccountRequest">
+    <wsdl:part name="parameters" type="typens:MailDeleteUserAccountRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailGetNewArrivingEmailRequest">
+    <wsdl:part name="parameters" type="typens:MailGetNewArrivingEmailRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailGetNewArrivingEmailResponse">
+    <wsdl:part name="returns" type="typens:MailGetNewArrivingEmailResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailAddMailServersRequest">
+    <wsdl:part name="parameters" type="typens:MailAddMailServersRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailAddMailServersResponse">
+    <wsdl:part name="returns" type="typens:MailAddMailServersResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailModifyMailServersRequest">
+    <wsdl:part name="parameters" type="typens:MailModifyMailServersRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MailModifyMailServersResponse">
+    <wsdl:part name="returns" type="typens:MailModifyMailServersResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MailRemoveMailServersRequest">
+    <wsdl:part name="parameters" type="typens:MailRemoveMailServersRequestType" />
+  </wsdl:message>
+  <wsdl:portType name="MailPort">
+    <wsdl:operation name="MailGetAccountVersions">
+      <documentation>
+        This API gets the modified mail accounts for login user.
+        "account_item" is a list of mail accounts that a client has.
+      </documentation>
+      <wsdl:input message="tns:MailGetAccountVersionsRequest" />
+      <wsdl:output message="tns:MailGetAccountVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailGetAccountsById">
+      <documentation>
+        This API gets the mail accounts by account id.
+        The client sends list of "account_id" for specify the account to search.
+      </documentation>
+      <wsdl:input message="tns:MailGetAccountsByIdRequest" />
+      <wsdl:output message="tns:MailGetAccountsByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailGetMailVersions">
+      <documentation>
+        This API gets the modified mail messages.
+        The client sends "folder_id" for specify the folder to search.
+        "mail_item" is a list of mail messages that a client has.
+        "start" and "end" for specify the range of search.
+      </documentation>
+      <wsdl:input message="tns:MailGetMailVersionsRequest" />
+      <wsdl:output message="tns:MailGetMailVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailGetMailsById">
+      <documentation>
+        This API gets the mail messages by mail id.
+        The client sends list of "mail_id" for specify the mail to search.
+      </documentation>
+      <wsdl:input message="tns:MailGetMailsByIdRequest" />
+      <wsdl:output message="tns:MailGetMailsByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailSendMails">
+      <documentation>
+        This API sends the mail messages.
+        The service returns the mail messages that sent.
+      </documentation>
+      <wsdl:input message="tns:MailSendMailsRequest" />
+      <wsdl:output message="tns:MailSendMailsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailReplyMails">
+      <documentation>
+        This API replies the mail messages.
+        The service returns the mail messages that replied.
+      </documentation>
+      <wsdl:input message="tns:MailReplyMailsRequest" />
+      <wsdl:output message="tns:MailReplyMailsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailForwardMails">
+      <documentation>
+        This API forwards the mail messages.
+        The service returns the mail messages that forwarded.
+      </documentation>
+      <wsdl:input message="tns:MailForwardMailsRequest" />
+      <wsdl:output message="tns:MailForwardMailsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailSaveDraftMails">
+      <documentation>
+        This API saves the mail messages.
+        The service returns the mail messages that saved.
+      </documentation>
+      <wsdl:input message="tns:MailSaveDraftMailsRequest" />
+      <wsdl:output message="tns:MailSaveDraftMailsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailRemoveMails">
+      <documentation>
+        This API removes the mail messages.
+      </documentation>
+      <wsdl:input message="tns:MailRemoveMailsRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailSearchMails">
+      <documentation>
+        This API searches the mail messages.
+      </documentation>
+      <wsdl:input message="tns:MailSearchMailsRequest" />
+      <wsdl:output message="tns:MailSearchMailsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailOpenDispositionNotifications">
+      <documentation>
+        This API sends the disposition notification response.
+        If operation type is "open", The api sends the disposition notification response and mail opened mail.
+        If operation type is "ignore", The api don't sends the disposition notification response and opened mail.
+      </documentation>
+      <wsdl:input message="tns:MailOpenDispositionNotificationsRequest" />
+      <wsdl:output message="tns:MailOpenDispositionNotificationsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailAddFolders">
+      <documentation>
+        This api adds a user folder to account mailbox.
+      </documentation>
+      <wsdl:input message="tns:MailAddFoldersRequest" />
+      <wsdl:output message="tns:MailAddFoldersResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailModifyFolders">
+      <documentation>
+        This api modifies a user folder to account mailbox.
+      </documentation>
+      <wsdl:input message="tns:MailModifyFoldersRequest" />
+      <wsdl:output message="tns:MailModifyFoldersResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailRemoveFolders">
+      <documentation>
+        This api removes a user folder to account mailbox.
+      </documentation>
+      <wsdl:input message="tns:MailRemoveFoldersRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailMoveMailsToOtherFolder">
+      <documentation>
+        This API moves mail to other folder.
+      </documentation>
+      <wsdl:input message="tns:MailMoveMailsToOtherFolderRequest" />
+      <wsdl:output message="tns:MailMoveMailsToOtherFolderResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailGetSignatures">
+      <documentation>
+        This API gets list of the mail signatures.
+      </documentation>
+      <wsdl:input message="tns:MailGetSignaturesRequest" />
+      <wsdl:output message="tns:MailGetSignaturesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailGetFilters">
+      <documentation>
+        This API gets list of the mail filters
+      </documentation>
+      <wsdl:input message="tns:MailGetFiltersRequest" />
+      <wsdl:output message="tns:MailGetFiltersResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailGetProfiles">
+      <documentation>
+        This API gets profiles in the mail application.
+      </documentation>
+      <wsdl:input message="tns:MailGetProfilesRequest" />
+      <wsdl:output message="tns:MailGetProfilesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailSetProfiles">
+      <documentation>
+        This API modifies profiles in the mail application.
+      </documentation>
+      <wsdl:input message="tns:MailSetProfilesRequest" />
+      <wsdl:output message="tns:MailSetProfilesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailSourceDownload">
+      <documentation>
+        This API download the mail source.
+      </documentation>
+      <wsdl:input message="tns:MailSourceDownloadRequest" />
+      <wsdl:output message="tns:MailSourceDownloadResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailFileDownload">
+      <documentation>
+        This API download the file in mail.
+      </documentation>
+      <wsdl:input message="tns:MailFileDownloadRequest" />
+      <wsdl:output message="tns:MailFileDownloadResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailCreateUserAccount">
+      <documentation>
+        This API create user account mail.
+      </documentation>
+      <wsdl:input message="tns:MailCreateUserAccountRequest" />
+      <wsdl:output message="tns:MailCreateUserAccountResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailEditUserAccount">
+      <documentation>
+        This API edit user account mail.
+      </documentation>
+      <wsdl:input message="tns:MailEditUserAccountRequest" />
+      <wsdl:output message="tns:MailEditUserAccountResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailDeleteUserAccount">
+      <documentation>
+        This API delete user account mail.
+      </documentation>
+      <wsdl:input message="tns:MailDeleteUserAccountRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailGetNewArrivingEmail">
+      <documentation>
+        This API to get the number of new arriving E-mail 
+      </documentation>
+      <wsdl:input message="tns:MailGetNewArrivingEmailRequest" />
+      <wsdl:output message="tns:MailGetNewArrivingEmailResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailAddMailServers">
+      <documentation>
+        This API to add mail servers
+      </documentation>
+      <wsdl:input message="tns:MailAddMailServersRequest" />
+      <wsdl:output message="tns:MailAddMailServersResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailModifyMailServers">
+      <documentation>
+        This API to modify mail servers
+      </documentation>
+      <wsdl:input message="tns:MailModifyMailServersRequest" />
+      <wsdl:output message="tns:MailModifyMailServersResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MailRemoveMailServers">
+      <documentation>
+        This API to remove mail servers
+      </documentation>
+      <wsdl:input message="tns:MailRemoveMailServersRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MailBinding" type="tns:MailPort">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="MailGetAccountVersions">
+      <soap12:operation soapAction="MailGetAccountVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailGetAccountsById">
+      <soap12:operation soapAction="MailGetAccountsById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailGetMailVersions">
+      <soap12:operation soapAction="MailGetMailVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailGetMailsById">
+      <soap12:operation soapAction="MailGetMailsById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailSendMails">
+      <soap12:operation soapAction="MailSendMails" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailReplyMails">
+      <soap12:operation soapAction="MailReplyMails" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailForwardMails">
+      <soap12:operation soapAction="MailForwardMails" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailSaveDraftMails">
+      <soap12:operation soapAction="MailSaveDraftMails" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailRemoveMails">
+      <soap12:operation soapAction="MailRemoveMails" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailSearchMails">
+      <soap12:operation soapAction="MailSearchMails" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailOpenDispositionNotifications">
+      <soap12:operation soapAction="MailOpenDispositionNotifications" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailAddFolders">
+      <soap12:operation soapAction="MailAddFolders" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailModifyFolders">
+      <soap12:operation soapAction="MailModifyFolders" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailRemoveFolders">
+      <soap12:operation soapAction="MailRemoveFolders" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailMoveMailsToOtherFolder">
+      <soap12:operation soapAction="MailMoveMailsToOtherFolder" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailGetSignatures">
+      <soap12:operation soapAction="MailGetSignatures" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailGetFilters">
+      <soap12:operation soapAction="MailGetFilters" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailGetProfiles">
+      <soap12:operation soapAction="MailGetProfiles" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailSetProfiles">
+      <soap12:operation soapAction="MailSetProfiles" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailSourceDownload">
+      <soap12:operation soapAction="MailSourceDownload" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailFileDownload">
+      <soap12:operation soapAction="MailFileDownload" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailCreateUserAccount">
+      <soap12:operation soapAction="MailCreateUserAccount" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailEditUserAccount">
+      <soap12:operation soapAction="MailEditUserAccount" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailDeleteUserAccount">
+      <soap12:operation soapAction="MailDeleteUserAccount" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailGetNewArrivingEmail">
+      <soap12:operation soapAction="MailGetNewArrivingEmail" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailAddMailServers">
+      <soap12:operation soapAction="MailAddMailServers" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailModifyMailServers">
+      <soap12:operation soapAction="MailModifyMailServers" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MailRemoveMailServers">
+      <soap12:operation soapAction="MailRemoveMailServers" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/mail/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>

@@ -1,0 +1,809 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://wsdl.cybozu.co.jp/workflow/2008" xmlns:typens="http://wsdl.cybozu.co.jp/workflow/2008/types" xmlns:base_services="http://wsdl.cybozu.co.jp/base/2008" xmlns="http://schemas.xmlsoap.org/wsdl/" name="CybozuWorkflowServices" targetNamespace="http://wsdl.cybozu.co.jp/workflow/2008" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import namespace="http://wsdl.cybozu.co.jp/base/2008" location="base.wsdl" />
+  <wsdl:types>
+    <xsd:schema xmlns:workflow="http://schemas.cybozu.co.jp/workflow/2008" xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns:base_types="http://wsdl.cybozu.co.jp/base/2008/types" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://wsdl.cybozu.co.jp/workflow/2008/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+      <xsd:import schemaLocation="workflow.xsd" namespace="http://schemas.cybozu.co.jp/workflow/2008" />
+      <xsd:import namespace="http://wsdl.cybozu.co.jp/base/2008/types" />
+      <xsd:simpleType name="WorkflowFolderType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="unprocessed" />
+          <xsd:enumeration value="sent" />
+          <xsd:enumeration value="received" />
+          <xsd:enumeration value="draft" />
+          <xsd:enumeration value="finish" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="WorkflowStatusType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="unprocessing" />
+          <xsd:enumeration value="inprogress" />
+          <xsd:enumeration value="sent_back" />
+          <xsd:enumeration value="approved" />
+          <xsd:enumeration value="rejected" />
+          <xsd:enumeration value="withdrawn" />
+          <xsd:enumeration value="cancelled" />
+          <xsd:enumeration value="completed" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="WorkflowApplicationType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="workflow:ApplicationType">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="folder_type" type="typens:WorkflowFolderType" />
+            </xsd:sequence>
+            <xsd:attribute name="status_type" type="typens:WorkflowStatusType" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:simpleType name="WorkflowGetManageRequestFilter">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="All" />
+          <xsd:enumeration value="In progress" />
+          <xsd:enumeration value="Approved" />
+          <xsd:enumeration value="Rejected" />
+          <xsd:enumeration value="Cancel" />
+          <xsd:enumeration value="Complete" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="WorkflowAvailabilityUserType">
+        <xsd:attribute name="id" type="base:IDType" use="required" />
+        <xsd:attribute name="workflow" type="xsd:boolean" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetRequestType">
+        <xsd:attribute name="request_form_id" type="base:IDType" use="required" />
+        <xsd:attribute name="filter" type="typens:WorkflowGetManageRequestFilter" use="optional" />
+        <xsd:attribute name="start_request_date" type="xsd:dateTime" use="optional" />
+        <xsd:attribute name="end_request_date" type="xsd:dateTime" use="optional" />
+        <xsd:attribute name="start_approval_date" type="xsd:dateTime" use="optional" />
+        <xsd:attribute name="end_approval_date" type="xsd:dateTime" use="optional" />
+        <xsd:attribute name="applicant" type="base:IDType" use="optional" />
+        <xsd:attribute name="last_approval" type="base:IDType" use="optional" />
+        <xsd:attribute name="start_to_get_information_from" type="base:IDType" use="optional" />
+        <xsd:attribute name="maximum_request_amount_to_get" type="xsd:string" use="optional" />
+        <xsd:anyAttribute processContents="lax" />
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetAttachedFileBodyType">
+        <xsd:attribute name="request_form_id" type="base:IDType" use="required" />
+        <xsd:attribute name="file_id" type="base:IDType" use="required" />
+        <xsd:anyAttribute processContents="lax" />
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetUnprocessedApplicationVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetUnprocessedApplicationVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetUnprocessedApplicationsByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="application_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetUnprocessedApplicationsByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application" type="typens:WorkflowApplicationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetSentApplicationVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetSentApplicationVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetSentApplicationsByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="application_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetSentApplicationsByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application" type="typens:WorkflowApplicationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetReceivedApplicationVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetReceivedApplicationVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetReceivedApplicationsByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="application_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetReceivedApplicationsByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application" type="typens:WorkflowApplicationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetApprovalDelegatorsRequestType" />
+      <xsd:complexType name="WorkflowGetApprovalDelegatorsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="delegator_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetProxyApprovalsByDelegatorIdRequestType">
+        <xsd:attribute name="delegator_id" type="base:IDType" use="required" />
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetProxyApprovalsByDelegatorIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application" type="typens:WorkflowApplicationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetPendingApprovalsRequestType">
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetPendingApprovalsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application" type="typens:WorkflowApplicationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowHandleApplicationOperationType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="operation" type="workflow:OperationType" />
+        </xsd:sequence>
+        <xsd:attribute name="application_id" type="base:IDType" use="required" />
+        <xsd:attribute name="delegator_id" type="base:IDType" use="optional" />
+        <xsd:attribute name="comment" type="xsd:string" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowHandleApplicationsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="handle" type="typens:WorkflowHandleApplicationOperationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowHandleApplicationsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application" type="typens:WorkflowApplicationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetProxiesRequestType" />
+      <xsd:complexType name="WorkflowGetProxiesResponseType">
+        <xsd:sequence>
+          <xsd:element ref="workflow:proxies" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowSetProxiesRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element ref="workflow:proxies" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowSetProxiesResponseType">
+        <xsd:sequence>
+          <xsd:element ref="workflow:proxies" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetProfilesRequestType" />
+      <xsd:complexType name="WorkflowGetProfilesResponseType">
+        <xsd:attribute name="use_pending_approvals" type="xsd:boolean" use="required" />
+        <xsd:attribute name="use_proxy_approvals" type="xsd:boolean" use="required" />
+        <xsd:attribute name="modify_proxies" type="xsd:boolean" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowFileDownloadRequestType">
+        <xsd:attribute name="file_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowFileDownloadResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="file" type="base_types:FileBodyType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetRequestsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="manage_request_parameter" type="typens:WorkflowGetRequestType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetRequestsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="category" type="workflow:RequestManageFormType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetRequestByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="request_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetRequestByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application" type="typens:WorkflowApplicationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetAvailabilityUsersRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="user_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetAvailabilityUsersResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="user" type="typens:WorkflowAvailabilityUserType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetAttachedFileBodyRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="parameter" type="typens:WorkflowGetAttachedFileBodyType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetAttachedFileBodyResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="attachment_details" type="workflow:FileAttachedDetail" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetListCategoryRequestType" />
+      <xsd:complexType name="WorkflowGetListCategoryResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="root" type="workflow:CategoriesType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetRequestFormByCategoryIdsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="category_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="WorkflowGetRequestFormByCategoryIdsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="category" type="workflow:RequestFormType" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="WorkflowGetUnprocessedApplicationVersionsRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetUnprocessedApplicationVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetUnprocessedApplicationVersionsResponse">
+    <wsdl:part name="returns" type="typens:WorkflowGetUnprocessedApplicationVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetUnprocessedApplicationsByIdRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetUnprocessedApplicationsByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetUnprocessedApplicationsByIdResponse">
+    <wsdl:part name="returns" type="typens:WorkflowGetUnprocessedApplicationsByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetSentApplicationVersionsRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetSentApplicationVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetSentApplicationVersionsResponse">
+    <wsdl:part name="returns" type="typens:WorkflowGetSentApplicationVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetSentApplicationsByIdRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetSentApplicationsByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetSentApplicationsByIdResponse">
+    <wsdl:part name="returns" type="typens:WorkflowGetSentApplicationsByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetReceivedApplicationVersionsRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetReceivedApplicationVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetReceivedApplicationVersionsResponse">
+    <wsdl:part name="returns" type="typens:WorkflowGetReceivedApplicationVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetReceivedApplicationsByIdRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetReceivedApplicationsByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetReceivedApplicationsByIdResponse">
+    <wsdl:part name="returns" type="typens:WorkflowGetReceivedApplicationsByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetApprovalDelegatorsRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetApprovalDelegatorsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetApprovalDelegatorsResponse">
+    <wsdl:part name="returns" type="typens:WorkflowGetApprovalDelegatorsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetProxyApprovalsByDelegatorIdRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetProxyApprovalsByDelegatorIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetProxyApprovalsByDelegatorIdResponse">
+    <wsdl:part name="returns" type="typens:WorkflowGetProxyApprovalsByDelegatorIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetPendingApprovalsRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetPendingApprovalsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetPendingApprovalsResponse">
+    <wsdl:part name="returns" type="typens:WorkflowGetPendingApprovalsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowHandleApplicationsRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowHandleApplicationsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowHandleApplicationsResponse">
+    <wsdl:part name="returns" type="typens:WorkflowHandleApplicationsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetProxiesRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetProxiesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetProxiesResponse">
+    <wsdl:part name="returns" type="typens:WorkflowGetProxiesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowSetProxiesRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowSetProxiesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowSetProxiesResponse">
+    <wsdl:part name="returns" type="typens:WorkflowSetProxiesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetProfilesRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetProfilesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetProfilesResponse">
+    <wsdl:part name="returns" type="typens:WorkflowGetProfilesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowFileDownloadRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowFileDownloadRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowFileDownloadResponse">
+    <wsdl:part name="returns" type="typens:WorkflowFileDownloadResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetRequestsRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetRequestsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetRequestsResponse">
+    <wsdl:part name="return" type="typens:WorkflowGetRequestsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetRequestByIdRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetRequestByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetRequestByIdResponse">
+    <wsdl:part name="returns" type="typens:WorkflowGetRequestByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetAvailabilityUsersRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetAvailabilityUsersRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetAvailabilityUsersResponse">
+    <wsdl:part name="returns" type="typens:WorkflowGetAvailabilityUsersResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetAttachedFileBodyRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetAttachedFileBodyRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetAttachedFileBodyResponse">
+    <wsdl:part name="returns" type="typens:WorkflowGetListCategoryResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetCategoriesRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetListCategoryRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetCategoriesResponse">
+    <wsdl:part name="returns" type="typens:WorkflowGetListCategoryResponseType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetRequestFormByCategoryIdsRequest">
+    <wsdl:part name="parameters" type="typens:WorkflowGetRequestFormByCategoryIdsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="WorkflowGetRequestFormByCategoryIdsResponse">
+    <wsdl:part name="returns" type="typens:WorkflowGetRequestFormByCategoryIdsResponseType" />
+  </wsdl:message>
+  <wsdl:portType name="WorkflowPort">
+    <wsdl:operation name="WorkflowGetUnprocessedApplicationVersions">
+      <documentation>
+        This API gets the modified unprocessed workflow applications.
+        "application_item" is a list of workflow applications that a client has.
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetUnprocessedApplicationVersionsRequest" />
+      <wsdl:output message="tns:WorkflowGetUnprocessedApplicationVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetUnprocessedApplicationsById">
+      <documentation>
+        This API gets the unprocessed workflow applications by application id.
+        The client sends list of "application_id" for specify the application to search.
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetUnprocessedApplicationsByIdRequest" />
+      <wsdl:output message="tns:WorkflowGetUnprocessedApplicationsByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetSentApplicationVersions">
+      <documentation>
+        This API gets the modified sent workflow applications.
+        "application_item" is a list of workflow applications that a client has.
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetSentApplicationVersionsRequest" />
+      <wsdl:output message="tns:WorkflowGetSentApplicationVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetSentApplicationsById">
+      <documentation>
+        This API gets the sent workflow applications by application id.
+        The client sends list of "application_id" for specify the application to search.
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetSentApplicationsByIdRequest" />
+      <wsdl:output message="tns:WorkflowGetSentApplicationsByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetReceivedApplicationVersions">
+      <documentation>
+        This API gets the modified received workflow applications.
+        "application_item" is a list of workflow applications that a client has.
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetReceivedApplicationVersionsRequest" />
+      <wsdl:output message="tns:WorkflowGetReceivedApplicationVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetReceivedApplicationsById">
+      <documentation>
+        This API gets the received workflow applications by application id.
+        The client sends list of "application_id" for specify the application to search.
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetReceivedApplicationsByIdRequest" />
+      <wsdl:output message="tns:WorkflowGetReceivedApplicationsByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetApprovalDelegators">
+      <documentation>
+        This API gets the users that has delegated to login user.
+        The service returns list of the delegate user id.
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetApprovalDelegatorsRequest" />
+      <wsdl:output message="tns:WorkflowGetApprovalDelegatorsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetProxyApprovalsByDelegatorId">
+      <documentation>
+        This API gets the proxy approvals by delegator's user id.
+        "start" and "end" are search range.
+        This API gets applications where the applied datetime is included within the range.
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetProxyApprovalsByDelegatorIdRequest" />
+      <wsdl:output message="tns:WorkflowGetProxyApprovalsByDelegatorIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetPendingApprovals">
+      <documentation>
+        This API gets the pending approvals.
+        "start" and "end" are search range.
+        This API gets applications where the applied datetime is included within the range.
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetPendingApprovalsRequest" />
+      <wsdl:output message="tns:WorkflowGetPendingApprovalsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowHandleApplications">
+      <documentation>
+        This API handles the workflow applications.
+        A possible operation is included in ApplicationType.
+        The service returns the workflow application that handled.
+      </documentation>
+      <wsdl:input message="tns:WorkflowHandleApplicationsRequest" />
+      <wsdl:output message="tns:WorkflowHandleApplicationsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetProxies">
+      <documentation>
+        This API gets proxy users for login user.
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetProxiesRequest" />
+      <wsdl:output message="tns:WorkflowGetProxiesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowSetProxies">
+      <documentation>
+        This API modifies proxy users for login user.
+      </documentation>
+      <wsdl:input message="tns:WorkflowSetProxiesRequest" />
+      <wsdl:output message="tns:WorkflowSetProxiesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetProfiles">
+      <documentation>
+        This API gets profiles in the workflow application.
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetProfilesRequest" />
+      <wsdl:output message="tns:WorkflowGetProfilesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowFileDownload">
+      <documentation>
+        This API download the file in workflow.
+        The client sends target file id.
+        The service returns the file body specified.
+      </documentation>
+      <wsdl:input message="tns:WorkflowFileDownloadRequest" />
+      <wsdl:output message="tns:WorkflowFileDownloadResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetRequests">
+      <documentation>
+        This API Get Manage Requests in workflow(Admin).
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetRequestsRequest" />
+      <wsdl:output message="tns:WorkflowGetRequestsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetRequestById">
+      <documentation>
+        This API Get Request Data in workflow(Admin).
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetRequestByIdRequest" />
+      <wsdl:output message="tns:WorkflowGetRequestByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetAvailabilityUsers">
+      <documentation>
+        This API Get Availability Users
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetAvailabilityUsersRequest" />
+      <wsdl:output message="tns:WorkflowGetAvailabilityUsersResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetAttachedFileBody">
+      <documentation>
+        This API Get Attached File Body 
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetAttachedFileBodyRequest" />
+      <wsdl:output message="tns:WorkflowGetAttachedFileBodyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetCategories">
+      <documentation>
+        This API Get List Category
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetCategoriesRequest" />
+      <wsdl:output message="tns:WorkflowGetCategoriesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetRequestFormByCategoryIds">
+      <documentation>
+        This API Get List Request Form By Category ids
+      </documentation>
+      <wsdl:input message="tns:WorkflowGetRequestFormByCategoryIdsRequest" />
+      <wsdl:output message="tns:WorkflowGetRequestFormByCategoryIdsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WorkflowBinding" type="tns:WorkflowPort">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="WorkflowGetUnprocessedApplicationVersions">
+      <soap12:operation soapAction="WorkflowGetUnprocessedApplicationVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetUnprocessedApplicationsById">
+      <soap12:operation soapAction="WorkflowGetUnprocessedApplicationsById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetSentApplicationVersions">
+      <soap12:operation soapAction="WorkflowGetSentApplicationVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetSentApplicationsById">
+      <soap12:operation soapAction="WorkflowGetSentApplicationsById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetReceivedApplicationVersions">
+      <soap12:operation soapAction="WorkflowGetReceivedApplicationVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetReceivedApplicationsById">
+      <soap12:operation soapAction="WorkflowGetReceivedApplicationsById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetApprovalDelegators">
+      <soap12:operation soapAction="WorkflowGetApprovalDelegators" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetProxyApprovalsByDelegatorId">
+      <soap12:operation soapAction="WorkflowGetProxyApprovalsByDelegatorId" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetPendingApprovals">
+      <soap12:operation soapAction="WorkflowGetPendingApprovals" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowHandleApplications">
+      <soap12:operation soapAction="WorkflowHandleApplications" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetProxies">
+      <soap12:operation soapAction="WorkflowGetProxies" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowSetProxies">
+      <soap12:operation soapAction="WorkflowSetProxies" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetProfiles">
+      <soap12:operation soapAction="WorkflowGetProfiles" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowFileDownload">
+      <soap12:operation soapAction="WorkflowFileDownload" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetRequests">
+      <soap12:operation soapAction="WorkflowGetRequests" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetRequestById">
+      <soap12:operation soapAction="WorkflowGetRequestById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetAvailabilityUsers">
+      <soap12:operation soapAction="WorkflowGetAvailabilityUsers" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetAttachedFileBody">
+      <soap12:operation soapAction="WorkflowGetAttachedFileBody" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetCategories">
+      <soap12:operation soapAction="WorkflowGetCategories" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="WorkflowGetRequestFormByCategoryIds">
+      <soap12:operation soapAction="WorkflowGetRequestFormByCategoryIds" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/workflow/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>

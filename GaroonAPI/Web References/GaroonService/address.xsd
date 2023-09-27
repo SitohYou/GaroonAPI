@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns="http://schemas.cybozu.co.jp/address/2008" elementFormDefault="qualified" targetNamespace="http://schemas.cybozu.co.jp/address/2008" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+  <xsd:element name="address_book">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="1" ref="books" />
+        <xsd:element minOccurs="0" maxOccurs="1" ref="cards" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="books">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="book" type="BookType" />
+        <xsd:element minOccurs="0" maxOccurs="unbounded" ref="base:acl" />
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="my_address_groups_for_user">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="my_address_group" type="MyAddressGroupType" />
+              <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+            </xsd:sequence>
+            <xsd:attribute name="version" type="base:VersionType" use="required" />
+            <xsd:attribute name="owner_id" type="base:IDType" use="required" />
+            <xsd:anyAttribute processContents="lax" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+      </xsd:sequence>
+      <xsd:anyAttribute processContents="lax" />
+    </xsd:complexType>
+    <xsd:key name="book_key">
+      <xsd:selector xpath="book" />
+      <xsd:field xpath="@key" />
+    </xsd:key>
+    <xsd:key name="form_key">
+      <xsd:selector xpath="form" />
+      <xsd:field xpath="@key" />
+    </xsd:key>
+    <xsd:key name="my_address_group_key">
+      <xsd:selector xpath="my_address_groups_for_user/my_address_group" />
+      <xsd:field xpath="@id" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:complexType name="BookType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        If "user_id" is assigned, the book is private book. Otherwise, the book
+        is shared book.
+
+        "type" attribute can be "defualt" or "ldap".
+
+        The "books/acl" element stands for use permission.
+
+        When you describe User Listing(??????????????????), use this element.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="form" type="FormConfigType" />
+      <xsd:element name="cards">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="card">
+              <xsd:complexType>
+                <xsd:attribute name="id" type="base:IDType" use="required" />
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" ref="base:acl" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="privilege">
+        <xsd:complexType>
+          <xsd:attribute name="target" type="xsd:string" use="required" />
+          <xsd:attribute name="target_type" type="xsd:string" use="required" />
+          <xsd:anyAttribute processContents="lax" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+    </xsd:sequence>
+    <xsd:attribute name="key" type="base:IDType" use="required" />
+    <xsd:attribute name="book_id" type="base:IDType" use="required" />
+    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="type" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="version" type="base:VersionType" use="required" />
+    <xsd:attribute name="user_id" type="base:IDType" use="optional" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:element name="cards">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="card" type="CardType" />
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:key name="card_key">
+      <xsd:selector xpath="cards/card" />
+      <xsd:field xpath="@id" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:complexType name="FormConfigType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="subject" type="FieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="personal_name" type="NameFieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="personal_reading" type="NameFieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="company_name" type="FieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="company_reading" type="FieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="section" type="FieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="zip_code" type="FieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="physical_address" type="FieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="map" type="FieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="route" type="FieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="company_tel" type="FieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="company_fax" type="FieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="url" type="FieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="post" type="FieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="personal_tel" type="FieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="email" type="FieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="image" type="FieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="description" type="FieldConfigType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="custom">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:choice minOccurs="1" maxOccurs="unbounded">
+              <xsd:element name="string" type="StringFieldConfigType" />
+              <xsd:element name="text" type="TextFieldConfigType" />
+              <xsd:element name="url" type="UrlFieldConfigType" />
+              <xsd:element name="file" type="FileFieldConfigType" />
+              <xsd:element name="email" type="EMailFieldConfigType" />
+              <xsd:element name="ipphone" type="IPPhoneFieldConfigType" />
+              <xsd:element name="menu" type="MenuFieldConfigType" />
+            </xsd:choice>
+            <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+          </xsd:sequence>
+          <xsd:anyAttribute processContents="lax" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+    </xsd:sequence>
+    <xsd:attribute name="key" type="base:IDType" use="required" />
+    <xsd:attribute name="version" type="base:VersionType" use="required" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:complexType name="FieldConfigType">
+    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="field_code" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="using" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="public" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="listing" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="necessary" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="allow_modification" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="sso_id" type="xsd:string" use="optional" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:complexType name="NameFieldConfigType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="FieldConfigType">
+        <xsd:attribute default="2" name="number_of_parts" type="xsd:positiveInteger" />
+        <xsd:anyAttribute processContents="lax" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="StringFieldConfigType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="FieldConfigType">
+        <xsd:anyAttribute processContents="lax" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="TextFieldConfigType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="FieldConfigType">
+        <xsd:anyAttribute processContents="lax" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="UrlFieldConfigType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="FieldConfigType">
+        <xsd:attribute default="false" name="image" type="xsd:boolean" />
+        <xsd:anyAttribute processContents="lax" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="FileFieldConfigType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="FieldConfigType">
+        <xsd:anyAttribute processContents="lax" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="EMailFieldConfigType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="FieldConfigType">
+        <xsd:anyAttribute processContents="lax" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="IPPhoneFieldConfigType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="FieldConfigType">
+        <xsd:anyAttribute processContents="lax" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="MenuFieldConfigType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="FieldConfigType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="item" type="xsd:string" />
+          <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+        </xsd:sequence>
+        <xsd:anyAttribute processContents="lax" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CardType">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="creator" type="base:ChangeLogType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="modifier" type="base:ChangeLogType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="subject" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="personal_name" type="NameFieldValueType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="personal_reading" type="NameFieldValueType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="company_name" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="company_reading" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="section" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="zip_code" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="physical_address" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="map" type="xsd:anyURI" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="route" type="RouteFieldValueType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="company_tel" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="company_fax" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="url" type="xsd:anyURI" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="post" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="personal_tel" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="email" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="image" type="FileFieldValueType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="description" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="custom">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:choice minOccurs="1" maxOccurs="unbounded">
+              <xsd:element name="string">
+                <xsd:complexType>
+                  <xsd:simpleContent>
+                    <xsd:extension base="StringFieldValueType">
+                      <xsd:attribute name="field_code" type="base:NonBlankStringType" use="required" />
+                    </xsd:extension>
+                  </xsd:simpleContent>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="text">
+                <xsd:complexType>
+                  <xsd:simpleContent>
+                    <xsd:extension base="TextFieldValueType">
+                      <xsd:attribute name="field_code" type="base:NonBlankStringType" use="required" />
+                    </xsd:extension>
+                  </xsd:simpleContent>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="url">
+                <xsd:complexType>
+                  <xsd:simpleContent>
+                    <xsd:extension base="UrlFieldValueType">
+                      <xsd:attribute name="field_code" type="base:NonBlankStringType" use="required" />
+                    </xsd:extension>
+                  </xsd:simpleContent>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="file">
+                <xsd:complexType>
+                  <xsd:complexContent mixed="false">
+                    <xsd:extension base="FileFieldValueType">
+                      <xsd:attribute name="field_code" type="base:NonBlankStringType" use="required" />
+                    </xsd:extension>
+                  </xsd:complexContent>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="email">
+                <xsd:complexType>
+                  <xsd:simpleContent>
+                    <xsd:extension base="EMailFieldValueType">
+                      <xsd:attribute name="field_code" type="base:NonBlankStringType" use="required" />
+                    </xsd:extension>
+                  </xsd:simpleContent>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="ipphone">
+                <xsd:complexType>
+                  <xsd:simpleContent>
+                    <xsd:extension base="IPPhoneFieldValueType">
+                      <xsd:attribute name="field_code" type="base:NonBlankStringType" use="required" />
+                    </xsd:extension>
+                  </xsd:simpleContent>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="menu">
+                <xsd:complexType>
+                  <xsd:simpleContent>
+                    <xsd:extension base="MenuFieldValueType">
+                      <xsd:attribute name="field_code" type="base:NonBlankStringType" use="required" />
+                    </xsd:extension>
+                  </xsd:simpleContent>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:choice>
+            <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+          </xsd:sequence>
+          <xsd:anyAttribute processContents="lax" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+    </xsd:sequence>
+    <xsd:attribute name="book_id" type="base:IDType" use="required" />
+    <xsd:attribute name="id" type="base:IDType" use="required" />
+    <xsd:attribute name="version" type="base:VersionType" use="required" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:complexType name="NameFieldValueType">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="unbounded" name="part" type="xsd:string" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+    </xsd:sequence>
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:complexType name="RouteFieldValueType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="path" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="time" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="fare" type="xsd:string" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+    </xsd:sequence>
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:complexType name="StringFieldValueType">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:anyAttribute processContents="lax" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="TextFieldValueType">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:anyAttribute processContents="lax" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="UrlFieldValueType">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:anyURI">
+        <xsd:anyAttribute processContents="lax" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="FileFieldValueType">
+    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="file_id" type="base:IDType" use="required" />
+    <xsd:attribute name="mime_type" type="xsd:string" use="optional" />
+    <xsd:attribute name="size" type="xsd:unsignedLong" use="optional" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:complexType name="EMailFieldValueType">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:anyAttribute processContents="lax" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="IPPhoneFieldValueType">
+    <xsd:simpleContent>
+      <xsd:extension base="base:IPPhoneURIType">
+        <xsd:anyAttribute processContents="lax" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MenuFieldValueType">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:anyAttribute processContents="lax" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="BookUsePermissionType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="acl">
+        <xsd:complexType>
+          <xsd:attribute name="target" type="base:NonBlankStringType" use="required" />
+          <xsd:attribute name="target_type" type="TargetType" use="required" />
+          <xsd:anyAttribute processContents="lax" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+    </xsd:sequence>
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:simpleType name="TargetType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="user" />
+      <xsd:enumeration value="group" />
+      <xsd:enumeration value="role" />
+      <xsd:enumeration value="dynamic_role" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="MyAddressGroupType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="user">
+        <xsd:complexType>
+          <xsd:attribute name="key" type="base:IDType" use="required" />
+          <xsd:anyAttribute processContents="lax" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="card">
+        <xsd:complexType>
+          <xsd:attribute name="key" type="base:IDType" use="required" />
+          <xsd:attribute name="type" use="required">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="private" />
+                <xsd:enumeration value="shared" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+          <xsd:anyAttribute processContents="lax" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+    </xsd:sequence>
+    <xsd:attribute name="id" type="base:IDType" use="required" />
+    <xsd:attribute name="version" type="base:VersionType" use="required" />
+    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="description" type="xsd:string" use="optional" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+</xsd:schema>

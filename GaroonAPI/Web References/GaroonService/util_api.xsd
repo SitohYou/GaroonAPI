@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns="http://schemas.cybozu.co.jp/util_api/2008" elementFormDefault="qualified" targetNamespace="http://schemas.cybozu.co.jp/util_api/2008" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="UserDetail">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="1" maxOccurs="1" name="userId" type="xsd:integer" />
+        <xsd:element minOccurs="1" maxOccurs="1" name="login_name" type="xsd:string" />
+        <xsd:element minOccurs="1" maxOccurs="1" name="display_name" type="xsd:string" />
+        <xsd:element minOccurs="0" maxOccurs="1" name="password_raw" type="xsd:string" />
+        <xsd:element minOccurs="0" maxOccurs="1" name="password_salt" type="xsd:string" />
+        <xsd:element minOccurs="0" maxOccurs="1" name="password_hashed" type="xsd:string" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

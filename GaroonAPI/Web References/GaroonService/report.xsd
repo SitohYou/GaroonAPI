@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns="http://schemas.cybozu.co.jp/report/2008" elementFormDefault="qualified" targetNamespace="http://schemas.cybozu.co.jp/report/2008" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+  <xsd:element name="reports">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="report" type="ReportType" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="ReportType">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="items">
+        <xsd:complexType>
+          <xsd:choice minOccurs="1" maxOccurs="unbounded">
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="ItemType" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="files_item" type="FilesItemType" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="blank_item" />
+          </xsd:choice>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="members">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="user" type="UserType" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="notifyusers">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="user" type="UserType" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="maintainers">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="user" type="UserType" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="creator" type="base:ChangeLogType" />
+      <xsd:element name="modifier" type="base:ChangeLogType" />
+    </xsd:sequence>
+    <xsd:attribute name="id" type="base:IDType" use="required" />
+    <xsd:attribute name="subject" type="xsd:string" use="required" />
+    <xsd:attribute name="is_draft" type="xsd:boolean" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="UserType">
+    <xsd:attribute name="id" type="base:NonBlankStringType" />
+    <xsd:attribute name="name" type="xsd:string" />
+  </xsd:complexType>
+  <xsd:complexType name="ItemType">
+    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="value" type="xsd:string" use="required" />
+    <xsd:attribute name="front" type="xsd:string" use="optional" />
+    <xsd:attribute name="back" type="xsd:string" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="FilesItemType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="file">
+        <xsd:complexType>
+          <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+          <xsd:attribute name="file_id" type="base:IDType" use="required" />
+          <xsd:attribute name="size" type="xsd:unsignedLong" use="optional" />
+          <xsd:attribute name="mime_type" type="xsd:string" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="inline" type="xsd:boolean" use="optional" />
+  </xsd:complexType>
+  <xsd:element name="follows">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="follow" type="FollowType" />
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:key name="follow_key">
+      <xsd:selector xpath="follow" />
+      <xsd:field xpath="@id" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:complexType name="FollowType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="file">
+        <xsd:complexType>
+          <xsd:attribute name="id" type="base:IDType" use="required" />
+          <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+          <xsd:attribute name="size" type="xsd:unsignedLong" use="optional" />
+          <xsd:attribute name="mime_type" type="xsd:string" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="creator" type="base:ChangeLogType" />
+    </xsd:sequence>
+    <xsd:attribute name="id" type="base:IDType" use="required" />
+    <xsd:attribute name="number" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="text" type="xsd:string" use="required" />
+    <xsd:attribute name="html_text" type="xsd:string" use="optional" />
+  </xsd:complexType>
+  <xsd:element name="files">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" ref="file" />
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:key name="file_key">
+      <xsd:selector xpath="file" />
+      <xsd:field xpath="@id" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:element name="file">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        ``max_version'' value is the generation to keep file data in a system.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="1" maxOccurs="1" name="title" type="xsd:string" />
+        <xsd:element minOccurs="0" maxOccurs="1" name="description" type="xsd:string" />
+        <xsd:element minOccurs="1" maxOccurs="unbounded" name="log">
+          <xsd:complexType>
+            <xsd:attribute name="revision" type="xsd:unsignedInt" use="required" />
+            <xsd:attribute name="version" type="xsd:unsignedInt" use="required" />
+            <xsd:attribute name="operation" type="FileOperationType" use="required" />
+            <xsd:attribute name="updater_id" type="base:NonBlankStringType" use="required" />
+            <xsd:attribute name="update_date" type="xsd:dateTime" use="required" />
+            <xsd:attribute name="updater_name" type="xsd:string" use="required" />
+            <xsd:attribute name="description" type="xsd:string" />
+            <xsd:attribute name="restore_version" type="xsd:unsignedInt" />
+            <xsd:anyAttribute processContents="lax" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element minOccurs="1" maxOccurs="unbounded" name="body" type="base:FileType" />
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="skip" />
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:string" use="required" />
+      <xsd:attribute name="creator_id" type="base:NonBlankStringType" use="required" />
+      <xsd:attribute name="create_date" type="xsd:string" use="required" />
+      <xsd:attribute name="creator_name" type="xsd:string" use="required" />
+      <xsd:attribute name="max_version" type="xsd:unsignedInt" />
+      <xsd:attribute name="lock_owner_id" type="base:NonBlankStringType" />
+      <xsd:attribute name="lock_timeout" type="xsd:duration" />
+      <xsd:anyAttribute processContents="lax" />
+    </xsd:complexType>
+    <xsd:key name="log_revision_key">
+      <xsd:selector xpath="log" />
+      <xsd:field xpath="@revision" />
+    </xsd:key>
+    <xsd:key name="body_version_key">
+      <xsd:selector xpath="body" />
+      <xsd:field xpath="@version" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:simpleType name="FileOperationType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="create" />
+      <xsd:enumeration value="update" />
+      <xsd:enumeration value="rollback" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="SearchTargetType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="received" />
+      <xsd:enumeration value="send" />
+      <xsd:enumeration value="draft" />
+      <xsd:enumeration value="all" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="TargetType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="form_name" />
+      <xsd:enumeration value="report_name" />
+      <xsd:enumeration value="create_date" />
+      <xsd:enumeration value="creator" />
+      <xsd:enumeration value="item_data" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ConditionType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="include" />
+      <xsd:enumeration value="not_include" />
+      <xsd:enumeration value="equal" />
+      <xsd:enumeration value="not_equal" />
+      <xsd:enumeration value="after" />
+      <xsd:enumeration value="before" />
+      <xsd:enumeration value="bigger" />
+      <xsd:enumeration value="and_over" />
+      <xsd:enumeration value="smaller" />
+      <xsd:enumeration value="or_less" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ReportFolderType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="received" />
+      <xsd:enumeration value="sent" />
+      <xsd:enumeration value="draft" />
+      <xsd:enumeration value="all" />
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

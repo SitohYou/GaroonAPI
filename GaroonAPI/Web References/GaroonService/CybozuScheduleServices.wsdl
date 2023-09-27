@@ -1,0 +1,1716 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://wsdl.cybozu.co.jp/schedule/2008" xmlns:typens="http://wsdl.cybozu.co.jp/schedule/2008/types" xmlns:base_services="http://wsdl.cybozu.co.jp/base/2008" xmlns="http://schemas.xmlsoap.org/wsdl/" name="CybozuScheduleServices" targetNamespace="http://wsdl.cybozu.co.jp/schedule/2008" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import namespace="http://wsdl.cybozu.co.jp/base/2008" location="base.wsdl" />
+  <wsdl:types>
+    <xsd:schema xmlns:base_types="http://wsdl.cybozu.co.jp/base/2008/types" xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns:schedule="http://schemas.cybozu.co.jp/schedule/2008" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://wsdl.cybozu.co.jp/schedule/2008/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+      <xsd:import schemaLocation="schedule.xsd" namespace="http://schemas.cybozu.co.jp/schedule/2008" />
+      <xsd:import namespace="http://wsdl.cybozu.co.jp/base/2008/types" />
+      <xsd:complexType name="ScheduleGetEventVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="event_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+        <xsd:attribute name="start_for_daily" type="xsd:date" use="optional" />
+        <xsd:attribute name="end_for_daily" type="xsd:date" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetEventVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="event_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetEventsRequestType">
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="start_for_daily" type="xsd:date" use="optional" />
+        <xsd:attribute name="end_for_daily" type="xsd:date" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetEventsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="schedule_event" type="schedule:EventType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetEventsByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="event_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetEventsByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="schedule_event" type="schedule:EventType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetEventsByTargetRequestType">
+        <xsd:choice minOccurs="1" maxOccurs="1">
+          <xsd:element name="user">
+            <xsd:complexType>
+              <xsd:attribute name="id" type="base:IDType" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="group">
+            <xsd:complexType>
+              <xsd:attribute name="id" type="base:IDType" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="facility">
+            <xsd:complexType>
+              <xsd:attribute name="id" type="base:IDType" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="start_for_daily" type="xsd:date" use="optional" />
+        <xsd:attribute name="end_for_daily" type="xsd:date" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetEventsByTargetResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="schedule_event" type="schedule:EventType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleAddEventsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="schedule_event" type="schedule:EventType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleAddEventsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="schedule_event" type="schedule:EventType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleModifyEventsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="schedule_event" type="schedule:EventType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleModifyEventsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="schedule_event" type="schedule:EventType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="ScheduleRepeatModifyType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="this" />
+          <xsd:enumeration value="after" />
+          <xsd:enumeration value="all" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ScheduleModifyRepeatEventsOperationType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="schedule_event" type="schedule:EventType" />
+        </xsd:sequence>
+        <xsd:attribute name="type" type="typens:ScheduleRepeatModifyType" use="required" />
+        <xsd:attribute name="date" type="xsd:date" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleModifyRepeatEventsResultType">
+        <xsd:sequence>
+          <xsd:element name="original" type="schedule:EventType" />
+          <xsd:element name="modified" type="schedule:EventType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleModifyRepeatEventsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="operation" type="typens:ScheduleModifyRepeatEventsOperationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleModifyRepeatEventsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="result" type="typens:ScheduleModifyRepeatEventsResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleRemoveEventsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="event_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleRemoveEventsFromRepeatEventOperationType">
+        <xsd:attribute name="event_id" type="base:IDType" use="required" />
+        <xsd:attribute name="type" type="typens:ScheduleRepeatModifyType" use="required" />
+        <xsd:attribute name="date" type="xsd:date" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleRemoveEventsFromRepeatEventRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="operation" type="typens:ScheduleRemoveEventsFromRepeatEventOperationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleRemoveEventsFromRepeatEventResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="result" type="typens:ScheduleModifyRepeatEventsResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleSearchEventsRequestType">
+        <xsd:attribute name="text" type="xsd:string" use="required" />
+        <xsd:attribute name="start" type="xsd:dateTime" use="optional" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+        <xsd:attribute name="start_for_daily" type="xsd:date" use="optional" />
+        <xsd:attribute name="end_for_daily" type="xsd:date" use="optional" />
+        <xsd:attribute name="title_search" type="xsd:boolean" use="required" />
+        <xsd:attribute name="customer_search" type="xsd:boolean" use="required" />
+        <xsd:attribute name="memo_search" type="xsd:boolean" use="required" />
+        <xsd:attribute name="follow_search" type="xsd:boolean" use="required" />
+        <xsd:attribute name="all_repeat_events" type="xsd:boolean" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleSearchEventsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="schedule_event" type="schedule:EventType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="ScheduleSearchConditionType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="and" />
+          <xsd:enumeration value="or" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ScheduleSearchFreeTimesCandidateType">
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleFreeTimeType">
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="facility_id" type="base:IDType" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleSearchFreeTimesRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="candidate" type="typens:ScheduleSearchFreeTimesCandidateType" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="member" type="schedule:MemberType" />
+        </xsd:sequence>
+        <xsd:attribute name="search_time" type="xsd:time" use="required" />
+        <xsd:attribute name="search_condition" type="typens:ScheduleSearchConditionType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleSearchFreeTimesResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="candidate" type="typens:ScheduleFreeTimeType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleFollowContentType">
+        <xsd:attribute name="event_id" type="base:IDType" use="required" />
+        <xsd:attribute name="content" type="xsd:string" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleAddFollowsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="follow" type="typens:ScheduleFollowContentType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleAddFollowsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="schedule_event" type="schedule:EventType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleFollowToRepeatEventContentType">
+        <xsd:attribute name="event_id" type="base:IDType" use="required" />
+        <xsd:attribute name="date" type="xsd:date" use="required" />
+        <xsd:attribute name="content" type="xsd:string" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleAddFollowsToRepeatEventResultType">
+        <xsd:sequence>
+          <xsd:element name="original" type="schedule:EventType" />
+          <xsd:element name="modified" type="schedule:EventType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleAddFollowsToRepeatEventRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="follow" type="typens:ScheduleFollowToRepeatEventContentType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleAddFollowsToRepeatEventResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="result" type="typens:ScheduleAddFollowsToRepeatEventResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleRemoveFollowsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="follow_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleCandidateItemType">
+        <xsd:attribute name="event_id" type="base:IDType" use="required" />
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="facility_id" type="base:IDType" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleDetermineTemporaryEventsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="candidate" type="typens:ScheduleCandidateItemType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleDetermineTemporaryEventsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="schedule_event" type="schedule:EventType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleRemoveTemporaryEventCandidatesRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="candidate" type="typens:ScheduleCandidateItemType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleRemoveTemporaryEventCandidatesResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="schedule_event" type="schedule:EventType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleParticipateEventsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="event_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleParticipateEventsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="schedule_event" type="schedule:EventType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleParticipateEventsToRepeatEventOperationType">
+        <xsd:attribute name="event_id" type="base:IDType" use="required" />
+        <xsd:attribute name="type" type="typens:ScheduleRepeatModifyType" use="required" />
+        <xsd:attribute name="date" type="xsd:date" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleParticipateEventsToRepeatEventRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="operation" type="typens:ScheduleParticipateEventsToRepeatEventOperationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleParticipateEventsToRepeatEventResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="result" type="typens:ScheduleModifyRepeatEventsResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleLeaveEventsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="event_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleLeaveEventsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="schedule_event" type="schedule:EventType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleLeaveEventsFromRepeatEventRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="operation" type="typens:ScheduleRemoveEventsFromRepeatEventOperationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleLeaveEventsFromRepeatEventResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="result" type="typens:ScheduleModifyRepeatEventsResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="SchedulePersonalProfileType">
+        <xsd:attribute name="start_time_in_dayview" type="xsd:unsignedInt" use="optional" />
+        <xsd:attribute name="end_time_in_dayview" type="xsd:unsignedInt" use="optional" />
+        <xsd:attribute name="show_sunday" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="show_end_time" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="plan_menu" type="xsd:string" use="optional" />
+        <xsd:attribute name="notify_mail" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="is_user_address_mail" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="notify_mail_address" type="base:NonBlankStringType" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleSystemProfileType">
+        <xsd:attribute name="plan_menu" type="xsd:string" use="optional" />
+        <xsd:attribute name="event_reserve_unit" type="xsd:unsignedInt" use="optional" />
+        <xsd:attribute name="event_repeat_max_time" type="xsd:unsignedInt" use="optional" />
+        <xsd:attribute name="register_private_event" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="show_memo" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="show_private_event" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="managed_notify" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="show_group_event" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="show_holiday" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="allow_file_attachment" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="allow_attendance_check" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="visibility_default" type="xsd:unsignedInt" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetProfilesRequestType">
+        <xsd:attribute name="include_system_profile" type="xsd:boolean" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetProfilesResponseType">
+        <xsd:sequence>
+          <xsd:sequence>
+            <xsd:element name="personal_profile" type="typens:SchedulePersonalProfileType" />
+            <xsd:element name="system_profile" type="typens:ScheduleSystemProfileType" />
+          </xsd:sequence>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleSetProfilesRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element name="personal_profile" type="typens:SchedulePersonalProfileType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleSetProfilesResponseType">
+        <xsd:sequence>
+          <xsd:sequence>
+            <xsd:element name="personal_profile" type="typens:SchedulePersonalProfileType" />
+          </xsd:sequence>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetFacilityVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetFacilityVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetFacilityProfileVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility_profile_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetFacilityProfileVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility_profile_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetFacilityProfilesByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetFacilityProfilesByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility_profile" type="schedule:FacilityProfileType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetFacilitiesByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="facility_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetFacilitiesByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility" type="schedule:FacilityType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetFacilityGroupVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility_group_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetFacilityGroupVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility_group_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetFacilityGroupsByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="facility_group_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetFacilityGroupsByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" ref="schedule:facility_group" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetReadAllowUsersRequestType" />
+      <xsd:complexType name="ScheduleGetReadAllowUsersResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="user_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetReadAllowGroupsRequestType" />
+      <xsd:complexType name="ScheduleGetReadAllowGroupsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="group_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetReadAllowFacilitiesRequestType" />
+      <xsd:complexType name="ScheduleGetReadAllowFacilitiesResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetAddAllowUsersRequestType" />
+      <xsd:complexType name="ScheduleGetAddAllowUsersResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="user_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetAddAllowGroupsRequestType" />
+      <xsd:complexType name="ScheduleGetAddAllowGroupsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="group_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetAddAllowFacilitiesRequestType" />
+      <xsd:complexType name="ScheduleGetAddAllowFacilitiesResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetModifyAllowUsersRequestType" />
+      <xsd:complexType name="ScheduleGetModifyAllowUsersResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="user_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetModifyAllowGroupsRequestType" />
+      <xsd:complexType name="ScheduleGetModifyAllowGroupsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="group_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetModifyAllowFacilitiesRequestType" />
+      <xsd:complexType name="ScheduleGetModifyAllowFacilitiesResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetRemoveAllowUsersRequestType" />
+      <xsd:complexType name="ScheduleGetRemoveAllowUsersResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="user_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetRemoveAllowGroupsRequestType" />
+      <xsd:complexType name="ScheduleGetRemoveAllowGroupsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="group_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleGetRemoveAllowFacilitiesRequestType" />
+      <xsd:complexType name="ScheduleGetRemoveAllowFacilitiesResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleFileDownloadRequestType">
+        <xsd:attribute name="file_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="ScheduleFileDownloadResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="file" type="base_types:FileBodyType" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ScheduleFileDownloadRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleFileDownloadRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleFileDownloadResponse">
+    <wsdl:part name="returns" type="typens:ScheduleFileDownloadResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetEventVersionsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetEventVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetEventVersionsResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetEventVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetEventsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetEventsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetEventsResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetEventsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetEventsByIdRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetEventsByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetEventsByIdResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetEventsByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetEventsByTargetRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetEventsByTargetRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetEventsByTargetResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetEventsByTargetResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleAddEventsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleAddEventsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleAddEventsResponse">
+    <wsdl:part name="returns" type="typens:ScheduleAddEventsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleModifyEventsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleModifyEventsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleModifyEventsResponse">
+    <wsdl:part name="returns" type="typens:ScheduleModifyEventsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleModifyRepeatEventsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleModifyRepeatEventsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleModifyRepeatEventsResponse">
+    <wsdl:part name="returns" type="typens:ScheduleModifyRepeatEventsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleRemoveEventsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleRemoveEventsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleRemoveEventsFromRepeatEventRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleRemoveEventsFromRepeatEventRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleRemoveEventsFromRepeatEventResponse">
+    <wsdl:part name="returns" type="typens:ScheduleRemoveEventsFromRepeatEventResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleSearchEventsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleSearchEventsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleSearchEventsResponse">
+    <wsdl:part name="returns" type="typens:ScheduleSearchEventsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleSearchFreeTimesRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleSearchFreeTimesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleSearchFreeTimesResponse">
+    <wsdl:part name="returns" type="typens:ScheduleSearchFreeTimesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleAddFollowsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleAddFollowsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleAddFollowsResponse">
+    <wsdl:part name="returns" type="typens:ScheduleAddFollowsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleAddFollowsToRepeatEventRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleAddFollowsToRepeatEventRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleAddFollowsToRepeatEventResponse">
+    <wsdl:part name="returns" type="typens:ScheduleAddFollowsToRepeatEventResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleRemoveFollowsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleRemoveFollowsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleDetermineTemporaryEventsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleDetermineTemporaryEventsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleDetermineTemporaryEventsResponse">
+    <wsdl:part name="returns" type="typens:ScheduleDetermineTemporaryEventsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleRemoveTemporaryEventCandidatesRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleRemoveTemporaryEventCandidatesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleRemoveTemporaryEventCandidatesResponse">
+    <wsdl:part name="returns" type="typens:ScheduleRemoveTemporaryEventCandidatesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleParticipateEventsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleParticipateEventsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleParticipateEventsResponse">
+    <wsdl:part name="returns" type="typens:ScheduleParticipateEventsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleParticipateEventsToRepeatEventRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleParticipateEventsToRepeatEventRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleParticipateEventsToRepeatEventResponse">
+    <wsdl:part name="returns" type="typens:ScheduleParticipateEventsToRepeatEventResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleLeaveEventsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleLeaveEventsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleLeaveEventsResponse">
+    <wsdl:part name="returns" type="typens:ScheduleLeaveEventsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleLeaveEventsFromRepeatEventRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleLeaveEventsFromRepeatEventRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleLeaveEventsFromRepeatEventResponse">
+    <wsdl:part name="returns" type="typens:ScheduleLeaveEventsFromRepeatEventResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetProfilesRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetProfilesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetProfilesResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetProfilesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleSetProfilesRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleSetProfilesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleSetProfilesResponse">
+    <wsdl:part name="returns" type="typens:ScheduleSetProfilesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetFacilityVersionsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetFacilityVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetFacilityVersionsResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetFacilityVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetFacilityProfileVersionsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetFacilityProfileVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetFacilityProfileVersionsResponse">
+    <wsdl:part name="return" type="typens:ScheduleGetFacilityProfileVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetFacilityProfilesByIdRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetFacilityProfilesByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetFacilityProfilesByIdResponse">
+    <wsdl:part name="return" type="typens:ScheduleGetFacilityProfilesByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetFacilitiesByIdRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetFacilitiesByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetFacilitiesByIdResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetFacilitiesByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetFacilityGroupVersionsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetFacilityGroupVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetFacilityGroupVersionsResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetFacilityGroupVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetFacilityGroupsByIdRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetFacilityGroupsByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetFacilityGroupsByIdResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetFacilityGroupsByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetReadAllowUsersRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetReadAllowUsersRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetReadAllowUsersResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetReadAllowUsersResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetReadAllowGroupsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetReadAllowGroupsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetReadAllowGroupsResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetReadAllowGroupsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetReadAllowFacilitiesRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetReadAllowFacilitiesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetReadAllowFacilitiesResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetReadAllowFacilitiesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetAddAllowUsersRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetAddAllowUsersRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetAddAllowUsersResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetAddAllowUsersResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetAddAllowGroupsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetAddAllowGroupsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetAddAllowGroupsResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetAddAllowGroupsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetAddAllowFacilitiesRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetAddAllowFacilitiesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetAddAllowFacilitiesResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetAddAllowFacilitiesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetModifyAllowUsersRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetModifyAllowUsersRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetModifyAllowUsersResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetModifyAllowUsersResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetModifyAllowGroupsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetModifyAllowGroupsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetModifyAllowGroupsResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetModifyAllowGroupsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetModifyAllowFacilitiesRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetModifyAllowFacilitiesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetModifyAllowFacilitiesResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetModifyAllowFacilitiesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetRemoveAllowUsersRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetRemoveAllowUsersRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetRemoveAllowUsersResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetRemoveAllowUsersResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetRemoveAllowGroupsRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetRemoveAllowGroupsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetRemoveAllowGroupsResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetRemoveAllowGroupsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetRemoveAllowFacilitiesRequest">
+    <wsdl:part name="parameters" type="typens:ScheduleGetRemoveAllowFacilitiesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ScheduleGetRemoveAllowFacilitiesResponse">
+    <wsdl:part name="returns" type="typens:ScheduleGetRemoveAllowFacilitiesResponseType" />
+  </wsdl:message>
+  <wsdl:portType name="SchedulePort">
+    <wsdl:operation name="ScheduleGetEventVersions">
+      <documentation>
+        This API gets the modified schedule events.
+        The client sends "start" and "end" for specify the range of search.
+        "event_item" is a list of schedule event's that a client has.
+
+        The service returns the operation to the received schedule events.
+        The operations are compared by the version number.
+        - "modify" is returned when the version number that the service has is different.
+        - A schedule that exists in the service that had not been sent from client is "add".
+        - A schedule that doesn't exist in schedule the service that has been sent from client is "remove "
+        - Nothing is returned when the version number is the same.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetEventVersionsRequest" />
+      <wsdl:output message="tns:ScheduleGetEventVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetEvents">
+      <documentation>
+        This API gets the schedule events from the start date to end date.
+        The client sends "start" and "end" for specify the range of search.
+        The service returns the schedule event that matches to search.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetEventsRequest" />
+      <wsdl:output message="tns:ScheduleGetEventsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetEventsById">
+      <documentation>
+        This API gets the schedule events by event id.
+        The client sends list of "event_id" for specify the event to search.
+        The service returns the schedule event that matches to "event_id".
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetEventsByIdRequest" />
+      <wsdl:output message="tns:ScheduleGetEventsByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetEventsByTarget">
+      <documentation>
+        This API gets the target schedule events from the start date to end date.
+        "target"is user or group or facility.
+        This API is used to see the schedules other than the login user.
+
+        The client sends "start" and "end" for specify the range of search.
+        The service returns the schedule event that matches to search.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetEventsByTargetRequest" />
+      <wsdl:output message="tns:ScheduleGetEventsByTargetResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleAddEvents">
+      <documentation>
+        This API adds the schedule events.
+        The service returns the schedule event that added.
+      </documentation>
+      <wsdl:input message="tns:ScheduleAddEventsRequest" />
+      <wsdl:output message="tns:ScheduleAddEventsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleModifyEvents">
+      <documentation>
+        This API modifies the schedule events.
+        if the event version is differentm this API returns error.
+        The following functions are offered by another API.
+        - Modify repeat event.
+        - Participate to event.
+        - Leaving from event.
+
+        The service returns the schedule event that modified.
+      </documentation>
+      <wsdl:input message="tns:ScheduleModifyEventsRequest" />
+      <wsdl:output message="tns:ScheduleModifyEventsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleModifyRepeatEvents">
+      <documentation>
+        This API modifies the repeat schedule events.
+        if the event version is different this API returns error.
+
+        The repeat event modify is different from the normal event modify.
+        Because when the repeat event modified,  the repeat event changed to the normal event.
+        So, a original repeat event is modified, and the new normal event added.
+
+        The service returns the schedule event that added and original event that modified.
+      </documentation>
+      <wsdl:input message="tns:ScheduleModifyRepeatEventsRequest" />
+      <wsdl:output message="tns:ScheduleModifyRepeatEventsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleRemoveEvents">
+      <documentation>
+        This API removes the schedule events by id.
+        The service returns empty response.
+      </documentation>
+      <wsdl:input message="tns:ScheduleRemoveEventsRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleRemoveEventsFromRepeatEvent">
+      <documentation>
+        This API removes the schedule events by id from repeat event.
+        The service returns the schedule event that added and original event that removed.
+      </documentation>
+      <wsdl:input message="tns:ScheduleRemoveEventsFromRepeatEventRequest" />
+      <wsdl:output message="tns:ScheduleRemoveEventsFromRepeatEventResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleSearchEvents">
+      <documentation>
+        This API searches the schedule events.        
+        The client sends search condition.
+        The service returns the schedule event that matches to search.
+      </documentation>
+      <wsdl:input message="tns:ScheduleSearchEventsRequest" />
+      <wsdl:output message="tns:ScheduleSearchEventsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleSearchFreeTimes">
+      <documentation>
+        This API searches the schedule free time.
+        The client sends search condition.
+        The service returns the candidate free time that matches to search.
+      </documentation>
+      <wsdl:input message="tns:ScheduleSearchFreeTimesRequest" />
+      <wsdl:output message="tns:ScheduleSearchFreeTimesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleAddFollows">
+      <documentation>
+        This API adds the follow to schedule events.
+        The add follow to repeat event is offered by another API.
+
+        The client sends the target event id and follow content.
+        The service returns the event id and version that follow added
+      </documentation>
+      <wsdl:input message="tns:ScheduleAddFollowsRequest" />
+      <wsdl:output message="tns:ScheduleAddFollowsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleAddFollowsToRepeatEvent">
+      <documentation>
+        This API adds the follow to repeat schedule events.
+
+        The add follows to repeat event is different from the add follows to normal event.
+        Because when the add follows to repeat event,  the repeat event changed to the normal event.
+        So, a original repeat event is modified, and a new normal event that folllow is written is added.
+
+        The service returns the schedule event that follow added and original schedule event that modified.
+      </documentation>
+      <wsdl:input message="tns:ScheduleAddFollowsToRepeatEventRequest" />
+      <wsdl:output message="tns:ScheduleAddFollowsToRepeatEventResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleRemoveFollows">
+      <documentation>
+        This API removes the follow from schedule events.
+        The service returns empty response.
+      </documentation>
+      <wsdl:input message="tns:ScheduleRemoveFollowsRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleDetermineTemporaryEvents">
+      <documentation>
+        This API determines date in candidates date.
+        If it has been already determined, this API returns error.
+
+        The client sends the candidate date of determine.
+        The service returns the event that determined.
+      </documentation>
+      <wsdl:input message="tns:ScheduleDetermineTemporaryEventsRequest" />
+      <wsdl:output message="tns:ScheduleDetermineTemporaryEventsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleRemoveTemporaryEventCandidates">
+      <documentation>
+
+        This API removes date in candidates date.
+        If it has been already determined, this API returns error.
+
+        The client sends the candidate date of determine.
+        The service returns the event that removed.
+
+        If all candidates are removed, this API removes temporary event.
+        The service returns the empty response.
+      </documentation>
+      <wsdl:input message="tns:ScheduleRemoveTemporaryEventCandidatesRequest" />
+      <wsdl:output message="tns:ScheduleRemoveTemporaryEventCandidatesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleParticipateEvents">
+      <documentation>
+        This API participates to event.
+        This API operates regardless of the version.
+
+        The service returns the event that participated.
+      </documentation>
+      <wsdl:input message="tns:ScheduleParticipateEventsRequest" />
+      <wsdl:output message="tns:ScheduleParticipateEventsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleParticipateEventsToRepeatEvent">
+      <documentation>
+        This API participates to repeat event.
+        The service returns the schedule event that added and original event that modified.
+      </documentation>
+      <wsdl:input message="tns:ScheduleParticipateEventsToRepeatEventRequest" />
+      <wsdl:output message="tns:ScheduleParticipateEventsToRepeatEventResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleLeaveEvents">
+      <documentation>
+        This API leaves from event.
+        This API operates regardless of the version.
+
+        The service returns the event that leaved
+      </documentation>
+      <wsdl:input message="tns:ScheduleLeaveEventsRequest" />
+      <wsdl:output message="tns:ScheduleLeaveEventsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleLeaveEventsFromRepeatEvent">
+      <documentation>
+        This API leaves from repeat event.
+        This API operates regardless of the version.
+
+        The service returns the schedule event that added and original event that leaved.
+      </documentation>
+      <wsdl:input message="tns:ScheduleLeaveEventsFromRepeatEventRequest" />
+      <wsdl:output message="tns:ScheduleLeaveEventsFromRepeatEventResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetProfiles">
+      <documentation>
+        This API gets profiles in the schedule application.
+        A personal profile is returned in default.
+        When "include_system_profile" is changed true, the system profile is returned.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetProfilesRequest" />
+      <wsdl:output message="tns:ScheduleGetProfilesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleSetProfiles">
+      <documentation>
+        This API modifies profiles in the schedule application.
+      </documentation>
+      <wsdl:input message="tns:ScheduleSetProfilesRequest" />
+      <wsdl:output message="tns:ScheduleSetProfilesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetFacilityVersions">
+      <documentation>
+        This API gets the modified facility.
+        "facility_item" is a list of facility's that a client has.
+
+        The service returns the operation to the received facility.
+        The operations are compared by the version number.
+        - "modify" is returned when the version number that the service has is different.
+        - A facility that exists in the service that had not been sent from client is "add".
+        - A facility that doesn't exist in facility the service that has been sent from client is "remove "
+        - Nothing is returned when the version number is the same.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetFacilityVersionsRequest" />
+      <wsdl:output message="tns:ScheduleGetFacilityVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetFacilityProfileVersions">
+      <documentation>
+        This API gets the modified profile facility.
+        "facility_profile_item" is a list of facility profiles that a client has.
+
+        The service returns the operation to the received facility.
+        The operations are compared by the version number.
+        - "modify" is returned when the version number that the service has is different.
+        - A facility profile that exists in the service that had not been sent from client is "add".
+        - A facility profile that doesn't exist in facility the service that has been sent from client is "remove "
+        - Nothing is returned when the version number is the same.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetFacilityProfileVersionsRequest" />
+      <wsdl:output message="tns:ScheduleGetFacilityProfileVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetFacilityProfilesById">
+      <documentation>
+        This API gets the facility profile by facility id.
+        The client sends list of "facility_id" for specify the facility profile to search.
+        The service returns the facility profile that matches to "facility_id".
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetFacilityProfilesByIdRequest" />
+      <wsdl:output message="tns:ScheduleGetFacilityProfilesByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetFacilitiesById">
+      <documentation>
+        This API gets the facility by facility id.
+        The client sends list of "facility_id" for specify the facility to search.
+        The service returns the facility that matches to "facility_id".
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetFacilitiesByIdRequest" />
+      <wsdl:output message="tns:ScheduleGetFacilitiesByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetFacilityGroupsVersions">
+      <documentation>
+        This API gets the modified facility groups.
+        "facility_group_item" is a list of facility group's that a client has.
+
+        The service returns the operation to the received facility group.
+        The operations are compared by the version number.
+        - "modify" is returned when the version number that the service has is different.
+        - A facility group that exists in the service that had not been sent from client is "add".
+        - A facility group that doesn't exist in facility group the service that has been sent from client is "remove "
+        - Nothing is returned when the version number is the same.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetFacilityGroupVersionsRequest" />
+      <wsdl:output message="tns:ScheduleGetFacilityGroupVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetFacilityGroupsById">
+      <documentation>
+        This API gets a facility group by facility group id.
+        The client sends list of "facility_group_id" for specify the facility group to search.
+        The service returns a facility group that matches to "facility_group_id".
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetFacilityGroupsByIdRequest" />
+      <wsdl:output message="tns:ScheduleGetFacilityGroupsByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetReadAllowUsers">
+      <documentation>
+        This API gets users allowed to read schedule by login user.
+        It is API used when the user list is given by the client.
+
+        The client sends empty requests.
+        The service returns the list of the user id from whom login user can read event.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetReadAllowUsersRequest" />
+      <wsdl:output message="tns:ScheduleGetReadAllowUsersResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetReadAllowGroups">
+      <documentation>
+        This API gets groups allowed to read schedule by login user.
+        It is API used when the group list is given by the client.
+
+        The client sends empty requests.
+        The service returns the list of the group id from whom login user can read event.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetReadAllowGroupsRequest" />
+      <wsdl:output message="tns:ScheduleGetReadAllowGroupsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetReadAllowFacilities">
+      <documentation>
+        This API gets facilities allowed to read schedule by login user.
+        It is API used when the facility list is given by the client.
+
+        The client sends empty requests.
+        The service returns the list of the facility id from whom login user can read event.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetReadAllowFacilitiesRequest" />
+      <wsdl:output message="tns:ScheduleGetReadAllowFacilitiesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetAddAllowUsers">
+      <documentation>
+        This API gets users allowed to add schedule by login user.
+        It is API used when the user list is given by the client.
+
+        The client sends empty requests.
+        The service returns the list of the user id from whom login user can add event.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetAddAllowUsersRequest" />
+      <wsdl:output message="tns:ScheduleGetAddAllowUsersResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetAddAllowGroups">
+      <documentation>
+        This API gets groups allowed to add schedule by login user.
+        It is API used when the group list is given by the client.
+
+        The client sends empty requests.
+        The service returns the list of the group id from whom login user can add event.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetAddAllowGroupsRequest" />
+      <wsdl:output message="tns:ScheduleGetAddAllowGroupsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetAddAllowFacilities">
+      <documentation>
+        This API gets facilities allowed to add schedule by login user.
+        It is API used when the facility list is given by the client.
+
+        The client sends empty requests.
+        The service returns the list of the facility id from whom login user can add event.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetAddAllowFacilitiesRequest" />
+      <wsdl:output message="tns:ScheduleGetAddAllowFacilitiesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetModifyAllowUsers">
+      <documentation>
+        This API gets users allowed to modify schedule by login user.
+        This API is used to put out the modify button by the client.
+
+        The client sends empty requests.
+        The service returns the list of the user id from whom login user can modify event.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetModifyAllowUsersRequest" />
+      <wsdl:output message="tns:ScheduleGetModifyAllowUsersResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetModifyAllowGroups">
+      <documentation>
+        This API gets groups allowed to modify schedule by login user.
+        This API is used to put out the modify button by the client.
+
+        The client sends empty requests.
+        The service returns the list of the group id from whom login user can modify event.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetModifyAllowGroupsRequest" />
+      <wsdl:output message="tns:ScheduleGetModifyAllowGroupsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetModifyAllowFacilities">
+      <documentation>
+        This API gets facilities allowed to modify schedule by login user.
+        This API is used to put out the modify button by the client.
+
+        The client sends empty requests.
+        The service returns the list of the facility id from whom login user can modify event.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetModifyAllowFacilitiesRequest" />
+      <wsdl:output message="tns:ScheduleGetModifyAllowFacilitiesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetRemoveAllowUsers">
+      <documentation>
+        This API gets users allowed to remove schedule by login user.
+        This API is used to put out the remove button by the client.
+
+        The client sends empty requests.
+        The service returns the list of the user id from whom login user can remove event.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetRemoveAllowUsersRequest" />
+      <wsdl:output message="tns:ScheduleGetRemoveAllowUsersResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetRemoveAllowGroups">
+      <documentation>
+        This API gets groups allowed to remove schedule by login user.
+        This API is used to put out the remove button by the client.
+
+        The client sends empty requests.
+        The service returns the list of the group id from whom login user can remove event.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetRemoveAllowGroupsRequest" />
+      <wsdl:output message="tns:ScheduleGetRemoveAllowGroupsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetRemoveAllowFacilities">
+      <documentation>
+        This API gets facilities allowed to remove schedule by login user.
+        This API is used to put out the remove button by the client.
+
+        The client sends empty requests.
+        The service returns the list of the facility id from whom login user can remove event.
+      </documentation>
+      <wsdl:input message="tns:ScheduleGetRemoveAllowFacilitiesRequest" />
+      <wsdl:output message="tns:ScheduleGetRemoveAllowFacilitiesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleFileDownload">
+      <wsdl:input message="tns:ScheduleFileDownloadRequest" />
+      <wsdl:output message="tns:ScheduleFileDownloadResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ScheduleBinding" type="tns:SchedulePort">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="ScheduleGetEventVersions">
+      <soap12:operation soapAction="ScheduleGetEventVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetEvents">
+      <soap12:operation soapAction="ScheduleGetEvents" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetEventsById">
+      <soap12:operation soapAction="ScheduleGetEventsById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetEventsByTarget">
+      <soap12:operation soapAction="ScheduleGetEventsByTarget" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleAddEvents">
+      <soap12:operation soapAction="ScheduleAddEvents" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleModifyEvents">
+      <soap12:operation soapAction="ScheduleModifyEvents" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleModifyRepeatEvents">
+      <soap12:operation soapAction="ScheduleModifyRepeatEvents" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleRemoveEvents">
+      <soap12:operation soapAction="ScheduleRemoveEvents" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleRemoveEventsFromRepeatEvent">
+      <soap12:operation soapAction="ScheduleRemoveEventsFromRepeatEvent" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleSearchEvents">
+      <soap12:operation soapAction="ScheduleSearchEvents" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleSearchFreeTimes">
+      <soap12:operation soapAction="ScheduleSearchFreeTimes" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleAddFollows">
+      <soap12:operation soapAction="ScheduleAddFollows" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleAddFollowsToRepeatEvent">
+      <soap12:operation soapAction="ScheduleAddFollowsToRepeatEvent" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleRemoveFollows">
+      <soap12:operation soapAction="ScheduleRemoveFollows" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleDetermineTemporaryEvents">
+      <soap12:operation soapAction="ScheduleDetermineTemporaryEvents" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleRemoveTemporaryEventCandidates">
+      <soap12:operation soapAction="ScheduleRemoveTemporaryEventCandidates" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleParticipateEvents">
+      <soap12:operation soapAction="ScheduleParticipateEvents" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleParticipateEventsToRepeatEvent">
+      <soap12:operation soapAction="ScheduleParticipateEventsToRepeatEvent" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleLeaveEvents">
+      <soap12:operation soapAction="ScheduleLeaveEvents" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleLeaveEventsFromRepeatEvent">
+      <soap12:operation soapAction="ScheduleLeaveEventsFromRepeatEvent" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetProfiles">
+      <soap12:operation soapAction="ScheduleGetProfiles" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleSetProfiles">
+      <soap12:operation soapAction="ScheduleSetProfiles" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetFacilityVersions">
+      <soap12:operation soapAction="ScheduleGetFacilityVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetFacilityProfileVersions">
+      <soap12:operation soapAction="ScheduleGetFacilityProfileVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetFacilityProfilesById">
+      <soap12:operation soapAction="ScheduleGetFacilityProfilesById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetFacilitiesById">
+      <soap12:operation soapAction="ScheduleGetFacilitiesById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetFacilityGroupsVersions">
+      <soap12:operation soapAction="ScheduleGetFacilityGroupVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetFacilityGroupsById">
+      <soap12:operation soapAction="ScheduleGetFacilityGroupsById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetReadAllowUsers">
+      <soap12:operation soapAction="ScheduleGetReadAllowUsers" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetReadAllowGroups">
+      <soap12:operation soapAction="ScheduleGetReadAllowGroups" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetReadAllowFacilities">
+      <soap12:operation soapAction="ScheduleGetReadAllowFacilities" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetAddAllowUsers">
+      <soap12:operation soapAction="ScheduleGetAddAllowUsers" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetAddAllowGroups">
+      <soap12:operation soapAction="ScheduleGetAddAllowGroups" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetAddAllowFacilities">
+      <soap12:operation soapAction="ScheduleGetAddAllowFacilities" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetModifyAllowUsers">
+      <soap12:operation soapAction="ScheduleGetModifyAllowUsers" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetModifyAllowGroups">
+      <soap12:operation soapAction="ScheduleGetModifyAllowGroups" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetModifyAllowFacilities">
+      <soap12:operation soapAction="ScheduleGetModifyAllowFacilities" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetRemoveAllowUsers">
+      <soap12:operation soapAction="ScheduleGetRemoveAllowUsers" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetRemoveAllowGroups">
+      <soap12:operation soapAction="ScheduleGetRemoveAllowGroups" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleGetRemoveAllowFacilities">
+      <soap12:operation soapAction="ScheduleGetRemoveAllowFacilities" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ScheduleFileDownload">
+      <soap12:operation soapAction="ScheduleFileDownload" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/schedule/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>

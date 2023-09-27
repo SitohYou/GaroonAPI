@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://wsdl.cybozu.co.jp/message/2008" xmlns:typens="http://wsdl.cybozu.co.jp/message/2008/types" xmlns:base_services="http://wsdl.cybozu.co.jp/base/2008" xmlns="http://schemas.xmlsoap.org/wsdl/" name="CybozuMessageServices" targetNamespace="http://wsdl.cybozu.co.jp/message/2008" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import namespace="http://wsdl.cybozu.co.jp/base/2008" location="base.wsdl" />
+  <wsdl:types>
+    <xsd:schema xmlns:message="http://schemas.cybozu.co.jp/message/2008" xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns:base_types="http://wsdl.cybozu.co.jp/base/2008/types" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://wsdl.cybozu.co.jp/message/2008/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+      <xsd:import schemaLocation="message.xsd" namespace="http://schemas.cybozu.co.jp/message/2008" />
+      <xsd:import namespace="http://wsdl.cybozu.co.jp/base/2008/types" />
+      <xsd:complexType name="MessageGetFolderVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="folder_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageGetFolderVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="folder_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageRemoveThreadType">
+        <xsd:attribute name="folder_id" type="base:IDType" use="required" />
+        <xsd:attribute name="thread_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:simpleType name="MessageFolderTypeType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="root" />
+          <xsd:enumeration value="received" />
+          <xsd:enumeration value="sent" />
+          <xsd:enumeration value="draft" />
+          <xsd:enumeration value="trash" />
+          <xsd:enumeration value="user_folder" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="MessageFolderType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="message:FolderType">
+            <xsd:attribute name="folder_type" type="typens:MessageFolderTypeType" use="required" />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MessageGetFoldersByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="folder_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageGetFoldersByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="folder" type="typens:MessageFolderType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageGetThreadVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="thread_item" type="base_types:ItemVersionType" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="folder_id" type="base:IDType" />
+        </xsd:sequence>
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="MessageGetThreadVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="thread_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageGetThreadsByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="thread_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageGetThreadsByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="thread" type="message:ThreadType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageCreateThreadType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="thread" type="message:ThreadType" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="file">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="1" maxOccurs="1" name="content" type="xsd:base64Binary" />
+              </xsd:sequence>
+              <xsd:attribute name="id" type="base:IDType" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="remove_file_id" type="base:IDType" />
+        </xsd:sequence>
+        <xsd:attribute name="draft_id" type="base:IDType" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="MessageCreateThreadsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="create_thread" type="typens:MessageCreateThreadType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageCreateThreadsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="thread" type="message:ThreadType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageModifyThreadsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="modify_thread" type="typens:MessageCreateThreadType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageModifyThreadsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="thread" type="message:ThreadType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageSaveDraftThreadsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="save_draft_thread" type="typens:MessageCreateThreadType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageSaveDraftThreadsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="thread" type="message:ThreadType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageRemoveThreadsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="param" type="typens:MessageRemoveThreadType" />
+        </xsd:sequence>
+        <xsd:attribute name="delete_all_inbox" type="xsd:boolean" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="MessageConfirmThreadsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="thread_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageConfirmThreadsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="thread" type="message:ThreadType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageSearchThreadsRequestType">
+        <xsd:attribute name="text" type="xsd:string" use="required" />
+        <xsd:attribute name="start" type="xsd:dateTime" use="optional" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+        <xsd:attribute name="folder_id" type="base:IDType" use="optional" />
+        <xsd:attribute name="search_sub_folders" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="title_search" type="xsd:boolean" use="required" />
+        <xsd:attribute name="body_search" type="xsd:boolean" use="required" />
+        <xsd:attribute name="from_search" type="xsd:boolean" use="required" />
+        <xsd:attribute name="addressee_search" type="xsd:boolean" use="required" />
+        <xsd:attribute name="follow_search" type="xsd:boolean" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="MessageSearchThreadsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="thread" type="message:ThreadType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageGetFollowsRequestType">
+        <xsd:attribute name="thread_id" type="base:IDType" use="required" />
+        <xsd:attribute name="offset" type="xsd:unsignedLong" use="required" />
+        <xsd:attribute name="limit" type="xsd:unsignedLong" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="MessageGetFollowsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="follow" type="message:FollowType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageAddFollowType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="follow" type="message:FollowType" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="file">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="1" maxOccurs="1" name="content" type="xsd:base64Binary" />
+              </xsd:sequence>
+              <xsd:attribute name="id" type="base:IDType" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="thread_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="MessageAddFollowsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="add_follow" type="typens:MessageAddFollowType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageAddFollowsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="thread" type="message:ThreadType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageRemoveFollowsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="follow_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessagePersonalProfileType">
+        <xsd:attribute name="use_trash" type="xsd:boolean" use="optional" />
+        <xsd:attribute default="5" name="trash_duration" type="xsd:positiveInteger" use="optional" />
+      </xsd:complexType>
+      <xsd:simpleType name="MessageConfirmActionType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Auto" />
+          <xsd:enumeration value="Manual" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="MessageSystemProfileType">
+        <xsd:attribute name="check_send_confirm" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="confirm_action" type="typens:MessageConfirmActionType" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="MessageGetProfilesRequestType">
+        <xsd:attribute name="include_system_profile" type="xsd:boolean" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="MessageGetProfilesResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="personal_profile" type="typens:MessagePersonalProfileType" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="system_profile" type="typens:MessageSystemProfileType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageSetProfilesRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="personal_profile" type="typens:MessagePersonalProfileType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageSetProfilesResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="personal_profile" type="typens:MessagePersonalProfileType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MessageFileDownloadRequestType">
+        <xsd:attribute name="file_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="MessageFileDownloadResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="file" type="base_types:FileBodyType" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="MessageGetFolderVersionsRequest">
+    <wsdl:part name="parameters" type="typens:MessageGetFolderVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MessageGetFolderVersionsResponse">
+    <wsdl:part name="returns" type="typens:MessageGetFolderVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MessageGetFoldersByIdRequest">
+    <wsdl:part name="parameters" type="typens:MessageGetFoldersByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MessageGetFoldersByIdResponse">
+    <wsdl:part name="returns" type="typens:MessageGetFoldersByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MessageGetThreadVersionsRequest">
+    <wsdl:part name="parameters" type="typens:MessageGetThreadVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MessageGetThreadVersionsResponse">
+    <wsdl:part name="returns" type="typens:MessageGetThreadVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MessageGetThreadsByIdRequest">
+    <wsdl:part name="parameters" type="typens:MessageGetThreadsByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MessageGetThreadsByIdResponse">
+    <wsdl:part name="returns" type="typens:MessageGetThreadsByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MessageCreateThreadsRequest">
+    <wsdl:part name="parameters" type="typens:MessageCreateThreadsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MessageCreateThreadsResponse">
+    <wsdl:part name="returns" type="typens:MessageCreateThreadsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MessageModifyThreadsRequest">
+    <wsdl:part name="parameters" type="typens:MessageModifyThreadsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MessageModifyThreadsResponse">
+    <wsdl:part name="returns" type="typens:MessageModifyThreadsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MessageRemoveThreadsRequest">
+    <wsdl:part name="parameters" type="typens:MessageRemoveThreadsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MessageSaveDraftThreadsRequest">
+    <wsdl:part name="parameters" type="typens:MessageSaveDraftThreadsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MessageSaveDraftThreadsResponse">
+    <wsdl:part name="returns" type="typens:MessageSaveDraftThreadsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MessageConfirmThreadsRequest">
+    <wsdl:part name="parameters" type="typens:MessageConfirmThreadsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MessageConfirmThreadsResponse">
+    <wsdl:part name="returns" type="typens:MessageConfirmThreadsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MessageSearchThreadsRequest">
+    <wsdl:part name="parameters" type="typens:MessageSearchThreadsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MessageSearchThreadsResponse">
+    <wsdl:part name="returns" type="typens:MessageSearchThreadsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MessageGetFollowsRequest">
+    <wsdl:part name="parameters" type="typens:MessageGetFollowsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MessageGetFollowsResponse">
+    <wsdl:part name="returns" type="typens:MessageGetFollowsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MessageAddFollowsRequest">
+    <wsdl:part name="parameters" type="typens:MessageAddFollowsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MessageAddFollowsResponse">
+    <wsdl:part name="returns" type="typens:MessageAddFollowsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MessageRemoveFollowsRequest">
+    <wsdl:part name="parameters" type="typens:MessageRemoveFollowsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MessageGetProfilesRequest">
+    <wsdl:part name="parameters" type="typens:MessageGetProfilesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MessageGetProfilesResponse">
+    <wsdl:part name="returns" type="typens:MessageGetProfilesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MessageSetProfilesRequest">
+    <wsdl:part name="parameters" type="typens:MessageSetProfilesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MessageSetProfilesResponse">
+    <wsdl:part name="returns" type="typens:MessageSetProfilesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="MessageFileDownloadRequest">
+    <wsdl:part name="parameters" type="typens:MessageFileDownloadRequestType" />
+  </wsdl:message>
+  <wsdl:message name="MessageFileDownloadResponse">
+    <wsdl:part name="returns" type="typens:MessageFileDownloadResponseType" />
+  </wsdl:message>
+  <wsdl:portType name="MessagePort">
+    <wsdl:operation name="MessageGetFolderVersions">
+      <documentation>
+        This API gets the modified folders for login user.
+        "folder_item" is a list of folders that a client has.
+      </documentation>
+      <wsdl:input message="tns:MessageGetFolderVersionsRequest" />
+      <wsdl:output message="tns:MessageGetFolderVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MessageGetFoldersById">
+      <documentation>
+        This API gets the folders by folder id.
+        The client sends list of "folder_id" for specify the folder to search.
+      </documentation>
+      <wsdl:input message="tns:MessageGetFoldersByIdRequest" />
+      <wsdl:output message="tns:MessageGetFoldersByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MessageGetThreadVersions">
+      <documentation>
+        This API gets the modified threads for login user.
+        "thread_item" is a list of threads that a client has.
+      </documentation>
+      <wsdl:input message="tns:MessageGetThreadVersionsRequest" />
+      <wsdl:output message="tns:MessageGetThreadVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MessageGetThreadsById">
+      <documentation>
+        This API gets the threads by thread id.
+        The client sends list of "thread_id" for specify the thread to search.
+      </documentation>
+      <wsdl:input message="tns:MessageGetThreadsByIdRequest" />
+      <wsdl:output message="tns:MessageGetThreadsByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MessageCreateThreads">
+      <documentation>
+        This API creates the threads.
+        The service returns the threads that created.
+      </documentation>
+      <wsdl:input message="tns:MessageCreateThreadsRequest" />
+      <wsdl:output message="tns:MessageCreateThreadsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MessageModifyThreads">
+      <documentation>
+        This API modifies the threads.
+        The service returns the threads that modified.
+      </documentation>
+      <wsdl:input message="tns:MessageModifyThreadsRequest" />
+      <wsdl:output message="tns:MessageModifyThreadsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MessageRemoveThreads">
+      <documentation>
+        This API removes the threads.
+        The service returns empty response.
+      </documentation>
+      <wsdl:input message="tns:MessageRemoveThreadsRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MessageSaveDraftThreads">
+      <documentation>
+        This API saves the draft threads.
+        The service returns the draft threads that saved.
+      </documentation>
+      <wsdl:input message="tns:MessageSaveDraftThreadsRequest" />
+      <wsdl:output message="tns:MessageSaveDraftThreadsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MessageConfirmThreads">
+      <documentation>
+        This API confirmes the threads.
+        The service returns the threads that confirmed.
+      </documentation>
+      <wsdl:input message="tns:MessageConfirmThreadsRequest" />
+      <wsdl:output message="tns:MessageConfirmThreadsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MessageSearchThreads">
+      <documentation>
+        This API searches the threads.
+      </documentation>
+      <wsdl:input message="tns:MessageSearchThreadsRequest" />
+      <wsdl:output message="tns:MessageSearchThreadsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MessageGetFollows">
+      <documentation>
+        This API gets follows from thread.
+        "offset" and "limit" specifies search range.
+      </documentation>
+      <wsdl:input message="tns:MessageGetFollowsRequest" />
+      <wsdl:output message="tns:MessageGetFollowsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MessageAddFollows">
+      <documentation>
+        This API add follows to thread.
+        The service returns the threads that a follow added.
+      </documentation>
+      <wsdl:input message="tns:MessageAddFollowsRequest" />
+      <wsdl:output message="tns:MessageAddFollowsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MessageRemoveFollows">
+      <documentation>
+        This API remove follows from thread.
+        The service returns empty response.
+      </documentation>
+      <wsdl:input message="tns:MessageRemoveFollowsRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MessageGetProfiles">
+      <documentation>
+        This API gets profiles in the message application.
+      </documentation>
+      <wsdl:input message="tns:MessageGetProfilesRequest" />
+      <wsdl:output message="tns:MessageGetProfilesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MessageSetProfiles">
+      <documentation>
+        This API sets profiles in the message application.
+      </documentation>
+      <wsdl:input message="tns:MessageSetProfilesRequest" />
+      <wsdl:output message="tns:MessageSetProfilesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="MessageFileDownload">
+      <documentation>
+        This API download the file in message.
+      </documentation>
+      <wsdl:input message="tns:MessageFileDownloadRequest" />
+      <wsdl:output message="tns:MessageFileDownloadResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MessageBinding" type="tns:MessagePort">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="MessageGetFolderVersions">
+      <soap12:operation soapAction="MessageGetFolderVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MessageGetFoldersById">
+      <soap12:operation soapAction="MessageGetFoldersById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MessageGetThreadVersions">
+      <soap12:operation soapAction="MessageGetThreadVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MessageGetThreadsById">
+      <soap12:operation soapAction="MessageGetThreadsById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MessageCreateThreads">
+      <soap12:operation soapAction="MessageSaveCreateThreads" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MessageModifyThreads">
+      <soap12:operation soapAction="MessageSaveModifyThreads" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MessageSaveDraftThreads">
+      <soap12:operation soapAction="MessageSaveDraftThreads" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MessageConfirmThreads">
+      <soap12:operation soapAction="MessageConfirmThreads" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MessageRemoveThreads">
+      <soap12:operation soapAction="MessageRemoveThreads" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MessageSearchThreads">
+      <soap12:operation soapAction="MessageSearchThreads" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MessageGetFollows">
+      <soap12:operation soapAction="MessageGetFollows" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MessageAddFollows">
+      <soap12:operation soapAction="MessageAddFollows" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MessageRemoveFollows">
+      <soap12:operation soapAction="MessageRemoveFollows" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MessageGetProfiles">
+      <soap12:operation soapAction="MessageGetProfiles" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MessageSetProfiles">
+      <soap12:operation soapAction="MessageSetProfiles" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="MessageFileDownload">
+      <soap12:operation soapAction="MessageFileDownload" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/message/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>

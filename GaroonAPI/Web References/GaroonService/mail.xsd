@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.cybozu.co.jp/mail/2008" elementFormDefault="qualified" targetNamespace="http://schemas.cybozu.co.jp/mail/2008" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+  <xsd:element name="root">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="servers" />
+        <xsd:element ref="accounts" />
+        <xsd:element ref="mails" />
+        <xsd:element ref="user_profiles" />
+        <xsd:element ref="system_profile" />
+        <xsd:element minOccurs="0" maxOccurs="1" ref="files" />
+        <xsd:element minOccurs="0" maxOccurs="1" ref="mail_sources" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="servers">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="server" type="ServerType" />
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:key name="server_key">
+      <xsd:selector xpath="server" />
+      <xsd:field xpath="@key" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:element name="accounts">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="account" type="AccountType" />
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:key name="account_key">
+      <xsd:selector xpath="account" />
+      <xsd:field xpath="@key" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:element name="mails">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="mail" type="MailType" />
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:key name="mail_key">
+      <xsd:selector xpath="mail" />
+      <xsd:field xpath="@key" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:element name="user_profiles">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="user_profile" type="UserProfileType" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="system_profile" type="SystemProfileType" />
+  <xsd:complexType name="ServerType">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="smtp" type="SmtpServerType" />
+      <xsd:choice minOccurs="1" maxOccurs="1">
+        <xsd:element name="pop" type="PopServerType" />
+        <xsd:element name="imap" type="ImapServerType" />
+      </xsd:choice>
+    </xsd:sequence>
+    <xsd:attribute name="key" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:complexType name="SmtpServerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="MailServerType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="pop_before_smtp">
+            <xsd:complexType>
+              <xsd:attribute default="false" name="enable" type="xsd:boolean" use="optional" />
+              <xsd:attribute default="0" name="wait_seconds" type="xsd:nonNegativeInteger" use="optional" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute default="true" name="use_pop_account" type="xsd:boolean" use="optional" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="PopServerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="MailServerType">
+        <xsd:attribute name="apop" type="xsd:boolean" use="optional" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="ImapServerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="MailServerType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="MailServerType">
+    <xsd:attribute name="host" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute default="110" name="port" type="xsd:unsignedShort" use="optional" />
+    <xsd:attribute default="10" name="timeout" type="xsd:positiveInteger" use="optional" />
+    <xsd:attribute default="false" name="over_ssl" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="sasl_mechanism" type="SaslMechanismType" use="optional" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:simpleType name="SaslMechanismType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="LOGIN" />
+      <xsd:enumeration value="PLAIN" />
+      <xsd:enumeration value="CRAM-MD5" />
+      <xsd:enumeration value="DIGEST-MD5" />
+      <xsd:enumeration value="GSSAPI" />
+      <xsd:enumeration value="KERBEROS_V4" />
+      <xsd:enumeration value="KERBEROS_V5" />
+      <xsd:enumeration value="NTLM" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="AccountType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="mailbox" type="MailboxType">
+        <xsd:key name="mailbox_folder_key">
+          <xsd:selector xpath=".//folder" />
+          <xsd:field xpath="@key" />
+        </xsd:key>
+        <xsd:keyref name="mailbox_folder_key_res" refer="mailbox_folder_key">
+          <xsd:selector xpath="./filter" />
+          <xsd:field xpath="@folder" />
+        </xsd:keyref>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="1" name="signatures">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="signature">
+              <xsd:complexType>
+                <xsd:simpleContent>
+                  <xsd:extension base="xsd:string">
+                    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+                  </xsd:extension>
+                </xsd:simpleContent>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="key" type="base:IDType" use="required" />
+    <xsd:attribute name="version" type="base:VersionType" use="required" />
+    <xsd:attribute name="user_id" type="xsd:string" use="required" />
+    <xsd:attribute name="server_id" type="xsd:string" use="required" />
+    <xsd:attribute name="email" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="username" type="xsd:string" use="required" />
+    <xsd:attribute name="password" type="xsd:string" use="required" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:complexType name="MailboxType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="filters">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="filter" type="FilterType" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="1" name="inbox" type="BuiltInFolderType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="sent" type="BuiltInFolderType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="draft" type="BuiltInFolderType" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="trash" type="BuiltInFolderType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="folder" type="FolderType" />
+    </xsd:sequence>
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:complexType name="BuiltInFolderType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="mail">
+        <xsd:complexType>
+          <xsd:attribute name="id" type="base:IDType" use="required" />
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="key" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="description" type="xsd:string" use="optional" />
+    <xsd:attribute name="subscribe" type="xsd:boolean" use="optional" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:complexType name="FolderType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="BuiltInFolderType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="folder" type="FolderType" />
+        </xsd:sequence>
+        <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+        <xsd:attribute name="order" type="xsd:unsignedLong" use="optional" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="FilterType">
+    <xsd:sequence>
+      <xsd:choice minOccurs="1" maxOccurs="unbounded">
+        <xsd:element name="expr" type="FilterExprType" />
+        <xsd:element name="size" type="FilterSizeType" />
+      </xsd:choice>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="folder" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="operator" type="FilterOperatorType" use="required" />
+    <xsd:attribute name="status" type="xsd:string" />
+  </xsd:complexType>
+  <xsd:simpleType name="FilterOperatorType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="AND" />
+      <xsd:enumeration value="OR" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="FilterExprType">
+    <xsd:attribute name="target" use="required">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Subject" />
+          <xsd:enumeration value="From" />
+          <xsd:enumeration value="To" />
+          <xsd:enumeration value="CC" />
+          <xsd:enumeration value="Header" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="content" type="xsd:string" use="optional" />
+    <xsd:attribute name="method" type="FilterExprOperatorType" use="required" />
+  </xsd:complexType>
+  <xsd:simpleType name="FilterExprOperatorType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Including" />
+      <xsd:enumeration value="Excluding" />
+      <xsd:enumeration value="Equal" />
+      <xsd:enumeration value="NotEqual" />
+      <xsd:enumeration value="Begin" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="FilterSizeType">
+    <xsd:attribute name="target" use="required">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Mail" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="content" type="xsd:nonNegativeInteger" use="required" />
+    <xsd:attribute name="method" type="FilterSizeOperatorType" use="required" />
+  </xsd:complexType>
+  <xsd:simpleType name="FilterSizeOperatorType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="LessThanOrEqual" />
+      <xsd:enumeration value="GreaterThanOrEqual" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="MailType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="file">
+        <xsd:complexType>
+          <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+          <xsd:attribute name="id" type="base:IDType" use="required" />
+          <xsd:attribute name="size" type="xsd:unsignedLong" use="optional" />
+          <xsd:attribute name="mime_type" type="xsd:string" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="1" name="source">
+        <xsd:complexType>
+          <xsd:attribute name="id" type="base:IDType" use="required" />
+          <xsd:attribute name="size" type="xsd:unsignedLong" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="from" type="MailAddressType" />
+      <xsd:element minOccurs="0" name="sender" type="MailAddressType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="to" type="MailAddressType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="cc" type="MailAddressType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="bcc" type="MailAddressType" />
+      <xsd:element minOccurs="0" name="reply_to" type="MailAddressType" />
+      <xsd:element minOccurs="0" name="disposition_notification_to" type="MailAddressType" />
+    </xsd:sequence>
+    <xsd:attribute name="key" type="base:IDType" use="required" />
+    <xsd:attribute name="version" type="base:VersionType" use="required" />
+    <xsd:attribute name="subject" type="xsd:string" use="required" />
+    <xsd:attribute name="body" type="xsd:string" use="required" />
+    <xsd:attribute name="html_body" type="xsd:string" use="optional" />
+    <xsd:attribute name="date" type="xsd:dateTime" use="optional" />
+    <xsd:attribute name="read" type="xsd:dateTime" use="optional" />
+    <xsd:attribute name="size" type="xsd:unsignedLong" use="optional" />
+    <xsd:attribute name="is_sent" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="is_draft" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="folder_key" type="base:IDType" use="required" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:complexType name="MailAddressType">
+    <xsd:attribute name="name" type="xsd:string" use="optional" />
+    <xsd:attribute name="address" type="xsd:string" use="required" />
+  </xsd:complexType>
+  <xsd:complexType name="UserProfileType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="from_name">
+        <xsd:complexType>
+          <xsd:attribute name="account_id" type="base:IDType" use="required" />
+          <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="user_id" type="xsd:string" use="required" />
+    <xsd:attribute default="false" name="wrap" type="xsd:boolean" use="optional" />
+    <xsd:attribute default="70" name="linewidth" type="xsd:positiveInteger" use="optional" />
+    <xsd:attribute default="false" name="save_send_files" type="xsd:boolean" use="optional" />
+    <xsd:attribute default="false" name="show_preview" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="send_charset" type="xsd:string" use="optional" />
+    <xsd:attribute default="false" name="send_vcard" type="xsd:boolean" use="optional" />
+    <xsd:attribute default="true" name="use_trash" type="xsd:boolean" use="optional" />
+    <xsd:attribute default="5" name="trash_duration" type="xsd:positiveInteger" use="optional" />
+    <xsd:attribute name="use_message_disposition_notification" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="reply_message_disposition_notification" use="optional">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="None" />
+          <xsd:enumeration value="ShowConfirmMessage" />
+          <xsd:enumeration value="ReplyAlways" />
+          <xsd:enumeration value="ReplyIncludingToOrCC" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="use_status" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="use_history" type="xsd:boolean" use="optional" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:complexType name="SystemProfileType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="auto_receive">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="receive_time" type="xsd:time" />
+          </xsd:sequence>
+          <xsd:attribute name="interval" type="xsd:duration" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="size_limits" type="SizeLimitsType" />
+      <xsd:element minOccurs="0" name="user_authorities" type="UserAuthoritiesType" />
+    </xsd:sequence>
+    <xsd:attribute name="disable_client" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="check_new_mail_at_login" type="xsd:boolean" use="optional" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:complexType name="SizeLimitsType">
+    <xsd:attribute name="total_kb" type="xsd:positiveInteger" use="optional" />
+    <xsd:attribute name="receive_kb" type="xsd:positiveInteger" use="optional" />
+    <xsd:attribute name="send_kb" type="xsd:positiveInteger" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="UserAuthoritiesType">
+    <xsd:attribute name="account_all_permission" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="account_modification" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="store_on_server" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="new_mail_check" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="collective_reception" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="send_markup_body" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="display_markup_image" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="message_disposition_notification" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="status" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="history" type="xsd:boolean" use="optional" />
+  </xsd:complexType>
+  <xsd:element name="files">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="file" type="base:FileType" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="mail_sources">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="mail_source">
+          <xsd:complexType>
+            <xsd:attribute name="content" type="xsd:string" />
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="DeleteUserAccount">
+    <xsd:attribute name="account_id" type="base:IDType" use="required" />
+    <xsd:attribute name="delete_all_email" type="xsd:boolean" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="Account_Info">
+    <xsd:attribute name="account_id" type="base:IDType" use="required" />
+    <xsd:attribute name="user_id" type="base:IDType" use="required" />
+    <xsd:attribute name="user_acount_code" type="xsd:string" use="required" />
+    <xsd:attribute name="user_account_name" type="xsd:string" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="MailSetting">
+    <xsd:attribute name="mail_server_id" type="xsd:string" use="required" />
+    <xsd:attribute name="email" type="xsd:string" use="required" />
+    <xsd:attribute name="acount_name" type="xsd:string" use="required" />
+    <xsd:attribute name="password" type="xsd:string" use="optional" />
+    <xsd:attribute name="leave_server_mail" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="deactivate_user_account" type="xsd:boolean" use="optional" />
+  </xsd:complexType>
+  <xsd:simpleType name="MailServerEncryptedConnectionType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="NONE" />
+      <xsd:enumeration value="SSL" />
+      <xsd:enumeration value="TLS" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="MailServerInfoType">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="outgoing">
+        <xsd:complexType>
+          <xsd:attribute name="server_name" type="base:NonBlankStringType" use="required" />
+          <xsd:attribute name="port_number" type="xsd:positiveInteger" use="required" />
+          <xsd:attribute name="encrypted_connection" type="MailServerEncryptedConnectionType" use="optional" />
+          <xsd:attribute name="smtp_auth" use="optional">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="NONE" />
+                <xsd:enumeration value="PLAIN" />
+                <xsd:enumeration value="LOGIN" />
+                <xsd:enumeration value="CRAM-MD5" />
+                <xsd:enumeration value="DIGEST-MD5" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+          <xsd:attribute name="account_for_send" type="xsd:boolean" use="optional" />
+          <xsd:attribute name="pop_before_smtp" type="xsd:boolean" use="optional" />
+          <xsd:attribute name="pop_before_smtp_wait_time" type="xsd:nonNegativeInteger" use="optional" />
+          <xsd:attribute name="timeout" type="xsd:positiveInteger" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="1" maxOccurs="1" name="incoming">
+        <xsd:complexType>
+          <xsd:attribute name="receive_protocol" use="required">
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="POP3" />
+                <xsd:enumeration value="IMAP4" />
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:attribute>
+          <xsd:attribute name="server_name" type="base:NonBlankStringType" use="required" />
+          <xsd:attribute name="port_number" type="xsd:positiveInteger" use="required" />
+          <xsd:attribute name="use_ssl" type="xsd:boolean" use="optional" />
+          <xsd:attribute name="apop_auth_for_pop3" type="xsd:boolean" use="optional" />
+          <xsd:attribute name="timeout" type="xsd:positiveInteger" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="base:IDType" use="required" />
+    <xsd:attribute name="server_code" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="server_name" type="base:NonBlankStringType" use="required" />
+  </xsd:complexType>
+</xsd:schema>

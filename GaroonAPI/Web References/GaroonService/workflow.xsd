@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns="http://schemas.cybozu.co.jp/workflow/2008" elementFormDefault="qualified" targetNamespace="http://schemas.cybozu.co.jp/workflow/2008" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+  <xsd:element name="workflow">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="1" ref="applications" />
+        <xsd:element minOccurs="0" maxOccurs="1" ref="folders" />
+        <xsd:element minOccurs="0" maxOccurs="1" ref="proxies" />
+        <xsd:element minOccurs="0" maxOccurs="1" ref="files" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="applications">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="application" type="ApplicationType" />
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:key name="application_id_key">
+      <xsd:selector xpath="application" />
+      <xsd:field xpath="@id" />
+    </xsd:key>
+    <xsd:key name="step_id_key">
+      <xsd:selector xpath="application/steps/step" />
+      <xsd:field xpath="@id" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:complexType name="ApplicationType">
+    <xsd:annotation>
+      <xsd:documentation>
+        steps/step/processor/@result attribute stands for the result of each processor.
+        steps/step/@status attribute stands for the result of each step.
+        (e.x. "approved", "rejected", ...)
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="applicant">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="proxy">
+              <xsd:complexType>
+                <xsd:attribute name="id" type="base:IDType" use="optional" />
+                <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+                <xsd:anyAttribute processContents="lax" />
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+          <xsd:attribute name="id" type="base:IDType" use="optional" />
+          <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+          <xsd:anyAttribute processContents="lax" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="1" maxOccurs="1" name="items">
+        <xsd:complexType>
+          <xsd:choice minOccurs="1" maxOccurs="unbounded">
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="ItemType" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="files_item" type="FilesItemType" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="blank_item" />
+          </xsd:choice>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="1" maxOccurs="1" name="steps">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="step">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element minOccurs="1" maxOccurs="unbounded" name="processor">
+                    <xsd:complexType>
+                      <xsd:sequence>
+                        <xsd:element minOccurs="0" maxOccurs="1" name="proxy">
+                          <xsd:complexType>
+                            <xsd:attribute name="id" type="base:IDType" use="optional" />
+                            <xsd:attribute name="processor_name" type="xsd:string" use="required" />
+                            <xsd:anyAttribute processContents="lax" />
+                          </xsd:complexType>
+                        </xsd:element>
+                      </xsd:sequence>
+                      <xsd:attribute name="id" type="base:IDType" use="optional" />
+                      <xsd:attribute name="processor_name" type="xsd:string" use="required" />
+                      <xsd:attribute name="date" type="xsd:dateTime" use="optional" />
+                      <xsd:attribute name="comment" type="xsd:string" use="optional" />
+                      <xsd:attribute name="result" type="base:NonBlankStringType" use="optional" />
+                      <xsd:anyAttribute processContents="lax" />
+                    </xsd:complexType>
+                  </xsd:element>
+                </xsd:sequence>
+                <xsd:attribute name="id" type="base:IDType" use="required" />
+                <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+                <xsd:attribute name="type" type="StepTypeType" use="required" />
+                <xsd:attribute name="is_approval_step" type="base:NonBlankStringType" use="optional" />
+                <xsd:anyAttribute processContents="lax" />
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="operation" type="OperationType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="folder">
+        <xsd:complexType>
+          <xsd:attribute name="id" type="base:IDType" use="required" />
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="base:IDType" use="required" />
+    <xsd:attribute name="version" type="base:VersionType" use="required" />
+    <xsd:attribute name="status" type="StatusType" use="required" />
+    <xsd:attribute name="name" type="xsd:string" use="optional" />
+    <xsd:attribute name="number" type="base:NonBlankStringType" use="optional" />
+    <xsd:attribute name="date" type="xsd:dateTime" use="required" />
+    <xsd:attribute name="processing_step" type="base:IDType" use="required" />
+    <xsd:attribute name="urgent" type="xsd:boolean" use="optional" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:element name="folders">
+    <xsd:annotation>
+      <xsd:documentation>
+        Folders are used to categorize applications.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="folders_for_user">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="folder" type="FolderType" />
+            </xsd:sequence>
+            <xsd:attribute name="user_id" type="base:NonBlankStringType" use="required" />
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="proxies">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="user_proxy">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="proxy_approver">
+                <xsd:complexType>
+                  <xsd:attribute name="approver_id" type="base:IDType" use="required" />
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="proxy_applicant">
+                <xsd:complexType>
+                  <xsd:attribute name="applicant_id" type="base:IDType" use="required" />
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+            <xsd:attribute name="user_id" type="base:IDType" use="required" />
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="FolderType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="application">
+        <xsd:complexType>
+          <xsd:attribute name="id" type="base:IDType" use="required" />
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="base:IDType" use="required" />
+    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+  </xsd:complexType>
+  <xsd:complexType name="OperationType">
+    <xsd:annotation>
+      <xsd:documentation>
+        In "to" attribute of "sent_back" element, use step ID.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice>
+      <xsd:element minOccurs="0" maxOccurs="1" name="sent_back">
+        <xsd:complexType>
+          <xsd:choice minOccurs="1" maxOccurs="unbounded">
+            <xsd:element name="applicant" />
+            <xsd:element name="step">
+              <xsd:complexType>
+                <xsd:attribute name="step_id" type="base:IDType" use="required" />
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:choice>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="1" name="approve" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="reject" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="withdraw" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="cancel" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="confirm" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="acknowledge" />
+    </xsd:choice>
+  </xsd:complexType>
+  <xsd:simpleType name="StatusType">
+    <xsd:restriction base="xsd:string" />
+  </xsd:simpleType>
+  <xsd:simpleType name="ApproverType">
+    <xsd:union memberTypes="xsd:string base:IDType" />
+  </xsd:simpleType>
+  <xsd:simpleType name="StepTypeType">
+    <xsd:restriction base="xsd:string" />
+  </xsd:simpleType>
+  <xsd:simpleType name="StepStatusType">
+    <xsd:restriction base="xsd:string" />
+  </xsd:simpleType>
+  <xsd:complexType name="ItemType">
+    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="value" type="xsd:string" use="required" />
+    <xsd:attribute name="right_align" type="xsd:boolean" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="FilesItemType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="file">
+        <xsd:complexType>
+          <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+          <xsd:attribute name="file_id" type="base:IDType" use="required" />
+          <xsd:attribute name="size" type="xsd:unsignedLong" use="optional" />
+          <xsd:attribute name="mime_type" type="xsd:string" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="inline" type="xsd:boolean" use="optional" />
+  </xsd:complexType>
+  <xsd:element name="files">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="file" type="base:FileType" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="RequestManageFormType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        "form_request_item" is assigned, return the list of Manage Request Form
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="manage_request_form">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="manage_item_detail">
+              <xsd:complexType>
+                <xsd:attribute name="pid" type="base:IDType" use="required" />
+                <xsd:attribute name="number" type="base:IDType" use="required" />
+                <xsd:attribute name="priority" type="xsd:string" use="required" />
+                <xsd:attribute name="subject" type="xsd:string" use="required" />
+                <xsd:attribute name="status" type="StatusType" use="required" />
+                <xsd:attribute name="applicant" type="base:IDType" use="required" />
+                <xsd:attribute name="last_approver" type="ApproverType" use="required" />
+                <xsd:attribute name="request_date" type="xsd:dateTime" use="required" />
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+          <xsd:attribute name="id_request_form" type="base:IDType" use="optional" />
+          <xsd:attribute name="name_request_form" type="xsd:string" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id_category" type="base:IDType" use="optional" />
+    <xsd:attribute name="name_category" type="xsd:string" use="optional" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:complexType name="CategoriesType">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="child_category" type="CategoryType" />
+    </xsd:sequence>
+    <xsd:attribute name="id" type="base:IDType" use="required" />
+    <xsd:attribute name="code" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="parent_category" type="base:IDType" use="optional" />
+    <xsd:attribute name="memo" type="base:NonBlankStringType" use="optional" />
+    <xsd:attribute name="create_time" type="base:IDType" use="optional" />
+    <xsd:attribute name="modify_time" type="base:IDType" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="CategoryType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="child_category" type="ChildCategoriesType" />
+    </xsd:sequence>
+    <xsd:attribute name="id" type="base:IDType" use="required" />
+    <xsd:attribute name="code" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="parent_category" type="base:IDType" use="optional" />
+    <xsd:attribute name="memo" type="base:NonBlankStringType" use="optional" />
+    <xsd:attribute name="create_time" type="base:IDType" use="optional" />
+    <xsd:attribute name="modify_time" type="base:IDType" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="ChildCategoriesType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="child_category" type="CategoryType" />
+    </xsd:sequence>
+    <xsd:attribute name="id" type="base:IDType" use="required" />
+    <xsd:attribute name="code" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="parent_category" type="base:IDType" use="optional" />
+    <xsd:attribute name="memo" type="base:NonBlankStringType" use="optional" />
+    <xsd:attribute name="create_time" type="base:IDType" use="optional" />
+    <xsd:attribute name="modify_time" type="base:IDType" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="RequestFormType">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="unbounded" name="requestForm">
+        <xsd:complexType>
+          <xsd:attribute name="fid" type="base:IDType" use="required" />
+          <xsd:attribute name="type" type="base:NonBlankStringType" use="required" />
+          <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+          <xsd:attribute name="active" type="base:IDType" use="optional" />
+          <xsd:attribute name="icon_type" type="base:NonBlankStringType" use="optional" />
+          <xsd:attribute name="icon_id" type="base:IDType" use="optional" />
+          <xsd:attribute name="icon_url" type="base:IDType" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="category_id" type="base:IDType" use="required" />
+  </xsd:complexType>
+  <xsd:complexType name="FileAttachedDetail">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="file_header">
+        <xsd:complexType>
+          <xsd:attribute name="file_id" type="base:IDType" use="required" />
+          <xsd:attribute name="request_form_id" type="base:IDType" use="required" />
+          <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+          <xsd:attribute name="size" type="base:NonBlankStringType" use="required" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="1" maxOccurs="1" name="file_information">
+        <xsd:complexType>
+          <xsd:attribute name="subject" type="base:NonBlankStringType" use="required" />
+          <xsd:attribute name="versioning" type="base:NonBlankStringType" use="required" />
+          <xsd:attribute name="create_time" type="base:IDType" use="optional" />
+          <xsd:attribute name="modyfy_time" type="base:IDType" use="optional" />
+          <xsd:attribute name="description" type="base:NonBlankStringType" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

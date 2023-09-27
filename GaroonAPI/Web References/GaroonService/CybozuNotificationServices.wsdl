@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://wsdl.cybozu.co.jp/notification/2008" xmlns:typens="http://wsdl.cybozu.co.jp/notification/2008/types" xmlns:base_services="http://wsdl.cybozu.co.jp/base/2008" xmlns="http://schemas.xmlsoap.org/wsdl/" name="CybozuNotificationServices" targetNamespace="http://wsdl.cybozu.co.jp/notification/2008" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import namespace="http://wsdl.cybozu.co.jp/base/2008" location="base.wsdl" />
+  <wsdl:types>
+    <xsd:schema xmlns:notification="http://schemas.cybozu.co.jp/notification/2008" xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns:base_types="http://wsdl.cybozu.co.jp/base/2008/types" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://wsdl.cybozu.co.jp/notification/2008/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+      <xsd:import schemaLocation="notification.xsd" namespace="http://schemas.cybozu.co.jp/notification/2008" />
+      <xsd:import namespace="http://wsdl.cybozu.co.jp/base/2008/types" />
+      <xsd:complexType name="NotificationIdType">
+        <xsd:attribute name="module_id" type="base:IDType" use="required" />
+        <xsd:attribute name="item" type="base:NonBlankStringType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="NotificationItemVersionType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="notification_id" type="typens:NotificationIdType" />
+        </xsd:sequence>
+        <xsd:attribute name="version" type="base:VersionType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="NotificationItemVersionResultType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="notification_id" type="typens:NotificationIdType" />
+        </xsd:sequence>
+        <xsd:attribute name="version" type="base:VersionType" use="required" />
+        <xsd:attribute name="operation" type="base_types:ItemOperationType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="NotificationGetNotificationVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="notification_item" type="typens:NotificationItemVersionType" />
+        </xsd:sequence>
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+        <xsd:attribute name="module_id" type="base:IDType" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="NotificationGetNotificationVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="notification_item" type="typens:NotificationItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="NotificationGetNotificationsByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="notification_id" type="typens:NotificationIdType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="NotificationGetNotificationsByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="notification" type="notification:NotificationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="NotificationGetNotificationHistoryVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="notification_history_item" type="typens:NotificationItemVersionType" />
+        </xsd:sequence>
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+        <xsd:attribute name="module_id" type="base:IDType" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="NotificationGetNotificationHistoryVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="notification_history_item" type="typens:NotificationItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="NotificationGetNotificationHistoriesByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="notification_history_id" type="typens:NotificationIdType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="NotificationGetNotificationHistoriesByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="notification_history" type="notification:NotificationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="NotificationConfirmNotificationRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="notification_id" type="typens:NotificationIdType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="NotificationConfirmNotificationResponseType">
+        <xsd:sequence>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="notification" type="notification:NotificationType" />
+          </xsd:sequence>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="NotificationPersonalProfileType">
+        <xsd:attribute name="save_notification_duration" type="xsd:positiveInteger" use="optional" />
+        <xsd:attribute name="save_notification_history_duration" type="xsd:positiveInteger" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="NotificationGetProfilesRequestType" />
+      <xsd:complexType name="NotificationGetProfilesResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="personal_profile" type="typens:NotificationPersonalProfileType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="NotificationSetProfilesRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="personal_profile" type="typens:NotificationPersonalProfileType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="NotificationSetProfilesResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="personal_profile" type="typens:NotificationPersonalProfileType" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="NotificationGetNotificationVersionsRequest">
+    <wsdl:part name="parameters" type="typens:NotificationGetNotificationVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="NotificationGetNotificationVersionsResponse">
+    <wsdl:part name="returns" type="typens:NotificationGetNotificationVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="NotificationGetNotificationsByIdRequest">
+    <wsdl:part name="parameters" type="typens:NotificationGetNotificationsByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="NotificationGetNotificationsByIdResponse">
+    <wsdl:part name="returns" type="typens:NotificationGetNotificationsByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="NotificationGetNotificationHistoryVersionsRequest">
+    <wsdl:part name="parameters" type="typens:NotificationGetNotificationHistoryVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="NotificationGetNotificationHistoryVersionsResponse">
+    <wsdl:part name="returns" type="typens:NotificationGetNotificationHistoryVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="NotificationGetNotificationHistoriesByIdRequest">
+    <wsdl:part name="parameters" type="typens:NotificationGetNotificationHistoriesByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="NotificationGetNotificationHistoriesByIdResponse">
+    <wsdl:part name="returns" type="typens:NotificationGetNotificationHistoriesByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="NotificationConfirmNotificationRequest">
+    <wsdl:part name="parameters" type="typens:NotificationConfirmNotificationRequestType" />
+  </wsdl:message>
+  <wsdl:message name="NotificationConfirmNotificationResponse">
+    <wsdl:part name="returns" type="typens:NotificationConfirmNotificationResponseType" />
+  </wsdl:message>
+  <wsdl:message name="NotificationGetProfilesRequest">
+    <wsdl:part name="parameters" type="typens:NotificationGetProfilesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="NotificationGetProfilesResponse">
+    <wsdl:part name="returns" type="typens:NotificationGetProfilesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="NotificationSetProfilesRequest">
+    <wsdl:part name="parameters" type="typens:NotificationSetProfilesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="NotificationSetProfilesResponse">
+    <wsdl:part name="returns" type="typens:NotificationSetProfilesResponseType" />
+  </wsdl:message>
+  <wsdl:portType name="NotificationPort">
+    <wsdl:operation name="NotificationGetNotificationVersions">
+      <documentation>
+        This API gets the modified notifications for login user.
+        "notification_item" is a list of notifications that a client has.
+      </documentation>
+      <wsdl:input message="tns:NotificationGetNotificationVersionsRequest" />
+      <wsdl:output message="tns:NotificationGetNotificationVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificationGetNotificationsById">
+      <documentation>
+        This API gets the notifications by notification module id and unique id.
+        The client sends list of "notification_id" for specify the notification to search.
+      </documentation>
+      <wsdl:input message="tns:NotificationGetNotificationsByIdRequest" />
+      <wsdl:output message="tns:NotificationGetNotificationsByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificationGetNotificationHistoryVersions">
+      <documentation>
+        This API gets the modified notification histories for login user.
+        "notification_history_item" is a list of notification histories that a client has.
+      </documentation>
+      <wsdl:input message="tns:NotificationGetNotificationHistoryVersionsRequest" />
+      <wsdl:output message="tns:NotificationGetNotificationHistoryVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificationGetNotificationHistoriesById">
+      <documentation>
+        This API gets the notification histories by notification module id and unique id.
+        The client sends list of "notification_history_id" for specify the notification history to search.
+      </documentation>
+      <wsdl:input message="tns:NotificationGetNotificationHistoriesByIdRequest" />
+      <wsdl:output message="tns:NotificationGetNotificationHistoriesByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificationConfirmNotification">
+      <documentation>
+        This API confirm notification.
+      </documentation>
+      <wsdl:input message="tns:NotificationConfirmNotificationRequest" />
+      <wsdl:output message="tns:NotificationConfirmNotificationResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificationGetProfiles">
+      <documentation>
+        This API gets profiles in the notification application.
+      </documentation>
+      <wsdl:input message="tns:NotificationGetProfilesRequest" />
+      <wsdl:output message="tns:NotificationGetProfilesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="NotificationSetProfiles">
+      <documentation>
+        This API sets profiles in the notification application.
+      </documentation>
+      <wsdl:input message="tns:NotificationSetProfilesRequest" />
+      <wsdl:output message="tns:NotificationSetProfilesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="NotificationBinding" type="tns:NotificationPort">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="NotificationGetNotificationVersions">
+      <soap12:operation soapAction="NotificationGetNotificationVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="NotificationGetNotificationsById">
+      <soap12:operation soapAction="NotificationGetNotificationsById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="NotificationGetNotificationHistoryVersions">
+      <soap12:operation soapAction="NotificationGetNotificationHistoryVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="NotificationGetNotificationHistoriesById">
+      <soap12:operation soapAction="NotificationGetNotificationHistoriesById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="NotificationConfirmNotification">
+      <soap12:operation soapAction="NotificationConfirmNotification" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="NotificationGetProfiles">
+      <soap12:operation soapAction="NotificationGetProfiles" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="NotificationSetProfiles">
+      <soap12:operation soapAction="NotificationSetProfiles" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/notification/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>

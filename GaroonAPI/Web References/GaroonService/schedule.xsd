@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns="http://schemas.cybozu.co.jp/schedule/2008" elementFormDefault="qualified" targetNamespace="http://schemas.cybozu.co.jp/schedule/2008" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+  <xsd:element name="schedule">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="event" type="EventType" />
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility" type="FacilityType" />
+        <xsd:element minOccurs="0" maxOccurs="unbounded" ref="authority" />
+        <xsd:element minOccurs="0" maxOccurs="unbounded" ref="facility_group" />
+        <xsd:element minOccurs="0" maxOccurs="unbounded" ref="plan_cooperation_menu" />
+        <xsd:element minOccurs="0" maxOccurs="1" ref="system_profile" />
+        <xsd:element minOccurs="0" maxOccurs="unbounded" ref="personal_profile" />
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+      </xsd:sequence>
+      <xsd:anyAttribute processContents="lax" />
+    </xsd:complexType>
+    <xsd:key name="event_key">
+      <xsd:selector xpath="event" />
+      <xsd:field xpath="@id" />
+    </xsd:key>
+    <xsd:key name="facility_key">
+      <xsd:selector xpath="facility" />
+      <xsd:field xpath="@id" />
+    </xsd:key>
+    <xsd:key name="facility_group_key">
+      <xsd:selector xpath="facility_group" />
+      <xsd:field xpath="@id" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:complexType name="EventType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" ref="members" />
+      <xsd:element minOccurs="0" maxOccurs="1" ref="observers" />
+      <xsd:element minOccurs="0" maxOccurs="1" ref="customer" />
+      <xsd:element minOccurs="0" maxOccurs="1" ref="repeat_info" />
+      <xsd:element minOccurs="0" maxOccurs="1" ref="when" />
+      <xsd:element minOccurs="0" maxOccurs="1" ref="follows" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="file">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="content" type="xsd:base64Binary" />
+          </xsd:sequence>
+          <xsd:attribute name="id" type="base:IDType" use="required" />
+          <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+          <xsd:attribute name="size" type="xsd:unsignedLong" use="optional" />
+          <xsd:attribute name="mime_type" type="xsd:string" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="remove_file_id" type="base:IDType" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+    </xsd:sequence>
+    <xsd:attribute name="id" type="base:IDType" use="required" />
+    <xsd:attribute name="event_type" type="EventTypeType" use="required" />
+    <xsd:attribute name="version" type="base:VersionType" use="required" />
+    <xsd:attribute name="public_type" type="PublicType" use="optional" />
+    <xsd:attribute name="plan" type="xsd:string" use="optional" />
+    <xsd:attribute name="detail" type="xsd:string" use="optional" />
+    <xsd:attribute name="description" type="xsd:string" use="optional" />
+    <xsd:attribute name="timezone" type="xsd:string" use="required" />
+    <xsd:attribute name="end_timezone" type="xsd:string" use="optional" />
+    <xsd:attribute name="allday" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="start_only" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="hidden_private" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="facility_using_purpose" type="xsd:string" use="optional" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:element name="authority">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="target">
+          <xsd:complexType>
+            <xsd:choice>
+              <xsd:element ref="base:user" />
+              <xsd:element ref="base:organization" />
+              <xsd:element name="facility" type="FacilityType" />
+              <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+            </xsd:choice>
+            <xsd:anyAttribute processContents="lax" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" ref="base:acl" />
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+      </xsd:sequence>
+      <xsd:anyAttribute processContents="lax" />
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="members">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="member" type="MemberType" />
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+      </xsd:sequence>
+      <xsd:anyAttribute processContents="lax" />
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="MemberType">
+    <xsd:sequence>
+      <xsd:choice>
+        <xsd:element name="user">
+          <xsd:complexType>
+            <xsd:attribute name="id" type="base:IDType" use="required" />
+            <xsd:attribute name="order" type="xsd:unsignedLong" use="optional" />
+            <xsd:anyAttribute processContents="lax" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="organization">
+          <xsd:complexType>
+            <xsd:attribute name="id" type="base:IDType" use="required" />
+            <xsd:attribute name="order" type="xsd:unsignedLong" use="optional" />
+            <xsd:anyAttribute processContents="lax" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="facility">
+          <xsd:complexType>
+            <xsd:attribute name="id" type="base:IDType" use="required" />
+            <xsd:attribute name="order" type="xsd:unsignedLong" use="optional" />
+            <xsd:anyAttribute processContents="lax" />
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:choice>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+    </xsd:sequence>
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:element name="observers">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="observer" type="ObserverType" />
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+      </xsd:sequence>
+      <xsd:anyAttribute processContents="lax" />
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="ObserverType">
+    <xsd:sequence>
+      <xsd:choice>
+        <xsd:element name="user">
+          <xsd:complexType>
+            <xsd:attribute name="id" type="base:IDType" use="required" />
+            <xsd:attribute name="order" type="xsd:integer" use="optional" />
+            <xsd:anyAttribute processContents="lax" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="organization">
+          <xsd:complexType>
+            <xsd:attribute name="id" type="base:IDType" use="required" />
+            <xsd:attribute name="order" type="xsd:integer" use="optional" />
+            <xsd:anyAttribute processContents="lax" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="role">
+          <xsd:complexType>
+            <xsd:attribute name="id" type="base:IDType" use="required" />
+            <xsd:attribute name="order" type="xsd:integer" use="optional" />
+            <xsd:anyAttribute processContents="lax" />
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:choice>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+    </xsd:sequence>
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:element name="repeat_info">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="1" maxOccurs="1" name="condition">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+            </xsd:sequence>
+            <xsd:attribute name="type" type="RepeatEventType" use="required" />
+            <xsd:attribute name="start_date" type="xsd:date" use="required" />
+            <xsd:attribute name="end_date" type="xsd:date" use="optional" />
+            <xsd:attribute name="start_time" type="xsd:time" use="optional" />
+            <xsd:attribute name="end_time" type="xsd:time" use="optional" />
+            <xsd:attribute name="day" type="xsd:unsignedInt" use="optional" />
+            <xsd:attribute name="week" type="xsd:unsignedInt" use="optional" />
+            <xsd:anyAttribute processContents="lax" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element minOccurs="0" maxOccurs="1" name="exclusive_datetimes">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="exclusive_datetime">
+                <xsd:complexType>
+                  <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+                  <xsd:attribute name="end" type="xsd:dateTime" use="required" />
+                  <xsd:anyAttribute processContents="lax" />
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+            </xsd:sequence>
+            <xsd:anyAttribute processContents="lax" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+      </xsd:sequence>
+      <xsd:anyAttribute processContents="lax" />
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="when">
+    <xsd:complexType>
+      <xsd:choice>
+        <xsd:element minOccurs="1" maxOccurs="unbounded" name="datetime" type="EventDateTimeType" />
+        <xsd:element minOccurs="1" maxOccurs="unbounded" name="date" type="EventDateType" />
+      </xsd:choice>
+      <xsd:anyAttribute processContents="lax" />
+    </xsd:complexType>
+    <xsd:key name="datetime_key">
+      <xsd:selector xpath="datetime" />
+      <xsd:field xpath="@start" />
+      <xsd:field xpath="@end" />
+      <xsd:field xpath="@facility_id" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:complexType name="EventDateType">
+    <xsd:sequence>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+    </xsd:sequence>
+    <xsd:attribute name="start" type="xsd:date" use="required" />
+    <xsd:attribute name="end" type="xsd:date" use="required" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:complexType name="EventDateTimeType">
+    <xsd:sequence>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+    </xsd:sequence>
+    <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+    <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+    <xsd:attribute name="facility_id" type="base:IDType" use="optional" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:element name="follows">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" ref="follow" />
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+      </xsd:sequence>
+      <xsd:anyAttribute processContents="lax" />
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="follow">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="1" maxOccurs="1" name="creator" type="base:ChangeLogType" />
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+      </xsd:sequence>
+      <xsd:attribute name="id" type="base:IDType" use="required" />
+      <xsd:attribute name="version" type="base:VersionType" use="required" />
+      <xsd:attribute name="text" type="xsd:string" use="optional" />
+      <xsd:anyAttribute processContents="lax" />
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="customer">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+      </xsd:sequence>
+      <xsd:attribute name="name" type="xsd:string" use="optional" />
+      <xsd:attribute name="yomi" type="xsd:string" use="optional" />
+      <xsd:attribute name="department" type="xsd:string" use="optional" />
+      <xsd:attribute name="zipcode" type="xsd:string" use="optional" />
+      <xsd:attribute name="address" type="xsd:string" use="optional" />
+      <xsd:attribute name="map" type="xsd:string" use="optional" />
+      <xsd:attribute name="route" type="xsd:string" use="optional" />
+      <xsd:attribute name="route_time" type="xsd:string" use="optional" />
+      <xsd:attribute name="route_fare" type="xsd:string" use="optional" />
+      <xsd:attribute name="phone" type="xsd:string" use="optional" />
+      <xsd:attribute name="fax" type="xsd:string" use="optional" />
+      <xsd:attribute name="url" type="xsd:string" use="optional" />
+      <xsd:anyAttribute processContents="lax" />
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="plan_cooperation_menu">
+    <xsd:annotation>
+      <xsd:documentation>
+        Plan Menu Cooperation.
+        Cybozu Office doesn't have this functionality.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+      </xsd:sequence>
+      <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+      <xsd:attribute name="content" type="xsd:string" use="optional" />
+      <xsd:attribute name="order" type="xsd:unsignedLong" use="optional" />
+      <xsd:anyAttribute processContents="lax" />
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:simpleType name="FacilityReserveEditableUserType">
+    <xsd:annotation>
+      <xsd:documentation>
+        creator  : Only one who reserved the facility
+        member   : Creator and ones who share the facility
+        grantuser: Everyone who can access to the facility
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="creator" />
+      <xsd:enumeration value="member" />
+      <xsd:enumeration value="grantuser" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="RepeatEventType">
+    <xsd:annotation>
+      <xsd:documentation>
+        Repeat Event Type.
+        day                    : Everyday
+        weekday                : Everyday(except Saturday, Sunday)
+        week                   : Every week
+        once_every_two_weeks   : Every two weeks
+        once_every_three_weeks : Every three weeks
+        1stweek                : The 1st week
+        2ndweek                : The 2nd week
+        3rdweek                : The 3rd week
+        4thweek                : The 4th week
+        lastweek               : The Last week
+        month                  : Every month
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="day" />
+      <xsd:enumeration value="weekday" />
+      <xsd:enumeration value="week" />
+      <xsd:enumeration value="once_every_two_weeks" />
+      <xsd:enumeration value="once_every_three_weeks" />
+      <xsd:enumeration value="1stweek" />
+      <xsd:enumeration value="2ndweek" />
+      <xsd:enumeration value="3rdweek" />
+      <xsd:enumeration value="4thweek" />
+      <xsd:enumeration value="lastweek" />
+      <xsd:enumeration value="month" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="PublicType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="public" />
+      <xsd:enumeration value="private" />
+      <xsd:enumeration value="qualified" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="EventTypeType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="normal" />
+      <xsd:enumeration value="repeat" />
+      <xsd:enumeration value="temporary" />
+      <xsd:enumeration value="banner" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:element name="system_profile" type="SystemProfileType" />
+  <xsd:complexType name="SystemProfileType">
+    <xsd:annotation>
+      <xsd:documentation>
+        If event_reserve_uint is 0, the users can add a repeat event whose end date
+        is not specified (repeat event for an indefinete term).
+        Only Cybozu Office has this functionality.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+    </xsd:sequence>
+    <xsd:attribute name="plan_menu" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="event_reserve_unit" type="xsd:unsignedInt" use="required" />
+    <xsd:attribute name="event_repeat_max_time" type="xsd:unsignedInt" use="required" />
+    <xsd:attribute name="register_private_event" type="xsd:boolean" use="required" />
+    <xsd:attribute name="show_description" type="xsd:boolean" use="required" />
+    <xsd:attribute name="show_private_event" type="xsd:boolean" use="required" />
+    <xsd:attribute name="show_group_event" type="xsd:boolean" use="required" />
+    <xsd:attribute name="show_holiday" type="xsd:boolean" use="required" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:element name="personal_profile">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="1" maxOccurs="1" ref="base:user" />
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+      </xsd:sequence>
+      <xsd:attribute name="start_time_in_dayview" type="xsd:unsignedInt" use="required" />
+      <xsd:attribute name="end_time_in_dayview" type="xsd:unsignedInt" use="required" />
+      <xsd:attribute name="plan_menu" type="xsd:string" use="optional" />
+      <xsd:attribute name="show_sunday" type="xsd:boolean" use="required" />
+      <xsd:attribute name="show_end_time" type="xsd:boolean" use="required" />
+      <xsd:attribute name="notify_mail" type="xsd:boolean" use="required" />
+      <xsd:attribute name="is_user_address_mail" type="xsd:boolean" use="optional" />
+      <xsd:attribute name="notify_mail_address" type="base:NonBlankStringType" use="optional" />
+      <xsd:anyAttribute processContents="lax" />
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="facility_group">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility_group">
+          <xsd:complexType>
+            <xsd:attribute name="id" type="base:IDType" use="required" />
+            <xsd:anyAttribute processContents="lax" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility">
+          <xsd:complexType>
+            <xsd:attribute name="id" type="base:IDType" use="required" />
+            <xsd:anyAttribute processContents="lax" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+      </xsd:sequence>
+      <xsd:attribute name="id" type="base:IDType" use="required" />
+      <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+      <xsd:attribute name="version" type="base:VersionType" use="required" />
+      <xsd:attribute name="order" type="xsd:unsignedLong" use="optional" />
+      <xsd:attribute name="parent_facility_group" type="base:IDType" use="optional" />
+      <xsd:anyAttribute processContents="lax" />
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="FacilityType">
+    <xsd:sequence>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+    </xsd:sequence>
+    <xsd:attribute name="key" type="base:IDType" use="required" />
+    <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+    <xsd:attribute name="version" type="base:VersionType" use="required" />
+    <xsd:attribute name="order" type="xsd:unsignedLong" use="optional" />
+    <xsd:attribute name="description" type="xsd:string" use="optional" />
+    <xsd:attribute name="belong_facility_group" type="base:IDType" use="optional" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:element name="facility_reserve_customize_items">
+    <xsd:annotation>
+      <xsd:documentation>
+        Customize items for facility reservation.
+        Cybozu Office doesn't have this functionality.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="facility_reserve_customize_itemType">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+            </xsd:sequence>
+            <xsd:attribute name="key" type="base:IDType" use="required" />
+            <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+            <xsd:attribute name="order" type="xsd:unsignedLong" use="optional" />
+            <xsd:attribute name="embedded" type="xsd:boolean" use="optional" />
+            <xsd:attribute name="type" type="FacilityReserveCustomizeItemTypeType" use="required" />
+            <xsd:attribute name="menu" type="xsd:string" use="optional" />
+            <xsd:attribute name="menu_initial" type="xsd:string" use="optional" />
+            <xsd:attribute name="use" type="xsd:boolean" use="required" />
+            <xsd:attribute name="use_editable" type="xsd:boolean" use="required" />
+            <xsd:attribute name="show_in_listview" type="xsd:boolean" use="required" />
+            <xsd:attribute name="show_in_listview_editable" type="xsd:boolean" use="required" />
+            <xsd:attribute name="show_item_in_listview" type="xsd:boolean" use="required" />
+            <xsd:attribute name="show_item_in_listview_editable" type="xsd:boolean" use="required" />
+            <xsd:anyAttribute processContents="lax" />
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+      </xsd:sequence>
+      <xsd:anyAttribute processContents="lax" />
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:simpleType name="FacilityReserveCustomizeItemTypeType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="string" />
+      <xsd:enumeration value="multiple_string" />
+      <xsd:enumeration value="menu" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="FacilityProfileType">
+    <xsd:sequence>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+    </xsd:sequence>
+    <xsd:attribute name="key" type="base:IDType" use="required" />
+    <xsd:attribute name="approval_required" type="xsd:boolean" use="required" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+</xsd:schema>

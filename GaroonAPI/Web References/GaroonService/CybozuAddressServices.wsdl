@@ -1,0 +1,921 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://wsdl.cybozu.co.jp/address/2008" xmlns:typens="http://wsdl.cybozu.co.jp/address/2008/types" xmlns:base_services="http://wsdl.cybozu.co.jp/base/2008" xmlns="http://schemas.xmlsoap.org/wsdl/" name="CybozuAddressServices" targetNamespace="http://wsdl.cybozu.co.jp/address/2008" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import namespace="http://wsdl.cybozu.co.jp/base/2008" location="base.wsdl" />
+  <wsdl:types>
+    <xsd:schema xmlns:address="http://schemas.cybozu.co.jp/address/2008" xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns:base_types="http://wsdl.cybozu.co.jp/base/2008/types" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://wsdl.cybozu.co.jp/address/2008/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+      <xsd:import schemaLocation="address.xsd" namespace="http://schemas.cybozu.co.jp/address/2008" />
+      <xsd:import namespace="http://wsdl.cybozu.co.jp/base/2008/types" />
+      <xsd:complexType name="AddressGetPersonalCardVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="card_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetPersonalCardVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="card_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetPersonalCardsByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="card_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetPersonalCardsByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="card" type="address:CardType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetSharedCardVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="card_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+        <xsd:attribute name="book_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetSharedCardVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="card_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetSharedCardsByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="card_id" type="base:IDType" />
+        </xsd:sequence>
+        <xsd:attribute name="book_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetSharedCardsByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="card" type="address:CardType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetPersonalBookVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="book_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetPersonalBookVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="book_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetPersonalBooksByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="book_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetPersonalBooksByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="book" type="address:BookType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetSharedBookVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="book_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetSharedBookVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="book_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetSharedBooksByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="book_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetSharedBooksByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="book" type="address:BookType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressCardContainsFileType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="card" type="address:CardType" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="file">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="1" maxOccurs="1" name="content" type="xsd:base64Binary" />
+              </xsd:sequence>
+              <xsd:attribute name="id" type="base:IDType" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressAddCardsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="add_card" type="typens:AddressCardContainsFileType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressAddCardsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="card" type="address:CardType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressModifyCardsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="modify_card" type="typens:AddressCardContainsFileType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressModifyCardsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="card" type="address:CardType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressRemovePersonalCardsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="card_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressRemovePersonalCardsResponseType" />
+      <xsd:complexType name="AddressRemoveSharedCardsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="card_id" type="base:IDType" />
+        </xsd:sequence>
+        <xsd:attribute name="book_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="AddressRemoveSharedCardsResponseType" />
+      <xsd:complexType name="AddressSearchCardsRequestType">
+        <xsd:attribute name="book_id" type="base:IDType" use="required" />
+        <xsd:attribute name="case_sensitive" type="xsd:boolean" use="required" />
+        <xsd:attribute name="text" type="xsd:string" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="AddressSearchCardsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="card" type="address:CardType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressCopyItemType">
+        <xsd:attribute name="copied_book_id" type="base:IDType" use="required" />
+        <xsd:attribute name="card_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="AddressCopyPersonalCardsToOtherBookRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="copy_item" type="typens:AddressCopyItemType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressCopyPersonalCardsToOtherBookResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="card" type="address:CardType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetMyAddressGroupVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="my_address_group_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetMyAddressGroupVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="my_address_group_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetMyAddressGroupsByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="my_address_group_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetMyAddressGroupsByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="my_address_group" type="address:MyAddressGroupType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressAddMyAddressGroupsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="my_address_group" type="address:MyAddressGroupType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressAddMyAddressGroupsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="my_address_group" type="address:MyAddressGroupType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressModifyMyAddressGroupsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="my_address_group" type="address:MyAddressGroupType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressModifyMyAddressGroupsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="my_address_group" type="address:MyAddressGroupType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressRemoveMyAddressGroupsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="my_address_group_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressRemoveMyAddressGroupsResponseType" />
+      <xsd:complexType name="AddressModifyCardsInMyAddressGroupRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="my_address_group" type="address:MyAddressGroupType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressModifyCardsInMyAddressGroupResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="my_address_group" type="address:MyAddressGroupType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetProfilesRequestType" />
+      <xsd:complexType name="AddressGetProfilesResponseType">
+        <xsd:attribute name="attendee_menu" type="xsd:string" use="required" />
+        <xsd:attribute name="use_personal_book" type="xsd:boolean" use="required" />
+        <xsd:attribute name="use_shared_book" type="xsd:boolean" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="AddressSetProfilesRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+        </xsd:sequence>
+        <xsd:attribute name="attendee_menu" type="xsd:string" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="AddressSetProfilesResponseType">
+        <xsd:attribute name="attendee_menu" type="xsd:string" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetReadAllowBooksRequestType" />
+      <xsd:complexType name="AddressGetReadAllowBooksResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="book_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressGetModifyAllowBooksRequestType" />
+      <xsd:complexType name="AddressGetModifyAllowBooksResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="book_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AddressFileDownloadRequestType">
+        <xsd:attribute name="file_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="AddressFileDownloadResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="file" type="base_types:FileBodyType" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="AddressGetPersonalCardVersionsRequest">
+    <wsdl:part name="parameters" type="typens:AddressGetPersonalCardVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetPersonalCardVersionsResponse">
+    <wsdl:part name="returns" type="typens:AddressGetPersonalCardVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetPersonalCardsByIdRequest">
+    <wsdl:part name="parameters" type="typens:AddressGetPersonalCardsByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetPersonalCardsByIdResponse">
+    <wsdl:part name="returns" type="typens:AddressGetPersonalCardsByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetSharedCardVersionsRequest">
+    <wsdl:part name="parameters" type="typens:AddressGetSharedCardVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetSharedCardVersionsResponse">
+    <wsdl:part name="returns" type="typens:AddressGetSharedCardVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetSharedCardsByIdRequest">
+    <wsdl:part name="parameters" type="typens:AddressGetSharedCardsByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetSharedCardsByIdResponse">
+    <wsdl:part name="returns" type="typens:AddressGetSharedCardsByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetPersonalBookVersionsRequest">
+    <wsdl:part name="parameters" type="typens:AddressGetPersonalBookVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetPersonalBookVersionsResponse">
+    <wsdl:part name="returns" type="typens:AddressGetPersonalBookVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetPersonalBooksByIdRequest">
+    <wsdl:part name="parameters" type="typens:AddressGetPersonalBooksByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetPersonalBooksByIdResponse">
+    <wsdl:part name="returns" type="typens:AddressGetPersonalBooksByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetSharedBookVersionsRequest">
+    <wsdl:part name="parameters" type="typens:AddressGetSharedBookVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetSharedBookVersionsResponse">
+    <wsdl:part name="returns" type="typens:AddressGetSharedBookVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetSharedBooksByIdRequest">
+    <wsdl:part name="parameters" type="typens:AddressGetSharedBooksByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetSharedBooksByIdResponse">
+    <wsdl:part name="returns" type="typens:AddressGetSharedBooksByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressAddCardsRequest">
+    <wsdl:part name="parameters" type="typens:AddressAddCardsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressAddCardsResponse">
+    <wsdl:part name="returns" type="typens:AddressAddCardsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressModifyCardsRequest">
+    <wsdl:part name="parameters" type="typens:AddressModifyCardsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressModifyCardsResponse">
+    <wsdl:part name="returns" type="typens:AddressModifyCardsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressRemovePersonalCardsRequest">
+    <wsdl:part name="parameters" type="typens:AddressRemovePersonalCardsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressRemoveSharedCardsRequest">
+    <wsdl:part name="parameters" type="typens:AddressRemoveSharedCardsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressSearchCardsRequest">
+    <wsdl:part name="parameters" type="typens:AddressSearchCardsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressSearchCardsResponse">
+    <wsdl:part name="returns" type="typens:AddressSearchCardsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressCopyPersonalCardsToOtherBookRequest">
+    <wsdl:part name="parameters" type="typens:AddressCopyPersonalCardsToOtherBookRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressCopyPersonalCardsToOtherBookResponse">
+    <wsdl:part name="returns" type="typens:AddressCopyPersonalCardsToOtherBookResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetMyAddressGroupVersionsRequest">
+    <wsdl:part name="parameters" type="typens:AddressGetMyAddressGroupVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetMyAddressGroupVersionsResponse">
+    <wsdl:part name="returns" type="typens:AddressGetMyAddressGroupVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetMyAddressGroupsByIdRequest">
+    <wsdl:part name="parameters" type="typens:AddressGetMyAddressGroupsByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetMyAddressGroupsByIdResponse">
+    <wsdl:part name="returns" type="typens:AddressGetMyAddressGroupsByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressAddMyAddressGroupsRequest">
+    <wsdl:part name="parameters" type="typens:AddressAddMyAddressGroupsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressAddMyAddressGroupsResponse">
+    <wsdl:part name="returns" type="typens:AddressAddMyAddressGroupsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressModifyMyAddressGroupsRequest">
+    <wsdl:part name="parameters" type="typens:AddressModifyMyAddressGroupsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressModifyMyAddressGroupsResponse">
+    <wsdl:part name="returns" type="typens:AddressModifyMyAddressGroupsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressRemoveMyAddressGroupsRequest">
+    <wsdl:part name="parameters" type="typens:AddressRemoveMyAddressGroupsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressModifyCardsInMyAddressGroupRequest">
+    <wsdl:part name="parameters" type="typens:AddressModifyCardsInMyAddressGroupRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressModifyCardsInMyAddressGroupResponse">
+    <wsdl:part name="returns" type="typens:AddressModifyCardsInMyAddressGroupResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetProfilesRequest">
+    <wsdl:part name="parameters" type="typens:AddressGetProfilesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetProfilesResponse">
+    <wsdl:part name="returns" type="typens:AddressGetProfilesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressSetProfilesRequest">
+    <wsdl:part name="parameters" type="typens:AddressSetProfilesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressSetProfilesResponse">
+    <wsdl:part name="returns" type="typens:AddressSetProfilesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetReadAllowBooksRequest">
+    <wsdl:part name="parameters" type="typens:AddressGetReadAllowBooksRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetReadAllowBooksResponse">
+    <wsdl:part name="returns" type="typens:AddressGetReadAllowBooksResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetModifyAllowBooksRequest">
+    <wsdl:part name="parameters" type="typens:AddressGetModifyAllowBooksRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressGetModifyAllowBooksResponse">
+    <wsdl:part name="returns" type="typens:AddressGetModifyAllowBooksResponseType" />
+  </wsdl:message>
+  <wsdl:message name="AddressFileDownloadRequest">
+    <wsdl:part name="parameters" type="typens:AddressFileDownloadRequestType" />
+  </wsdl:message>
+  <wsdl:message name="AddressFileDownloadResponse">
+    <wsdl:part name="returns" type="typens:AddressFileDownloadResponseType" />
+  </wsdl:message>
+  <wsdl:portType name="AddressPort">
+    <wsdl:operation name="AddressGetPersonalCardVersions">
+      <documentation>
+        This API gets the modified personal address cards.
+        "card_item" is a list of address card's that a client has.
+      </documentation>
+      <wsdl:input message="tns:AddressGetPersonalCardVersionsRequest" />
+      <wsdl:output message="tns:AddressGetPersonalCardVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetPersonalCardsById">
+      <documentation>
+        This API gets the personal address cards by card id.
+        The client sends list of "card_id" for specify the card to search.
+      </documentation>
+      <wsdl:input message="tns:AddressGetPersonalCardsByIdRequest" />
+      <wsdl:output message="tns:AddressGetPersonalCardsByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetSharedCardVersions">
+      <documentation>
+        This API gets the modified address cards in shared books.
+        "card_item" is a list of address card's that a client has.
+      </documentation>
+      <wsdl:input message="tns:AddressGetSharedCardVersionsRequest" />
+      <wsdl:output message="tns:AddressGetSharedCardVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetSharedCardsById">
+      <documentation>
+        This API gets the address cards by card id.
+        The client sends list of "card_id" for specify the card to search.
+      </documentation>
+      <wsdl:input message="tns:AddressGetSharedCardsByIdRequest" />
+      <wsdl:output message="tns:AddressGetSharedCardsByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetPersonalBookVersions">
+      <documentation>
+        This API gets the modified personal address books.
+        "book_item" is a list of address book's that a client has.
+      </documentation>
+      <wsdl:input message="tns:AddressGetPersonalBookVersionsRequest" />
+      <wsdl:output message="tns:AddressGetPersonalBookVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetPersonalBooksById">
+      <documentation>
+        This API gets the personal address books by book id.
+        The client sends list of "book_id" for specify the book to search.
+      </documentation>
+      <wsdl:input message="tns:AddressGetPersonalBooksByIdRequest" />
+      <wsdl:output message="tns:AddressGetPersonalBooksByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetSharedBookVersions">
+      <documentation>
+        This API gets the modified shared address books.
+        "book_item" is a list of address book's that a client has.
+      </documentation>
+      <wsdl:input message="tns:AddressGetSharedBookVersionsRequest" />
+      <wsdl:output message="tns:AddressGetSharedBookVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetSharedBooksById">
+      <documentation>
+        This API gets the shared address books by book id.
+        The client sends list of "book_id" for specify the book to search.
+      </documentation>
+      <wsdl:input message="tns:AddressGetSharedBooksByIdRequest" />
+      <wsdl:output message="tns:AddressGetSharedBooksByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressAddCards">
+      <documentation>
+        This API adds the address cards to book.
+      </documentation>
+      <wsdl:input message="tns:AddressAddCardsRequest" />
+      <wsdl:output message="tns:AddressAddCardsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressModifyCards">
+      <documentation>
+        This API modifies the address cards in book.
+        if the card version is different this API returns error.
+      </documentation>
+      <wsdl:input message="tns:AddressModifyCardsRequest" />
+      <wsdl:output message="tns:AddressModifyCardsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressRemovePersonalCards">
+      <documentation>
+        This API removes the personal address cards by id.
+      </documentation>
+      <wsdl:input message="tns:AddressRemovePersonalCardsRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressRemoveSharedCards">
+      <documentation>
+        This API removes the shared address cards by id.
+      </documentation>
+      <wsdl:input message="tns:AddressRemoveSharedCardsRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressSearchCards">
+      <documentation>
+        This API searches the address cards.
+      </documentation>
+      <wsdl:input message="tns:AddressSearchCardsRequest" />
+      <wsdl:output message="tns:AddressSearchCardsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressCopyPersonalCardsToOtherBook">
+      <documentation>
+        This API copies the personal address card to other book.
+      </documentation>
+      <wsdl:input message="tns:AddressCopyPersonalCardsToOtherBookRequest" />
+      <wsdl:output message="tns:AddressCopyPersonalCardsToOtherBookResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetMyAddressGroupVersions">
+      <documentation>
+        This API gets the modified my address groups.
+        "my_address_group_item" is a list of address card's that a client has.
+      </documentation>
+      <wsdl:input message="tns:AddressGetMyAddressGroupVersionsRequest" />
+      <wsdl:output message="tns:AddressGetMyAddressGroupVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetMyAddressGroupsById">
+      <documentation>
+        This API gets the my address groups by my address group id.
+        The client sends list of "my_address_group_id" for specify the card to search.
+      </documentation>
+      <wsdl:input message="tns:AddressGetMyAddressGroupsByIdRequest" />
+      <wsdl:output message="tns:AddressGetMyAddressGroupsByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressAddMyAddressGroups">
+      <documentation>
+        This API adds the address cards to book.
+      </documentation>
+      <wsdl:input message="tns:AddressAddMyAddressGroupsRequest" />
+      <wsdl:output message="tns:AddressAddMyAddressGroupsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressModifyMyAddressGroups">
+      <documentation>
+        This API modifies the my address group.
+        if the my address group version is different this API returns error.
+      </documentation>
+      <wsdl:input message="tns:AddressModifyMyAddressGroupsRequest" />
+      <wsdl:output message="tns:AddressModifyMyAddressGroupsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressRemoveMyAddressGroups">
+      <documentation>
+        This API removes the my address groups by id.
+      </documentation>
+      <wsdl:input message="tns:AddressRemoveMyAddressGroupsRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressModifyCardsInMyAddressGroup">
+      <documentation>
+        This API modifies cards belongs to address group.
+      </documentation>
+      <wsdl:input message="tns:AddressModifyCardsInMyAddressGroupRequest" />
+      <wsdl:output message="tns:AddressModifyCardsInMyAddressGroupResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetProfiles">
+      <documentation>
+        This API gets profiles in the address application.
+      </documentation>
+      <wsdl:input message="tns:AddressGetProfilesRequest" />
+      <wsdl:output message="tns:AddressGetProfilesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressSetProfiles">
+      <documentation>
+        This API modifies profiles in the address application.
+      </documentation>
+      <wsdl:input message="tns:AddressSetProfilesRequest" />
+      <wsdl:output message="tns:AddressSetProfilesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetReadAllowBooks">
+      <documentation>
+        This API gets books allowed to read cards by login user.
+      </documentation>
+      <wsdl:input message="tns:AddressGetReadAllowBooksRequest" />
+      <wsdl:output message="tns:AddressGetReadAllowBooksResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetModifyAllowBooks">
+      <documentation>
+        This API gets books allowed to modify cards by login user.
+      </documentation>
+      <wsdl:input message="tns:AddressGetModifyAllowBooksRequest" />
+      <wsdl:output message="tns:AddressGetModifyAllowBooksResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressFileDownload">
+      <documentation>
+        This API downloads the attached file.
+      </documentation>
+      <wsdl:input message="tns:AddressFileDownloadRequest" />
+      <wsdl:output message="tns:AddressFileDownloadResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AddressBinding" type="tns:AddressPort">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="AddressGetPersonalCardVersions">
+      <soap12:operation soapAction="AddressGetPersonalCardVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetPersonalCardsById">
+      <soap12:operation soapAction="AddressGetPersonalCardsById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetSharedCardVersions">
+      <soap12:operation soapAction="AddressGetSharedCardVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetSharedCardsById">
+      <soap12:operation soapAction="AddressGetSharedCardsById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetPersonalBookVersions">
+      <soap12:operation soapAction="AddressGetPersonalBookVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetPersonalBooksById">
+      <soap12:operation soapAction="AddressGetPersonalBooksById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetSharedBookVersions">
+      <soap12:operation soapAction="AddressGetSharedBookVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetSharedBooksById">
+      <soap12:operation soapAction="AddressGetSharedBooksById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressAddCards">
+      <soap12:operation soapAction="AddressAddCards" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressModifyCards">
+      <soap12:operation soapAction="AddressModifyCards" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressRemovePersonalCards">
+      <soap12:operation soapAction="AddressRemovePersonalCards" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressRemoveSharedCards">
+      <soap12:operation soapAction="AddressRemoveSharedCards" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressSearchCards">
+      <soap12:operation soapAction="AddressSearchCards" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressCopyPersonalCardsToOtherBook">
+      <soap12:operation soapAction="AddressCopyPersonalCardsToOtherBook" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetMyAddressGroupVersions">
+      <soap12:operation soapAction="AddressGetMyAddressGroupVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetMyAddressGroupsById">
+      <soap12:operation soapAction="AddressGetMyAddressGroupsById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressAddMyAddressGroups">
+      <soap12:operation soapAction="AddressAddMyAddressGroups" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressModifyMyAddressGroups">
+      <soap12:operation soapAction="AddressModifyMyAddressGroups" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressRemoveMyAddressGroups">
+      <soap12:operation soapAction="AddressRemoveMyAddressGroups" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressModifyCardsInMyAddressGroup">
+      <soap12:operation soapAction="AddressModifyCardsInMyAddressGroup" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetProfiles">
+      <soap12:operation soapAction="AddressGetProfiles" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressSetProfiles">
+      <soap12:operation soapAction="AddressSetProfiles" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetReadAllowBooks">
+      <soap12:operation soapAction="AddressGetReadAllowBooks" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressGetModifyAllowBooks">
+      <soap12:operation soapAction="AddressGetModifyAllowBooks" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="AddressFileDownload">
+      <soap12:operation soapAction="AddressFileDownload" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/address/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>

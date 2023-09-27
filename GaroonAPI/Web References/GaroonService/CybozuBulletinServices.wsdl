@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://wsdl.cybozu.co.jp/bulletin/2008" xmlns:typens="http://wsdl.cybozu.co.jp/bulletin/2008/types" xmlns:base_services="http://wsdl.cybozu.co.jp/base/2008" xmlns="http://schemas.xmlsoap.org/wsdl/" name="CybozuBulletinServices" targetNamespace="http://wsdl.cybozu.co.jp/bulletin/2008" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import namespace="http://wsdl.cybozu.co.jp/base/2008" location="base.wsdl" />
+  <wsdl:types>
+    <xsd:schema xmlns:base_types="http://wsdl.cybozu.co.jp/base/2008/types" xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns:bulletin="http://schemas.cybozu.co.jp/bulletin/2008" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://wsdl.cybozu.co.jp/bulletin/2008/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+      <xsd:import schemaLocation="bulletin.xsd" namespace="http://schemas.cybozu.co.jp/bulletin/2008" />
+      <xsd:import namespace="http://wsdl.cybozu.co.jp/base/2008/types" />
+      <xsd:complexType name="BulletinGetCategoryVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="category_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinGetCategoryVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="category_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinGetCategoriesRequestType" />
+      <xsd:complexType name="BulletinGetCategoriesResponseType">
+        <xsd:sequence>
+          <xsd:element name="categories" type="bulletin:CategoryInformationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinGetTopicVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="topic_item" type="base_types:ItemVersionType" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="category_id" type="base:IDType" />
+        </xsd:sequence>
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="BulletinGetTopicVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="topic_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinGetDraftTopicVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="topic_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="BulletinGetDraftTopicVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="topic_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinGetTopicsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="category_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinGetTopicsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="category" type="bulletin:TopicsList" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinGetTopicByIdsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="topics">
+            <xsd:complexType>
+              <xsd:attribute name="topic_id" type="base:IDType" use="required" />
+              <xsd:attribute name="is_draft" type="xsd:boolean" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinGetTopicByIdsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="topic" type="bulletin:TopicType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinFileDownloadRequestType">
+        <xsd:attribute name="file_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="BulletinFileDownloadResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="file" type="base_types:FileBodyType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinCreateTopicType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="topic" type="bulletin:TopicType" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="file">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="1" maxOccurs="1" name="content" type="xsd:base64Binary" />
+              </xsd:sequence>
+              <xsd:attribute name="id" type="base:IDType" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="remove_file_id" type="base:IDType" />
+        </xsd:sequence>
+        <xsd:attribute name="draft_id" type="base:IDType" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="BulletinModifyTopicType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="topic" type="bulletin:TopicType" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="file">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="1" maxOccurs="1" name="content" type="xsd:base64Binary" />
+              </xsd:sequence>
+              <xsd:attribute name="id" type="base:IDType" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="remove_file_id" type="base:IDType" />
+        </xsd:sequence>
+        <xsd:attribute name="is_notified" type="xsd:boolean" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="BulletinCreateTopicsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="create_topic" type="typens:BulletinCreateTopicType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinCreateTopicsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="topic" type="bulletin:TopicType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinModifyTopicsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="modify_topic" type="typens:BulletinModifyTopicType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinModifyTopicsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="topic" type="bulletin:TopicType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinSaveDraftTopicsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="save_draft_topic" type="typens:BulletinCreateTopicType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinSaveDraftTopicsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="topic" type="bulletin:TopicType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinRemoveTopicsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="topics">
+            <xsd:complexType>
+              <xsd:attribute name="topic_id" type="base:IDType" use="required" />
+              <xsd:attribute name="is_draft" type="xsd:boolean" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinSearchTopicsRequestType">
+        <xsd:attribute name="text" type="xsd:string" use="required" />
+        <xsd:attribute name="sensitive" type="xsd:boolean" use="optional" />
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+        <xsd:attribute name="category_id" type="base:IDType" use="required" />
+        <xsd:attribute name="search_sub_categories" type="xsd:boolean" use="required" />
+        <xsd:attribute name="title_search" type="xsd:boolean" use="required" />
+        <xsd:attribute name="body_search" type="xsd:boolean" use="required" />
+        <xsd:attribute name="from_search" type="xsd:boolean" use="required" />
+        <xsd:attribute name="follow_search" type="xsd:boolean" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="BulletinSearchTopicsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="topic" type="bulletin:TopicType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinGetFollowsRequestType">
+        <xsd:attribute name="topic_id" type="base:IDType" use="required" />
+        <xsd:attribute name="offset" type="xsd:unsignedLong" use="required" />
+        <xsd:attribute name="limit" type="xsd:unsignedLong" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="BulletinGetFollowsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="follow" type="bulletin:FollowType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinAddFollowType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="follow" type="bulletin:FollowType" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="file">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="1" maxOccurs="1" name="content" type="xsd:base64Binary" />
+              </xsd:sequence>
+              <xsd:attribute name="id" type="base:IDType" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="topic_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="BulletinAddFollowsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="add_follow" type="typens:BulletinAddFollowType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinAddFollowsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="topic" type="bulletin:TopicType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BulletinRemoveFollowsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="follow_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="BulletinGetCategoryVersionsRequest">
+    <wsdl:part name="parameters" type="typens:BulletinGetCategoryVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinGetCategoryVersionsResponse">
+    <wsdl:part name="returns" type="typens:BulletinGetCategoryVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinGetCategoriesRequest">
+    <wsdl:part name="parameters" type="typens:BulletinGetCategoriesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinGetCategoriesResponse">
+    <wsdl:part name="returns" type="typens:BulletinGetCategoriesResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinGetTopicVersionsRequest">
+    <wsdl:part name="parameters" type="typens:BulletinGetTopicVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinGetTopicVersionsResponse">
+    <wsdl:part name="returns" type="typens:BulletinGetTopicVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinGetDraftTopicVersionsRequest">
+    <wsdl:part name="parameters" type="typens:BulletinGetDraftTopicVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinGetDraftTopicVersionsResponse">
+    <wsdl:part name="returns" type="typens:BulletinGetDraftTopicVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinGetTopicsRequest">
+    <wsdl:part name="parameters" type="typens:BulletinGetTopicsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinGetTopicsResponse">
+    <wsdl:part name="returns" type="typens:BulletinGetTopicsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinGetTopicByIdsRequest">
+    <wsdl:part name="parameters" type="typens:BulletinGetTopicByIdsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinGetTopicByIdsResponse">
+    <wsdl:part name="returns" type="typens:BulletinGetTopicByIdsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinFileDownloadRequest">
+    <wsdl:part name="parameters" type="typens:BulletinFileDownloadRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinFileDownloadResponse">
+    <wsdl:part name="returns" type="typens:BulletinFileDownloadResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinCreateTopicsRequest">
+    <wsdl:part name="parameters" type="typens:BulletinCreateTopicsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinCreateTopicsResponse">
+    <wsdl:part name="returns" type="typens:BulletinCreateTopicsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinModifyTopicsRequest">
+    <wsdl:part name="parameters" type="typens:BulletinModifyTopicsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinModifyTopicsResponse">
+    <wsdl:part name="returns" type="typens:BulletinModifyTopicsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinSaveDraftTopicsRequest">
+    <wsdl:part name="parameters" type="typens:BulletinSaveDraftTopicsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinSaveDraftTopicsResponse">
+    <wsdl:part name="returns" type="typens:BulletinSaveDraftTopicsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinRemoveTopicsRequest">
+    <wsdl:part name="parameters" type="typens:BulletinRemoveTopicsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinSearchTopicsRequest">
+    <wsdl:part name="parameters" type="typens:BulletinSearchTopicsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinSearchTopicsResponse">
+    <wsdl:part name="returns" type="typens:BulletinSearchTopicsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinGetFollowsRequest">
+    <wsdl:part name="parameters" type="typens:BulletinGetFollowsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinGetFollowsResponse">
+    <wsdl:part name="returns" type="typens:BulletinGetFollowsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinAddFollowsRequest">
+    <wsdl:part name="parameters" type="typens:BulletinAddFollowsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinAddFollowsResponse">
+    <wsdl:part name="returns" type="typens:BulletinAddFollowsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BulletinRemoveFollowsRequest">
+    <wsdl:part name="parameters" type="typens:BulletinRemoveFollowsRequestType" />
+  </wsdl:message>
+  <wsdl:portType name="BulletinPort">
+    <wsdl:operation name="BulletinGetCategoryVersions">
+      <documentation>
+        This API gets all categories in the bulletin application.
+      </documentation>
+      <wsdl:input message="tns:BulletinGetCategoryVersionsRequest" />
+      <wsdl:output message="tns:BulletinGetCategoryVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BulletinGetCategories">
+      <documentation>
+        This API gets all categories in the bulletin application.
+      </documentation>
+      <wsdl:input message="tns:BulletinGetCategoriesRequest" />
+      <wsdl:output message="tns:BulletinGetCategoriesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BulletinGetTopicVersions">
+      <wsdl:input message="tns:BulletinGetTopicVersionsRequest" />
+      <wsdl:output message="tns:BulletinGetTopicVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BulletinGetDraftTopicVersions">
+      <wsdl:input message="tns:BulletinGetDraftTopicVersionsRequest" />
+      <wsdl:output message="tns:BulletinGetDraftTopicVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BulletinGetTopics">
+      <documentation>
+        This API gets topics list by "category_id".
+        Exception 
+        In case "category_id" = -1 return topics list in "Waiting to be published" category
+        In case "category_id" = -2 return topics list in "Draft" category
+        </documentation>
+      <wsdl:input message="tns:BulletinGetTopicsRequest" />
+      <wsdl:output message="tns:BulletinGetTopicsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BulletinGetTopicByIds">
+      <documentation>
+        This API gets a topic by id.
+        The client sends list of "topic_id" for specify the topic to retrieve topic
+      </documentation>
+      <wsdl:input message="tns:BulletinGetTopicByIdsRequest" />
+      <wsdl:output message="tns:BulletinGetTopicByIdsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BulletinFileDownload">
+      <wsdl:input message="tns:BulletinFileDownloadRequest" />
+      <wsdl:output message="tns:BulletinFileDownloadResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BulletinCreateTopics">
+      <wsdl:input message="tns:BulletinCreateTopicsRequest" />
+      <wsdl:output message="tns:BulletinCreateTopicsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BulletinModifyTopics">
+      <documentation>
+        This API modifies the Topics.
+        The service returns the topics that modified.
+      </documentation>
+      <wsdl:input message="tns:BulletinModifyTopicsRequest" />
+      <wsdl:output message="tns:BulletinModifyTopicsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BulletinSaveDraftTopics">
+      <documentation>
+        This API can save new or modify topic to the draft.
+        The service returns the draft topics that saved.
+      </documentation>
+      <wsdl:input message="tns:BulletinSaveDraftTopicsRequest" />
+      <wsdl:output message="tns:BulletinSaveDraftTopicsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BulletinRemoveTopics">
+      <documentation>
+        This API removes the topics.
+        The service returns empty response.
+      </documentation>
+      <wsdl:input message="tns:BulletinRemoveTopicsRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BulletinSearchTopics">
+      <documentation>
+        This API searches the topics.
+      </documentation>
+      <wsdl:input message="tns:BulletinSearchTopicsRequest" />
+      <wsdl:output message="tns:BulletinSearchTopicsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BulletinGetFollows">
+      <documentation>
+        This API gets follows from topic.
+        "offset" and "limit" specifies search range.
+      </documentation>
+      <wsdl:input message="tns:BulletinGetFollowsRequest" />
+      <wsdl:output message="tns:BulletinGetFollowsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BulletinAddFollows">
+      <documentation>
+        This API add follows to topic.
+        The service returns the topics that a follow added.
+      </documentation>
+      <wsdl:input message="tns:BulletinAddFollowsRequest" />
+      <wsdl:output message="tns:BulletinAddFollowsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BulletinRemoveFollows">
+      <documentation>
+        This API remove follows from topic.
+        The service returns empty response.
+      </documentation>
+      <wsdl:input message="tns:BulletinRemoveFollowsRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BulletinBinding" type="tns:BulletinPort">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="BulletinGetCategoryVersions">
+      <soap12:operation soapAction="BulletinGetCategoryVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BulletinGetCategories">
+      <soap12:operation soapAction="BulletinGetCategories" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BulletinGetTopicVersions">
+      <soap12:operation soapAction="BulletinGetTopicVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BulletinGetDraftTopicVersions">
+      <soap12:operation soapAction="BulletinGetDraftTopicVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BulletinGetTopics">
+      <soap12:operation soapAction="BulletinGetTopics" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BulletinGetTopicByIds">
+      <soap12:operation soapAction="BulletinGetTopicByIds" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BulletinFileDownload">
+      <soap12:operation soapAction="BulletinFileDownload" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BulletinCreateTopics">
+      <soap12:operation soapAction="BulletinCreateTopics" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BulletinModifyTopics">
+      <soap12:operation soapAction="BulletinModifyTopics" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BulletinSaveDraftTopics">
+      <soap12:operation soapAction="BulletinSaveDraftTopics" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BulletinRemoveTopics">
+      <soap12:operation soapAction="BulletinRemoveTopics" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BulletinSearchTopics">
+      <soap12:operation soapAction="BulletinSearchTopics" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BulletinGetFollows">
+      <soap12:operation soapAction="BulletinGetFollows" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BulletinAddFollows">
+      <soap12:operation soapAction="BulletinAddFollows" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BulletinRemoveFollows">
+      <soap12:operation soapAction="BulletinRemoveFollows" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/bulletin/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="http://schemas.cybozu.co.jp/base/2008" elementFormDefault="qualified" targetNamespace="http://schemas.cybozu.co.jp/base/2008" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="base">
+    <xsd:complexType>
+      <xsd:all>
+        <xsd:element minOccurs="0" ref="users" />
+        <xsd:element minOccurs="0" ref="organizations" />
+        <xsd:element minOccurs="0" ref="static_groups" />
+        <xsd:element minOccurs="0" ref="dynamic_groups" />
+        <xsd:element minOccurs="0" ref="posts" />
+        <xsd:element minOccurs="0" ref="post_relations" />
+        <xsd:element minOccurs="0" ref="acl" />
+      </xsd:all>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="users">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" ref="user" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="user" type="UserType">
+    <xsd:key name="user_key">
+      <xsd:selector xpath="user" />
+      <xsd:field xpath="@key" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:complexType name="UserType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="photo">
+        <xsd:complexType>
+          <xsd:attribute name="file_id" type="IDType" use="required" />
+          <xsd:attribute name="version" type="VersionType" use="required" />
+          <xsd:attribute name="name" type="NonBlankStringType" use="required" />
+          <xsd:attribute name="size" type="xsd:unsignedLong" use="optional" />
+          <xsd:attribute name="mime_type" type="xsd:string" use="optional" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="organization">
+        <xsd:complexType>
+          <xsd:attribute name="id" type="IDType" use="required" />
+          <xsd:anyAttribute processContents="lax" />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="1" ref="acl" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="skip" />
+    </xsd:sequence>
+    <xsd:attribute name="key" type="IDType" use="required" />
+    <xsd:attribute name="version" type="VersionType" use="required" />
+    <xsd:attribute name="order" type="xsd:unsignedLong" use="optional" />
+    <xsd:attribute name="name" type="xsd:string" use="optional" />
+    <xsd:attribute name="status" type="xsd:byte" use="optional" />
+    <xsd:attribute name="reading" type="xsd:string" use="optional" />
+    <xsd:attribute name="url" type="xsd:string" use="optional" />
+    <xsd:attribute name="email" type="xsd:string" use="optional" />
+    <xsd:attribute name="phone" type="xsd:string" use="optional" />
+    <xsd:attribute default="1970-01-01" name="birth_date" type="xsd:date" use="optional" />
+    <xsd:attribute default="1970-01-01" name="join_date" type="xsd:date" use="optional" />
+    <xsd:attribute name="employee_number" type="xsd:string" use="optional" />
+    <xsd:attribute name="extension_number" type="xsd:string" use="optional" />
+    <xsd:attribute name="employment_pattern" type="xsd:string" use="optional" />
+    <xsd:attribute name="title" type="xsd:string" use="optional" />
+    <xsd:attribute name="office" type="xsd:string" use="optional" />
+    <xsd:attribute name="description" type="xsd:string" use="optional" />
+    <xsd:attribute name="primary_organization" type="IDType" use="optional" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+  <xsd:element name="posts">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" ref="post" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="post" type="ListType" />
+  <xsd:element name="post_relations">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="post_relation">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="organization" />
+              <xsd:element minOccurs="1" maxOccurs="1" ref="post" />
+              <xsd:element minOccurs="1" maxOccurs="1" ref="user" />
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="ListType">
+    <xsd:attribute name="key" type="IDType" use="required" />
+    <xsd:attribute name="name" type="xsd:string" use="required" />
+    <xsd:attribute name="order" type="xsd:unsignedLong" use="optional" />
+    <xsd:attribute name="description" type="xsd:string" />
+  </xsd:complexType>
+  <xsd:element name="organizations">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" ref="organization" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="organization" type="OrganizationType">
+    <xsd:key name="organization_key">
+      <xsd:selector xpath="organization" />
+      <xsd:field xpath="@key" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:complexType name="OrganizationType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="GroupType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" ref="organization" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="members" type="MembersType" />
+          <xsd:element minOccurs="0" maxOccurs="1" ref="acl" />
+          <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="skip" />
+        </xsd:sequence>
+        <xsd:attribute name="parent_organization" type="IDType" use="optional" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="static_groups">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" ref="static_group" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="static_group">
+    <xsd:complexType>
+      <xsd:complexContent mixed="false">
+        <xsd:extension base="GroupType">
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="members" type="MembersType" />
+            <xsd:element minOccurs="0" maxOccurs="1" ref="acl" />
+            <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="skip" />
+          </xsd:sequence>
+        </xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:key name="static_group_key">
+      <xsd:selector xpath="static_group" />
+      <xsd:field xpath="@key" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:element name="dynamic_groups">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" ref="dynamic_group" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="dynamic_group">
+    <xsd:complexType>
+      <xsd:complexContent mixed="false">
+        <xsd:extension base="GroupType">
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" ref="acl" />
+            <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="skip" />
+          </xsd:sequence>
+          <xsd:attribute name="condition" type="xsd:string" />
+        </xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:key name="dynamic_group_key">
+      <xsd:selector xpath="dynamic_group" />
+      <xsd:field xpath="@key" />
+    </xsd:key>
+  </xsd:element>
+  <xsd:complexType name="GroupType">
+    <xsd:attribute name="key" type="IDType" use="required" />
+    <xsd:attribute name="name" type="xsd:string" use="required" />
+    <xsd:attribute name="version" type="VersionType" use="required" />
+    <xsd:attribute name="description" type="xsd:string" use="optional" />
+    <xsd:attribute name="order" type="xsd:unsignedLong" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="MembersType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="user">
+        <xsd:complexType>
+          <xsd:attribute name="id" type="IDType" use="required" />
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="FileType">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="content" type="xsd:base64Binary" />
+    </xsd:sequence>
+    <xsd:attribute name="id" type="IDType" use="required" />
+    <xsd:attribute name="version" type="VersionType" use="required" />
+    <xsd:attribute name="name" type="xsd:string" use="required" />
+    <xsd:attribute name="size" type="xsd:unsignedLong" use="optional" />
+    <xsd:attribute name="mime_type" type="xsd:string" use="optional" />
+  </xsd:complexType>
+  <xsd:element name="acl">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="ace" type="AceType" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="AceType">
+    <xsd:choice>
+      <xsd:element ref="user" />
+      <xsd:element ref="static_group" />
+      <xsd:element ref="dynamic_group" />
+      <xsd:element ref="organization" />
+    </xsd:choice>
+    <xsd:attribute name="action" type="xsd:string" use="required" />
+    <xsd:attribute name="rights" type="RightsType" use="required" />
+    <xsd:attribute default="false" name="quick" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="order" type="xsd:unsignedLong" use="optional" />
+  </xsd:complexType>
+  <xsd:simpleType name="RightsType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="allow" />
+      <xsd:enumeration value="deny" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="NonBlankStringType">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="TextType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        Each "Text" type element can contain two types of text data, 
+        one is plain text, and the other is html markup text.
+        Since a plain text element is useful for text search application,
+        a "Text" type element must have one child element which is plain text
+        when it contains a html markupe body element.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="plain" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="markup">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##any" processContents="skip" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ChangeLogType">
+    <xsd:attribute name="user_id" type="IDType" use="optional" />
+    <xsd:attribute name="name" type="NonBlankStringType" use="required" />
+    <xsd:attribute name="date" type="xsd:dateTime" use="required" />
+  </xsd:complexType>
+  <xsd:simpleType name="IPPhoneURIType">
+    <xsd:restriction base="xsd:anyURI">
+      <xsd:pattern value="callto:.*" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="IDType">
+    <xsd:restriction base="NonBlankStringType" />
+  </xsd:simpleType>
+  <xsd:simpleType name="VersionType">
+    <xsd:restriction base="NonBlankStringType" />
+  </xsd:simpleType>
+  <xsd:complexType name="RegionType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="city">
+        <xsd:complexType>
+          <xsd:attribute name="name" type="xsd:string" />
+          <xsd:attribute name="timezone" type="xsd:string" />
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string" />
+  </xsd:complexType>
+</xsd:schema>

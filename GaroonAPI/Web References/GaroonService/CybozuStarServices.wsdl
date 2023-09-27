@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://wsdl.cybozu.co.jp/star/2008" xmlns:typens="http://wsdl.cybozu.co.jp/star/2008/types" xmlns:base_services="http://wsdl.cybozu.co.jp/base/2008" xmlns="http://schemas.xmlsoap.org/wsdl/" name="CybozuStarServices" targetNamespace="http://wsdl.cybozu.co.jp/star/2008" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import namespace="http://wsdl.cybozu.co.jp/base/2008" location="base.wsdl" />
+  <wsdl:types>
+    <xsd:schema xmlns:star="http://schemas.cybozu.co.jp/star/2008" xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns:base_types="http://wsdl.cybozu.co.jp/base/2008/types" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://wsdl.cybozu.co.jp/star/2008/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+      <xsd:import schemaLocation="star.xsd" namespace="http://schemas.cybozu.co.jp/star/2008" />
+      <xsd:import namespace="http://wsdl.cybozu.co.jp/base/2008/types" />
+      <xsd:complexType name="StarIDType">
+        <xsd:attribute name="module_id" type="base:IDType" use="required" />
+        <xsd:attribute name="item" type="base:NonBlankStringType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="StarGetStarsByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="star_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="StarGetStarsByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="star_data" type="star:StarDataType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="StarGetStarVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="star_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="StarGetStarVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="star_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="StarRemoveStarsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="star_item">
+            <xsd:complexType>
+              <xsd:complexContent mixed="false">
+                <xsd:extension base="typens:StarIDType">
+                  <xsd:attribute name="date" type="xsd:date" use="optional" />
+                  <xsd:attribute name="is_draft" type="xsd:boolean" use="optional" />
+                </xsd:extension>
+              </xsd:complexContent>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="StarAddStarsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="star_item">
+            <xsd:complexType>
+              <xsd:complexContent mixed="false">
+                <xsd:extension base="typens:StarIDType">
+                  <xsd:attribute name="date" type="xsd:date" use="optional" />
+                  <xsd:attribute name="is_draft" type="xsd:boolean" use="optional" />
+                </xsd:extension>
+              </xsd:complexContent>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="StarAddStarsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="star_data" type="star:StarDataType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="StarGetProfilesRequestType" />
+      <xsd:complexType name="StarGetProfilesResponseType">
+        <xsd:attribute name="star_num_allow" type="xsd:positiveInteger" use="required" />
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="StarGetStarsByIdRequest">
+    <wsdl:part name="parameters" type="typens:StarGetStarsByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="StarGetStarsByIdResponse">
+    <wsdl:part name="returns" type="typens:StarGetStarsByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="StarGetStarVersionsRequest">
+    <wsdl:part name="parameters" type="typens:StarGetStarVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="StarGetStarVersionsResponse">
+    <wsdl:part name="returns" type="typens:StarGetStarVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="StarRemoveStarsRequest">
+    <wsdl:part name="parameters" type="typens:StarRemoveStarsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="StarAddStarsRequest">
+    <wsdl:part name="parameters" type="typens:StarAddStarsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="StarAddStarsResponse">
+    <wsdl:part name="returns" type="typens:StarAddStarsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="StarGetProfilesRequest">
+    <wsdl:part name="parameters" type="typens:StarGetProfilesRequestType" />
+  </wsdl:message>
+  <wsdl:message name="StarGetProfilesResponse">
+    <wsdl:part name="returns" type="typens:StarGetProfilesResponseType" />
+  </wsdl:message>
+  <wsdl:portType name="StarPort">
+    <wsdl:operation name="StarGetStarsById">
+      <documentation>
+        This API gets the star datas by star module id and unique id.
+        The client sends list of "star_id" for specify the star to search.
+      </documentation>
+      <wsdl:input message="tns:StarGetStarsByIdRequest" />
+      <wsdl:output message="tns:StarGetStarsByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="StarGetStarVersions">
+      <documentation>
+        This API gets the modified stars for login user.
+        "star_item" is a list of star that a client has.
+      </documentation>
+      <wsdl:input message="tns:StarGetStarVersionsRequest" />
+      <wsdl:output message="tns:StarGetStarVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="StarRemoveStars">
+      <documentation>
+        This API will reomve star item of login user.
+        "star_item" is a list of star that a client has.
+      </documentation>
+      <wsdl:input message="tns:StarRemoveStarsRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="StarAddStars">
+      <documentation>
+        This API will add star item of login user.
+      </documentation>
+      <wsdl:input message="tns:StarAddStarsRequest" />
+      <wsdl:output message="tns:StarAddStarsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="StarGetProfiles">
+      <documentation>
+        This API will get star limited value.
+      </documentation>
+      <wsdl:input message="tns:StarGetProfilesRequest" />
+      <wsdl:output message="tns:StarGetProfilesResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="StarBinding" type="tns:StarPort">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="StarGetStarsById">
+      <soap12:operation soapAction="StarGetStarsById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/star/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/star/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/star/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="StarGetStarVersions">
+      <soap12:operation soapAction="StarGetStarVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/star/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/star/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/star/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="StarAddStars">
+      <soap12:operation soapAction="StarAddStars" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/star/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/star/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/star/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="StarRemoveStars">
+      <soap12:operation soapAction="StarRemoveStars" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/star/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/star/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/star/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="StarGetProfiles">
+      <soap12:operation soapAction="StarGetProfiles" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/star/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/star/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/star/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>

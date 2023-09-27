@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://wsdl.cybozu.co.jp/base/2008" xmlns:typens="http://wsdl.cybozu.co.jp/base/2008/types" xmlns="http://schemas.xmlsoap.org/wsdl/" name="CybozuBaseServices" targetNamespace="http://wsdl.cybozu.co.jp/base/2008" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://wsdl.cybozu.co.jp/base/2008/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+      <xsd:complexType name="FaultMessageType">
+        <xsd:attribute name="code" type="base:NonBlankStringType" use="required" />
+        <xsd:attribute name="diagnosis" type="xsd:string" use="required" />
+        <xsd:attribute name="cause" type="xsd:string" use="required" />
+        <xsd:attribute name="counter_measure" type="xsd:string" use="required" />
+      </xsd:complexType>
+      <xsd:element name="fault" type="typens:FaultMessageType" />
+      <xsd:complexType name="ItemVersionType">
+        <xsd:attribute name="id" type="base:IDType" use="required" />
+        <xsd:attribute name="version" type="base:VersionType" use="required" />
+      </xsd:complexType>
+      <xsd:simpleType name="ItemOperationType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="add" />
+          <xsd:enumeration value="modify" />
+          <xsd:enumeration value="remove" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ItemVersionResultType">
+        <xsd:attribute name="id" type="base:IDType" use="required" />
+        <xsd:attribute name="version" type="base:VersionType" use="required" />
+        <xsd:attribute name="operation" type="typens:ItemOperationType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="FileBodyType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="content" type="xsd:base64Binary" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetUserVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="user_item" type="typens:ItemVersionType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetUserVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="user_item" type="typens:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetUsersByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="user_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetUsersByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="user" type="base:UserType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetUsersByLoginNameRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="login_name" type="base:NonBlankStringType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetUsersByLoginNameResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="user" type="base:UserType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetOrganizationVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="organization_item" type="typens:ItemVersionType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetOrganizationVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="organization_item" type="typens:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetOrganizationsByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="organization_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetOrganizationsByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="organization" type="base:OrganizationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetMyGroupVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="my_group_item" type="typens:ItemVersionType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetMyGroupVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="my_group_item" type="typens:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseMyGroupType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="base:GroupType">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="belong_member" type="base:IDType" />
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="belong_facility" type="base:IDType" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetMyGroupsByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="my_group_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetMyGroupsByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="my_group" type="typens:BaseMyGroupType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetFrequentUsersRequestType" />
+      <xsd:complexType name="BaseGetFrequentUsersResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="user_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetFrequentOrganizationsRequestType" />
+      <xsd:complexType name="BaseGetFrequentOrganizationsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="organization_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="BaseCalendarEventTypeType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="public_holiday" />
+          <xsd:enumeration value="memorial_day" />
+          <xsd:enumeration value="system_memo" />
+          <xsd:enumeration value="user_memo" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="BaseCalendarEventType">
+        <xsd:attribute name="date" type="xsd:date" />
+        <xsd:attribute name="content" type="xsd:string" />
+        <xsd:attribute name="type" type="typens:BaseCalendarEventTypeType" />
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetCalendarEventsRequestType" />
+      <xsd:complexType name="BaseGetCalendarEventsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="calendar_event" type="typens:BaseCalendarEventType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:simpleType name="BaseApplicationStatusType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="active" />
+          <xsd:enumeration value="deactive" />
+          <xsd:enumeration value="license_expired" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="BaseApplicationType">
+        <xsd:attribute name="code" type="base:NonBlankStringType" />
+        <xsd:attribute name="status" type="typens:BaseApplicationStatusType" />
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetApplicationStatusRequestType" />
+      <xsd:complexType name="BaseGetApplicationStatusResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application" type="typens:BaseApplicationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseApplicationInformationType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="app_icon">
+            <xsd:complexType>
+              <xsd:attribute name="id" type="base:NonBlankStringType" use="required" />
+              <xsd:attribute name="url" type="xsd:anyURI" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="available_client">
+            <xsd:complexType>
+              <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="module_id" type="base:IDType" use="required" />
+        <xsd:attribute name="name" type="base:NonBlankStringType" use="required" />
+        <xsd:attribute name="url" type="xsd:anyURI" />
+        <xsd:attribute name="available_feature" type="xsd:positiveInteger" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetApplicationInformationRequestType" />
+      <xsd:complexType name="BaseGetApplicationInformationResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application" type="typens:BaseApplicationInformationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseFileDownloadRequestType">
+        <xsd:attribute name="file_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="BaseFileDownloadResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="file" type="typens:FileBodyType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetRegionsListRequestType" />
+      <xsd:complexType name="BaseGetRegionsListResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="region" type="base:RegionType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseGetTimezoneVersionRequestType" />
+      <xsd:complexType name="BaseGetTimezoneVersionResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="timezone_version" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseManagerApplicationType">
+        <xsd:attribute name="code" type="xsd:string" use="required" />
+        <xsd:attribute name="active" type="xsd:boolean" />
+      </xsd:complexType>
+      <xsd:complexType name="BaseManagerApplicationRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application" type="typens:BaseManagerApplicationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BaseManagerApplicationResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="application" type="typens:BaseApplicationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="Fault">
+    <wsdl:part name="message" element="typens:fault" />
+  </wsdl:message>
+  <wsdl:message name="EmptyRequest" />
+  <wsdl:message name="EmptyResponse" />
+  <wsdl:message name="BaseGetUserVersionsRequest">
+    <wsdl:part name="parameters" type="typens:BaseGetUserVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetUserVersionsResponse">
+    <wsdl:part name="returns" type="typens:BaseGetUserVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetUsersByIdRequest">
+    <wsdl:part name="parameters" type="typens:BaseGetUsersByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetUsersByIdResponse">
+    <wsdl:part name="returns" type="typens:BaseGetUsersByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetUsersByLoginNameRequest">
+    <wsdl:part name="parameters" type="typens:BaseGetUsersByLoginNameRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetUsersByLoginNameResponse">
+    <wsdl:part name="returns" type="typens:BaseGetUsersByLoginNameResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetOrganizationVersionsRequest">
+    <wsdl:part name="parameters" type="typens:BaseGetOrganizationVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetOrganizationVersionsResponse">
+    <wsdl:part name="returns" type="typens:BaseGetOrganizationVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetOrganizationsByIdRequest">
+    <wsdl:part name="parameters" type="typens:BaseGetOrganizationsByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetOrganizationsByIdResponse">
+    <wsdl:part name="returns" type="typens:BaseGetOrganizationsByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetMyGroupVersionsRequest">
+    <wsdl:part name="parameters" type="typens:BaseGetMyGroupVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetMyGroupVersionsResponse">
+    <wsdl:part name="returns" type="typens:BaseGetMyGroupVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetMyGroupsByIdRequest">
+    <wsdl:part name="parameters" type="typens:BaseGetMyGroupsByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetMyGroupsByIdResponse">
+    <wsdl:part name="returns" type="typens:BaseGetMyGroupsByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetFrequentUsersRequest">
+    <wsdl:part name="parameters" type="typens:BaseGetFrequentUsersRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetFrequentUsersResponse">
+    <wsdl:part name="returns" type="typens:BaseGetFrequentUsersResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetFrequentOrganizationsRequest">
+    <wsdl:part name="parameters" type="typens:BaseGetFrequentOrganizationsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetFrequentOrganizationsResponse">
+    <wsdl:part name="returns" type="typens:BaseGetFrequentOrganizationsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetCalendarEventsRequest">
+    <wsdl:part name="parameters" type="typens:BaseGetCalendarEventsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetCalendarEventsResponse">
+    <wsdl:part name="returns" type="typens:BaseGetCalendarEventsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetApplicationStatusRequest">
+    <wsdl:part name="parameters" type="typens:BaseGetApplicationStatusRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetApplicationStatusResponse">
+    <wsdl:part name="returns" type="typens:BaseGetApplicationStatusResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetApplicationInformationRequest">
+    <wsdl:part name="parameters" type="typens:BaseGetApplicationInformationRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetApplicationInformationResponse">
+    <wsdl:part name="returns" type="typens:BaseGetApplicationInformationResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BaseFileDownloadRequest">
+    <wsdl:part name="parameters" type="typens:BaseFileDownloadRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BaseFileDownloadResponse">
+    <wsdl:part name="returns" type="typens:BaseFileDownloadResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetRegionsListRequest">
+    <wsdl:part name="parameters" type="typens:BaseGetRegionsListRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetRegionsListResponse">
+    <wsdl:part name="returns" type="typens:BaseGetRegionsListResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetTimezoneVersionRequest">
+    <wsdl:part name="parameters" type="typens:BaseGetTimezoneVersionRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BaseGetTimezoneVersionResponse">
+    <wsdl:part name="returns" type="typens:BaseGetTimezoneVersionResponseType" />
+  </wsdl:message>
+  <wsdl:message name="BaseManagerApplicationRequest">
+    <wsdl:part name="parameters" type="typens:BaseManagerApplicationRequestType" />
+  </wsdl:message>
+  <wsdl:message name="BaseManagerApplicationResponse">
+    <wsdl:part name="returns" type="typens:BaseManagerApplicationResponseType" />
+  </wsdl:message>
+  <wsdl:portType name="BasePort">
+    <wsdl:operation name="BaseGetUserVersions">
+      <documentation>
+        This API gets the modified users.
+        "user_item" is a list of user that a client has.
+
+        The service returns the operation to the received users.
+        The operations are compared by the version number.
+        - "modify" is returned when the version number that the service has is different.
+        - A user that exists in the service that had not been sent from client is "add".
+        - A user that doesn't exist in the service that has been sent from client is "remove "
+        - Nothing is returned when the version number is the same.
+      </documentation>
+      <wsdl:input message="tns:BaseGetUserVersionsRequest" />
+      <wsdl:output message="tns:BaseGetUserVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="tns:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetUsersById">
+      <documentation>
+        This API gets the users by user id.
+        The client sends list of "user_id" for specify the user to search.
+        The service returns the user that matches to "user_id".
+      </documentation>
+      <wsdl:input message="tns:BaseGetUsersByIdRequest" />
+      <wsdl:output message="tns:BaseGetUsersByIdResponse" />
+      <wsdl:fault name="CybozuError" message="tns:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetUsersByLoginName">
+      <documentation>
+        This API gets the users by the login name of user.
+        The client sends list of "login_name" for specify the user to search.
+        The service returns the user that matches to "login_name".
+      </documentation>
+      <wsdl:input message="tns:BaseGetUsersByLoginNameRequest" />
+      <wsdl:output message="tns:BaseGetUsersByLoginNameResponse" />
+      <wsdl:fault name="CybozuError" message="tns:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetOrganizationVersions">
+      <documentation>
+        This API gets the modified organizations.
+        "organization_item" is a list of organization that a client has.
+
+        The service returns the operation to the received organizations.
+        The operations are compared by the version number.
+        - "modify" is returned when the version number that the service has is different.
+        - A organization that exists in the service that had not been sent from client is "add".
+        - A organization that doesn't exist in the service that has been sent from client is "remove "
+        - Nothing is returned when the version number is the same.
+      </documentation>
+      <wsdl:input message="tns:BaseGetOrganizationVersionsRequest" />
+      <wsdl:output message="tns:BaseGetOrganizationVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="tns:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetOrganizationsById">
+      <documentation>
+        This API gets the organizations by organization id.
+        The client sends list of "organization_id" for specify the organization to search.
+        The service returns the organization that matches to "organization_id".
+      </documentation>
+      <wsdl:input message="tns:BaseGetOrganizationsByIdRequest" />
+      <wsdl:output message="tns:BaseGetOrganizationsByIdResponse" />
+      <wsdl:fault name="CybozuError" message="tns:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetMyGroupVersions">
+      <documentation>
+        This API gets the modified my groups.
+        "my_group_item" is a list of the my group that a client has.
+
+        The service returns the operation to the received my groups.
+        The operations are compared by the version number.
+        - "modify" is returned when the version number that the service has is different.
+        - A my group that exists in the service that had not been sent from client is "add".
+        - A my group that doesn't exist in the service that has been sent from client is "remove "
+        - Nothing is returned when the version number is the same.
+      </documentation>
+      <wsdl:input message="tns:BaseGetMyGroupVersionsRequest" />
+      <wsdl:output message="tns:BaseGetMyGroupVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="tns:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetMyGroupsById">
+      <documentation>
+        This API gets the organizations by the my group id.
+        The client sends list of "my_group_id" for specify the my group to search.
+        The service returns the my group that matches to "my_group_id".
+      </documentation>
+      <wsdl:input message="tns:BaseGetMyGroupsByIdRequest" />
+      <wsdl:output message="tns:BaseGetMyGroupsByIdResponse" />
+      <wsdl:fault name="CybozuError" message="tns:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetFrequentUsers">
+      <documentation>
+        This API gets the users frequent use.
+      </documentation>
+      <wsdl:input message="tns:BaseGetFrequentUsersRequest" />
+      <wsdl:output message="tns:BaseGetFrequentUsersResponse" />
+      <wsdl:fault name="CybozuError" message="tns:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetFrequentOrganizations">
+      <documentation>
+        This API gets the organization frequent use.
+      </documentation>
+      <wsdl:input message="tns:BaseGetFrequentOrganizationsRequest" />
+      <wsdl:output message="tns:BaseGetFrequentOrganizationsResponse" />
+      <wsdl:fault name="CybozuError" message="tns:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetCalendarEvents">
+      <documentation>
+        This API gets list of events in my calendar.
+      </documentation>
+      <wsdl:input message="tns:BaseGetCalendarEventsRequest" />
+      <wsdl:output message="tns:BaseGetCalendarEventsResponse" />
+      <wsdl:fault name="CybozuError" message="tns:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetApplicationStatus">
+      <documentation>
+        This API gets the application status.
+        The application status is whether the application can be used.
+        -  "active" is status that application can be used.
+        -  "deactive" is status that application cannot be used.
+        - "license_expired" is status that application cannot be used because license expired.
+      </documentation>
+      <wsdl:input message="tns:BaseGetApplicationStatusRequest" />
+      <wsdl:output message="tns:BaseGetApplicationStatusResponse" />
+      <wsdl:fault name="CybozuError" message="tns:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetApplicationInformation">
+      <documentation>
+        This API gets the application information.
+      </documentation>
+      <wsdl:input message="tns:BaseGetApplicationInformationRequest" />
+      <wsdl:output message="tns:BaseGetApplicationInformationResponse" />
+      <wsdl:fault name="CybozuError" message="tns:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BaseFileDownload">
+      <documentation>
+        This API downloads the attached file.
+      </documentation>
+      <wsdl:input message="tns:BaseFileDownloadRequest" />
+      <wsdl:output message="tns:BaseFileDownloadResponse" />
+      <wsdl:fault name="CybozuError" message="tns:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetRegionsList">
+      <documentation>
+        This API gets regions list.
+      </documentation>
+      <wsdl:input message="tns:BaseGetRegionsListRequest" />
+      <wsdl:output message="tns:BaseGetRegionsListResponse" />
+      <wsdl:fault name="CybozuError" message="tns:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetTimezoneVersion">
+      <documentation>
+        This API gets TimezoneDB version of PHP on Garoon.
+      </documentation>
+      <wsdl:input message="tns:BaseGetTimezoneVersionRequest" />
+      <wsdl:output message="tns:BaseGetTimezoneVersionResponse" />
+      <wsdl:fault name="CybozuError" message="tns:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="BaseManagerApplication">
+      <documentation>
+        An API to set applications ON/OFF.
+      </documentation>
+      <wsdl:input message="tns:BaseManagerApplicationRequest" />
+      <wsdl:output message="tns:BaseManagerApplicationResponse" />
+      <wsdl:fault name="CybozuError" message="tns:Fault" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BaseBinding" type="tns:BasePort">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="BaseGetUserVersions">
+      <soap12:operation soapAction="BaseGetUserVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetUsersById">
+      <soap12:operation soapAction="BaseGetUsersById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetUsersByLoginName">
+      <soap12:operation soapAction="BaseGetUsersByLoginName" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetOrganizationVersions">
+      <soap12:operation soapAction="BaseGetOrganizationVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetOrganizationsById">
+      <soap12:operation soapAction="BaseGetOrganizationsById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetMyGroupVersions">
+      <soap12:operation soapAction="BaseGetMyGroupVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetMyGroupsById">
+      <soap12:operation soapAction="BaseGetMyGroupsById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetFrequentUsers">
+      <soap12:operation soapAction="BaseGetFrequentUsers" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetFrequentOrganizations">
+      <soap12:operation soapAction="BaseGetFrequentOrganizations" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetCalendarEvents">
+      <soap12:operation soapAction="BaseGetCalendarEvents" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetApplicationStatus">
+      <soap12:operation soapAction="BaseGetApplicationStatus" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetApplicationInformation">
+      <soap12:operation soapAction="BaseGetApplicationInformation" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BaseFileDownload">
+      <soap12:operation soapAction="BaseFileDownload" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetRegionsList">
+      <soap12:operation soapAction="BaseGetRegionsList" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BaseGetTimezoneVersion">
+      <soap12:operation soapAction="BaseGetTimezoneVersion" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="BaseManagerApplication">
+      <soap12:operation soapAction="BaseManagerApplication" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/base/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>

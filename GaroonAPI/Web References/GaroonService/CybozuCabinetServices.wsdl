@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://wsdl.cybozu.co.jp/cabinet/2008" xmlns:typens="http://wsdl.cybozu.co.jp/cabinet/2008/types" xmlns:base_services="http://wsdl.cybozu.co.jp/base/2008" xmlns="http://schemas.xmlsoap.org/wsdl/" name="CybozuCabinetServices" targetNamespace="http://wsdl.cybozu.co.jp/cabinet/2008" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import namespace="http://wsdl.cybozu.co.jp/base/2008" location="base.wsdl" />
+  <wsdl:types>
+    <xsd:schema xmlns:cabinet="http://schemas.cybozu.co.jp/cabinet/2008" xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns:base_types="http://wsdl.cybozu.co.jp/base/2008/types" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://wsdl.cybozu.co.jp/cabinet/2008/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+      <xsd:import schemaLocation="cabinet.xsd" namespace="http://schemas.cybozu.co.jp/cabinet/2008" />
+      <xsd:import namespace="http://wsdl.cybozu.co.jp/base/2008/types" />
+      <xsd:complexType name="CabinetGetFolderInfoRequestType" />
+      <xsd:complexType name="CabinetGetFolderInfoResponseType">
+        <xsd:sequence>
+          <xsd:element name="folder_information" type="cabinet:FolderInformationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CabinetGetFileInfoRequestType">
+        <xsd:attribute name="hid" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="CabinetGetFileInfoResponseType">
+        <xsd:sequence>
+          <xsd:element name="file_information" type="cabinet:FileInformationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CabinetFileDownloadRequestType">
+        <xsd:attribute name="file_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="CabinetFileDownloadResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="file" type="base_types:FileBodyType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CabinetAddFileRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="content" type="xsd:base64Binary" />
+        </xsd:sequence>
+        <xsd:attribute name="hid" type="base:IDType" use="required" />
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+        <xsd:attribute name="title" type="xsd:string" use="optional" />
+        <xsd:attribute name="version" type="base:IDType" use="optional" />
+        <xsd:attribute name="description" type="xsd:string" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="CabinetAddFileResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="file" type="cabinet:SimpleFileType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CabinetUpdateFileRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="content" type="xsd:base64Binary" />
+        </xsd:sequence>
+        <xsd:attribute name="file_id" type="base:IDType" use="required" />
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+        <xsd:attribute name="comment" type="xsd:string" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="CabinetUpdateFileResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="file" type="cabinet:SimpleFileInformationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CabinetUpdateFileInformationRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+        </xsd:sequence>
+        <xsd:attribute name="file_id" type="base:IDType" use="required" />
+        <xsd:attribute name="title" type="xsd:string" use="optional" />
+        <xsd:attribute name="version" type="base:IDType" use="optional" />
+        <xsd:attribute name="description" type="xsd:string" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="CabinetUpdateFileInformationResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="file" type="cabinet:SimpleFileInformationType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CabinetDeleteFilesRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="file_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="CabinetGetFolderInfoRequest">
+    <wsdl:part name="parameters" type="typens:CabinetGetFolderInfoRequestType" />
+  </wsdl:message>
+  <wsdl:message name="CabinetGetFolderInfoResponse">
+    <wsdl:part name="returns" type="typens:CabinetGetFolderInfoResponseType" />
+  </wsdl:message>
+  <wsdl:message name="CabinetGetFileInfoRequest">
+    <wsdl:part name="parameters" type="typens:CabinetGetFileInfoRequestType" />
+  </wsdl:message>
+  <wsdl:message name="CabinetGetFileInfoResponse">
+    <wsdl:part name="returns" type="typens:CabinetGetFileInfoResponseType" />
+  </wsdl:message>
+  <wsdl:message name="CabinetFileDownloadRequest">
+    <wsdl:part name="parameters" type="typens:CabinetFileDownloadRequestType" />
+  </wsdl:message>
+  <wsdl:message name="CabinetFileDownloadResponse">
+    <wsdl:part name="returns" type="typens:CabinetFileDownloadResponseType" />
+  </wsdl:message>
+  <wsdl:message name="CabinetAddFileRequest">
+    <wsdl:part name="parameters" type="typens:CabinetAddFileRequestType" />
+  </wsdl:message>
+  <wsdl:message name="CabinetAddFileResponse">
+    <wsdl:part name="returns" type="typens:CabinetAddFileResponseType" />
+  </wsdl:message>
+  <wsdl:message name="CabinetUpdateFileRequest">
+    <wsdl:part name="parameters" type="typens:CabinetUpdateFileRequestType" />
+  </wsdl:message>
+  <wsdl:message name="CabinetUpdateFileResponse">
+    <wsdl:part name="returns" type="typens:CabinetUpdateFileResponseType" />
+  </wsdl:message>
+  <wsdl:message name="CabinetUpdateFileInformationRequest">
+    <wsdl:part name="parameters" type="typens:CabinetUpdateFileInformationRequestType" />
+  </wsdl:message>
+  <wsdl:message name="CabinetUpdateFileInformationResponse">
+    <wsdl:part name="returns" type="typens:CabinetUpdateFileInformationResponseType" />
+  </wsdl:message>
+  <wsdl:message name="CabinetDeleteFilesRequest">
+    <wsdl:part name="parameters" type="typens:CabinetDeleteFilesRequestType" />
+  </wsdl:message>
+  <wsdl:portType name="CabinetPort">
+    <wsdl:operation name="CabinetGetFolderInfo">
+      <wsdl:input message="tns:CabinetGetFolderInfoRequest" />
+      <wsdl:output message="tns:CabinetGetFolderInfoResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="CabinetGetFileInfo">
+      <wsdl:input message="tns:CabinetGetFileInfoRequest" />
+      <wsdl:output message="tns:CabinetGetFileInfoResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="CabinetFileDownload">
+      <wsdl:input message="tns:CabinetFileDownloadRequest" />
+      <wsdl:output message="tns:CabinetFileDownloadResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="CabinetAddFile">
+      <wsdl:input message="tns:CabinetAddFileRequest" />
+      <wsdl:output message="tns:CabinetAddFileResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="CabinetUpdateFile">
+      <wsdl:input message="tns:CabinetUpdateFileRequest" />
+      <wsdl:output message="tns:CabinetUpdateFileResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="CabinetUpdateFileInformation">
+      <wsdl:input message="tns:CabinetUpdateFileInformationRequest" />
+      <wsdl:output message="tns:CabinetUpdateFileInformationResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="CabinetDeleteFiles">
+      <wsdl:input message="tns:CabinetDeleteFilesRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CabinetBinding" type="tns:CabinetPort">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="CabinetGetFolderInfo">
+      <soap12:operation soapAction="CabinetGetFolderInfo" soapActionRequired="true" />
+      <wsdl:input name="CabinetGetFolderInfoRequest">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:input>
+      <wsdl:output name="CabinetGetFolderInfoResponse">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="CabinetGetFileInfo">
+      <soap12:operation soapAction="CabinetGetFolderInfo" soapActionRequired="true" />
+      <wsdl:input name="CabinetGetFileInfoRequest">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:input>
+      <wsdl:output name="CabinetGetFileInfoResponse">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="CabinetFileDownload">
+      <soap12:operation soapAction="CabinetFileDownload" soapActionRequired="true" />
+      <wsdl:input name="CabinetFileDownloadRequest">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:input>
+      <wsdl:output name="CabinetFileDownloadResponse">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="CabinetAddFile">
+      <soap12:operation soapAction="CabinetAddFile" soapActionRequired="true" />
+      <wsdl:input name="CabinetAddFileRequest">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:input>
+      <wsdl:output name="CabinetAddFileResponse">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="CabinetUpdateFile">
+      <soap12:operation soapAction="CabinetUpdateFile" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="CabinetUpdateFileInformation">
+      <soap12:operation soapAction="CabinetUpdateFileInformation" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="CabinetDeleteFiles">
+      <soap12:operation soapAction="CabinetDeleteFiles" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/cabinet/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>

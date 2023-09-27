@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns="http://schemas.cybozu.co.jp/admin/2008" elementFormDefault="qualified" targetNamespace="http://schemas.cybozu.co.jp/admin/2008" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+  <xsd:complexType name="UserDetail">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="userId" type="xsd:integer" />
+      <xsd:element minOccurs="1" maxOccurs="1" name="login_name" type="xsd:string" />
+      <xsd:element minOccurs="1" maxOccurs="1" name="display_name" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OrgDetail">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="orgId" type="xsd:integer" />
+      <xsd:element minOccurs="1" maxOccurs="1" name="org_code" type="xsd:string" />
+      <xsd:element minOccurs="1" maxOccurs="1" name="org_name" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="UserInfoType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="image" type="base:FileType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="organization" type="xsd:integer" />
+      <xsd:any minOccurs="0" maxOccurs="unbounded" namespace="##local" processContents="lax" />
+    </xsd:sequence>
+    <xsd:attribute name="primary_group" type="base:IDType" use="optional" />
+    <xsd:attribute name="position" type="xsd:unsignedLong" use="optional" />
+    <xsd:attribute name="invalid" type="xsd:boolean" use="optional" />
+    <xsd:attribute name="sort_key" type="xsd:string" use="optional" />
+    <xsd:attribute name="email_address" type="xsd:string" use="optional" />
+    <xsd:attribute name="description" type="xsd:string" use="optional" />
+    <xsd:attribute name="post" type="xsd:string" use="optional" />
+    <xsd:attribute name="telephone_number" type="xsd:string" use="optional" />
+    <xsd:attribute name="url" type="xsd:string" use="optional" />
+    <xsd:attribute name="locale" type="base:IDType" use="optional" />
+    <xsd:attribute name="base" type="base:IDType" use="optional" />
+    <xsd:anyAttribute processContents="lax" />
+  </xsd:complexType>
+</xsd:schema>

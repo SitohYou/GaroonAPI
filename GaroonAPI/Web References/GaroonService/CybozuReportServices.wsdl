@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://wsdl.cybozu.co.jp/report/2008" xmlns:typens="http://wsdl.cybozu.co.jp/report/2008/types" xmlns:base_services="http://wsdl.cybozu.co.jp/base/2008" xmlns="http://schemas.xmlsoap.org/wsdl/" name="CybozuReportServices" targetNamespace="http://wsdl.cybozu.co.jp/report/2008" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:import namespace="http://wsdl.cybozu.co.jp/base/2008" location="base.wsdl" />
+  <wsdl:types>
+    <xsd:schema xmlns:report="http://schemas.cybozu.co.jp/report/2008" xmlns:base="http://schemas.cybozu.co.jp/base/2008" xmlns:base_types="http://wsdl.cybozu.co.jp/base/2008/types" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://wsdl.cybozu.co.jp/report/2008/types" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import schemaLocation="base.xsd" namespace="http://schemas.cybozu.co.jp/base/2008" />
+      <xsd:import schemaLocation="report.xsd" namespace="http://schemas.cybozu.co.jp/report/2008" />
+      <xsd:import namespace="http://wsdl.cybozu.co.jp/base/2008/types" />
+      <xsd:complexType name="ReportAddFollowType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="follow" type="report:FollowType" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="file">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element minOccurs="1" maxOccurs="1" name="content" type="xsd:base64Binary" />
+              </xsd:sequence>
+              <xsd:attribute name="id" type="base:IDType" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="report_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="ReportAddFollowsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="add_follow" type="typens:ReportAddFollowType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportAddFollowsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="report" type="report:ReportType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportGetReportVersionsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="report_item" type="base_types:ItemVersionType" />
+        </xsd:sequence>
+        <xsd:attribute name="start" type="xsd:dateTime" use="required" />
+        <xsd:attribute name="end" type="xsd:dateTime" use="optional" />
+        <xsd:attribute name="target" type="report:SearchTargetType" use="optional" />
+      </xsd:complexType>
+      <xsd:complexType name="ReportGetReportVersionsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="report_item" type="base_types:ItemVersionResultType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportGetReportByIdRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="report_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportGetReportByIdResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="report" type="report:ReportType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportGetFollowsRequestType">
+        <xsd:attribute name="report_id" type="base:IDType" use="required" />
+        <xsd:attribute name="limit" type="xsd:unsignedLong" use="required" />
+        <xsd:attribute name="offset" type="xsd:unsignedLong" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="ReportGetFollowsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="follows" type="report:FollowType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportRemoveFollowsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="follow_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportRemoveReportsRequestType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="request_token" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="report_id" type="base:IDType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportSearchReportsRequestType">
+        <xsd:attribute name="target" type="report:SearchTargetType" use="required" />
+        <xsd:attribute name="keyword" type="xsd:string" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="ReportSearchReportsResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="report" type="report:ReportType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportFileDownloadRequestType">
+        <xsd:attribute name="file_id" type="base:IDType" use="required" />
+      </xsd:complexType>
+      <xsd:complexType name="ReportFileDownloadResponseType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="file" type="base_types:FileBodyType" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ReportAddFollowsRequest">
+    <wsdl:part name="parameters" type="typens:ReportAddFollowsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ReportAddFollowsResponse">
+    <wsdl:part name="returns" type="typens:ReportAddFollowsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ReportGetReportVersionsRequest">
+    <wsdl:part name="parameters" type="typens:ReportGetReportVersionsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ReportGetReportVersionsResponse">
+    <wsdl:part name="returns" type="typens:ReportGetReportVersionsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ReportGetReportByIdRequest">
+    <wsdl:part name="parameters" type="typens:ReportGetReportByIdRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ReportGetReportByIdResponse">
+    <wsdl:part name="returns" type="typens:ReportGetReportByIdResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ReportGetFollowsRequest">
+    <wsdl:part name="parameters" type="typens:ReportGetFollowsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ReportGetFollowsResponse">
+    <wsdl:part name="returns" type="typens:ReportGetFollowsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ReportRemoveFollowsRequest">
+    <wsdl:part name="parameters" type="typens:ReportRemoveFollowsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ReportRemoveReportsRequest">
+    <wsdl:part name="parameters" type="typens:ReportRemoveReportsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ReportSearchReportsRequest">
+    <wsdl:part name="parameters" type="typens:ReportSearchReportsRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ReportSearchReportsResponse">
+    <wsdl:part name="returns" type="typens:ReportSearchReportsResponseType" />
+  </wsdl:message>
+  <wsdl:message name="ReportFileDownloadRequest">
+    <wsdl:part name="parameters" type="typens:ReportFileDownloadRequestType" />
+  </wsdl:message>
+  <wsdl:message name="ReportFileDownloadResponse">
+    <wsdl:part name="returns" type="typens:ReportFileDownloadResponseType" />
+  </wsdl:message>
+  <wsdl:portType name="ReportPort">
+    <wsdl:operation name="ReportGetReportVersions">
+      <documentation>
+      </documentation>
+      <wsdl:input message="tns:ReportGetReportVersionsRequest" />
+      <wsdl:output message="tns:ReportGetReportVersionsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ReportGetReportById">
+      <documentation>
+      </documentation>
+      <wsdl:input message="tns:ReportGetReportByIdRequest" />
+      <wsdl:output message="tns:ReportGetReportByIdResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ReportAddFollows">
+      <documentation>
+      </documentation>
+      <wsdl:input message="tns:ReportAddFollowsRequest" />
+      <wsdl:output message="tns:ReportAddFollowsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ReportGetFollows">
+      <documentation>
+      </documentation>
+      <wsdl:input message="tns:ReportGetFollowsRequest" />
+      <wsdl:output message="tns:ReportGetFollowsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ReportRemoveFollows">
+      <documentation>
+      </documentation>
+      <wsdl:input message="tns:ReportRemoveFollowsRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ReportRemoveReports">
+      <documentation>
+      </documentation>
+      <wsdl:input message="tns:ReportRemoveReportsRequest" />
+      <wsdl:output message="base_services:EmptyResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ReportSearchReports">
+      <documentation>
+      </documentation>
+      <wsdl:input message="tns:ReportSearchReportsRequest" />
+      <wsdl:output message="tns:ReportSearchReportsResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+    <wsdl:operation name="ReportFileDownload">
+      <documentation>
+      </documentation>
+      <wsdl:input message="tns:ReportFileDownloadRequest" />
+      <wsdl:output message="tns:ReportFileDownloadResponse" />
+      <wsdl:fault name="CybozuError" message="base_services:Fault" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ReportBinding" type="tns:ReportPort">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="ReportGetReportVersions">
+      <soap12:operation soapAction="ReportGetReportVersions" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ReportGetReportById">
+      <soap12:operation soapAction="ReportGetReportById" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ReportAddFollows">
+      <soap12:operation soapAction="ReportAddFollows" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ReportGetFollows">
+      <soap12:operation soapAction="ReportGetFollows" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ReportRemoveFollows">
+      <soap12:operation soapAction="ReportRemoveFollows" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ReportRemoveReports">
+      <soap12:operation soapAction="ReportRemoveReports" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ReportSearchReports">
+      <soap12:operation soapAction="ReportSearchReports" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ReportFileDownload">
+      <soap12:operation soapAction="ReportFileDownload" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:output>
+      <wsdl:fault name="CybozuError">
+        <soap12:body use="literal" namespace="http://wsdl.cybozu.co.jp/report/2008" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>
