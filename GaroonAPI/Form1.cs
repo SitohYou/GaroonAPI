@@ -27,10 +27,12 @@ namespace GaroonAPI
         private void button1_Click(object sender, EventArgs e)
         {
             if(textBox2.Text.Length < 1 || textBox3.Text.Length < 1) return;
+            button1.Enabled = false;
             Mail mail = new Mail();
             mail.OnMessageChanged += ChangeTextBox;
             mail.OnMessageAdd += AddTextBox;
-            mail.GetMailInfo(textBox2.Text, textBox3.Text);
+            mail.GetMailInfoCompleted += GetMailInfoEnabled;
+            mail.GetMailInfo(textBox2.Text, textBox3.Text, textBox4.Text);
         }
 
         // テキストボックス上書き
@@ -43,6 +45,21 @@ namespace GaroonAPI
         private void AddTextBox(string message)
         {
             textBox1.Text += "\r\n" + message;
+        }
+
+        private void GetMailInfoEnabled()
+        {
+            button1.Enabled = true;
+        }
+
+        private void button2_MouseDown(object sender, MouseEventArgs e)
+        {
+            textBox3.UseSystemPasswordChar = false;
+        }
+
+        private void button2_MouseUp(object sender, MouseEventArgs e)
+        {
+            textBox3.UseSystemPasswordChar = true;
         }
     }
 }

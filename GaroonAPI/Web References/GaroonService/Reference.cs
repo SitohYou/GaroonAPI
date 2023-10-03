@@ -4580,8 +4580,11 @@ namespace GaroonAPI.GaroonService {
                 this.MailSaveDraftMailsCompleted(this, new MailSaveDraftMailsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
-        
+
         /// <remarks/>
+        [System.Web.Services.Protocols.SoapHeaderAttribute("action", Direction = SoapHeaderDirection.InOut)]
+        [System.Web.Services.Protocols.SoapHeaderAttribute("security", Direction = SoapHeaderDirection.InOut)]
+        [System.Web.Services.Protocols.SoapHeaderAttribute("timeStamp", Direction = SoapHeaderDirection.InOut)]
         [System.Web.Services.Protocols.SoapRpcMethodAttribute("MailRemoveMails", RequestNamespace="http://wsdl.cybozu.co.jp/mail/2008", ResponseNamespace="http://wsdl.cybozu.co.jp/mail/2008", Use=System.Web.Services.Description.SoapBindingUse.Literal)]
         public void MailRemoveMails(MailRemoveMailsRequestType parameters) {
             this.Invoke("MailRemoveMails", new object[] {
@@ -4608,7 +4611,36 @@ namespace GaroonAPI.GaroonService {
                 this.MailRemoveMailsCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
-        
+
+        // 追記
+        public Task<Action> MailRemoveMailsAsyncWrapper(MailRemoveMailsRequestType parameters)
+        {
+            var tcs = new TaskCompletionSource<Action>();
+
+            // コールバックを設定
+            MailRemoveMailsCompleted += (s, e) =>
+            {
+                if (e.Error != null)
+                {
+                    tcs.SetException(e.Error);
+                }
+                else if (e.Cancelled)
+                {
+                    tcs.SetCanceled();
+                }
+                else
+                {
+                    tcs.SetResult(() => { });
+                }
+            };
+
+            // 非同期メソッドを呼び出す
+            MailRemoveMailsAsync(parameters);
+
+            return tcs.Task;
+        }
+        // 追記終了
+
         /// <remarks/>
         [System.Web.Services.Protocols.SoapRpcMethodAttribute("MailSearchMails", RequestNamespace="http://wsdl.cybozu.co.jp/mail/2008", ResponseNamespace="http://wsdl.cybozu.co.jp/mail/2008", Use=System.Web.Services.Description.SoapBindingUse.Literal)]
         [return: System.Xml.Serialization.XmlArrayAttribute("returns")]
@@ -4943,8 +4975,11 @@ namespace GaroonAPI.GaroonService {
                 this.MailSourceDownloadCompleted(this, new MailSourceDownloadCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
-        
+
         /// <remarks/>
+        [System.Web.Services.Protocols.SoapHeaderAttribute("action", Direction = SoapHeaderDirection.InOut)]
+        [System.Web.Services.Protocols.SoapHeaderAttribute("security", Direction = SoapHeaderDirection.InOut)]
+        [System.Web.Services.Protocols.SoapHeaderAttribute("timeStamp", Direction = SoapHeaderDirection.InOut)]
         [System.Web.Services.Protocols.SoapRpcMethodAttribute("MailFileDownload", RequestNamespace="http://wsdl.cybozu.co.jp/mail/2008", ResponseNamespace="http://wsdl.cybozu.co.jp/mail/2008", Use=System.Web.Services.Description.SoapBindingUse.Literal)]
         [return: System.Xml.Serialization.XmlElementAttribute("returns")]
         public MailFileDownloadResponseType MailFileDownload(MailFileDownloadRequestType parameters) {
@@ -4973,7 +5008,39 @@ namespace GaroonAPI.GaroonService {
                 this.MailFileDownloadCompleted(this, new MailFileDownloadCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
-        
+
+        /// <summary>
+        /// 上手くいかない。
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public Task<MailFileDownloadResponseType> MailFileDownloadAsyncWrapper(MailFileDownloadRequestType parameters)
+        {
+            var tcs = new TaskCompletionSource<MailFileDownloadResponseType>();
+
+            // コールバックを設定
+            MailFileDownloadCompleted += (s, e) =>
+            {
+                if (e.Error != null)
+                {
+                    tcs.SetException(e.Error);
+                }
+                else if (e.Cancelled)
+                {
+                    tcs.SetCanceled();
+                }
+                else
+                {
+                    tcs.SetResult(e.Result); //
+                }
+            };
+
+            // 非同期メソッドを呼び出す
+            MailFileDownload(parameters);
+
+            return tcs.Task;
+        }
+
         /// <remarks/>
         [System.Web.Services.Protocols.SoapRpcMethodAttribute("MailCreateUserAccount", RequestNamespace="http://wsdl.cybozu.co.jp/mail/2008", ResponseNamespace="http://wsdl.cybozu.co.jp/mail/2008", Use=System.Web.Services.Description.SoapBindingUse.Literal)]
         [return: System.Xml.Serialization.XmlElementAttribute("returns")]
